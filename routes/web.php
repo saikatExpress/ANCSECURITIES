@@ -40,4 +40,8 @@ Route::get('/', function () {
 
 Route::controller(CompanyController::class)->group(function(){
     Route::get('/about', 'about')->name('about.us');
+    Route::get('/contact', 'contact')->name('contact.us');
+    Route::get('/faq', 'faq')->name('faq.us');
+    Route::get('/board/director', 'boardDirector')->name('board.director');
+    Route::get('/online/bo/system', 'onlineBo')->name('online.bo');
 });

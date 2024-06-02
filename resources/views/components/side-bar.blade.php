@@ -9,66 +9,94 @@
 
                         <div id="navbar-collapse" class="collapse navbar-collapse">
                             <ul class="nav navbar-nav mr-auto">
-                            <li class="nav-item dropdown active">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Home <i class="fa fa-angle-down"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li class="active"><a href="{{ url('/') }}">Home One</a></li>
-                                </ul>
-                            </li>
+                                <li class="nav-item dropdown active">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Home <i class="fa fa-angle-down"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li class="active"><a href="{{ url('/') }}">Home One</a></li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Company <i class="fa fa-angle-down"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('about.us') }}">About Us</a></li>
-                                    <li><a href="team.html">Our People</a></li>
-                                    <li><a href="testimonials.html">Testimonials</a></li>
-                                    <li><a href="faq.html">Faq</a></li>
-                                    <li><a href="pricing.html">Pricing</a></li>
-                                </ul>
-                            </li>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Company <i class="fa fa-angle-down"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="{{ route('about.us') }}">About Us</a></li>
+                                        <li><a href="{{ route('board.director') }}">Board Of Directors</a></li>
+                                        <li><a href="team.html">Management Team</a></li>
+                                        <li><a href="testimonials.html">Sister of concern</a></li>
+                                        <li><a href="{{ route('faq.us') }}">Faq</a></li>
+                                        <li><a href="pricing.html">Pricing</a></li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Projects <i class="fa fa-angle-down"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="projects.html">Projects All</a></li>
-                                    <li><a href="projects-single.html">Projects Single</a></li>
-                                </ul>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('online.bo') }}">
+                                        ONLINE BO SYSTEM
+                                    </a>
+                                </li>
 
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Services <i class="fa fa-angle-down"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="services.html">Services All</a></li>
-                                    <li><a href="service-single.html">Services Single</a></li>
-                                </ul>
-                            </li>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">FORM DOWNLOAD <i class="fa fa-angle-down"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="projects.html">BO Closing Form</a></li>
+                                        <li><a href="projects.html">Demat Form</a></li>
+                                        <li><a href="projects-single.html">DSE Mobile Registation</a></li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Features <i class="fa fa-angle-down"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="typography.html">Typography</a></li>
-                                    <li><a href="404.html">404</a></li>
-                                    <li class="dropdown-submenu">
-                                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown">Parent Menu</a>
-                                        <ul class="dropdown-menu">
-                                        <li><a href="#!">Child Menu 1</a></li>
-                                        <li><a href="#!">Child Menu 2</a></li>
-                                        <li><a href="#!">Child Menu 3</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Services <i class="fa fa-angle-down"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="services.html">Fund withdraw request generate</a></li>
+                                        <li><a href="service-single.html">Fund deposite request generate</a></li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">News <i class="fa fa-angle-down"></i></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="news-left-sidebar.html">News Left Sidebar</a></li>
-                                    <li><a href="news-right-sidebar.html">News Right Sidebar</a></li>
-                                    <li><a href="news-single.html">News Single</a></li>
-                                </ul>
-                            </li>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">MARKET OVERVIEW <i class="fa fa-angle-down"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="https://www.dse.com.bd/top_20_share.php" target="_blank">
+                                                Top 20 Market Movers
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://dsebd.org/Company_AGM.htm" target="_blank">
+                                                Declaration & AGM
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.dse.com.bd/latest_share_price_scroll_l.php" target="_blank">
+                                                Historical Price & Volume
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.dse.com.bd/ipo.php" target="_blank">
+                                                New Issues (IPO)
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.dsebd.org/latest_PE.php" target="_blank">
+                                                EPS/PE
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.cnbc.com/futures-and-commodities/" target="_blank">
+                                                World Market
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
 
-                            <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">News <i class="fa fa-angle-down"></i></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="news-left-sidebar.html">News Left Sidebar</a></li>
+                                        <li><a href="news-right-sidebar.html">News Right Sidebar</a></li>
+                                        <li><a href="news-single.html">News Single</a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="nav-item"><a class="nav-link" href="{{ route('contact.us') }}">Contact</a></li>
                             </ul>
                         </div>
                     </nav>

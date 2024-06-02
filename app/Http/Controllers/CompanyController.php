@@ -10,4 +10,24 @@ class CompanyController extends Controller
     {
         return view('global.about');
     }
+
+    public function contact()
+    {
+        return view('global.contact');
+    }
+
+    public function faq()
+    {
+        return view('global.faq');
+    }
+
+    public function boardDirector()
+    {
+        return view('global.boraddirector');
+    }
+
+    public function onlineBo()
+    {
+        return view('global.bo');
+    }
 }
