@@ -11,7 +11,7 @@
         <h3 class="section-sub-title">Find Our Location</h3>
       </div>
     </div>
-    <!--/ Title row end -->
+
 
     <div class="row">
       <div class="col-md-4">
@@ -24,7 +24,7 @@
             <p>1100 Al Haj Tower,4th floor(Level-03),82 Mothijheel C/A Dhaka, Bangladesh.</p>
           </div>
         </div>
-      </div><!-- Col 1 end -->
+      </div>
 
       <div class="col-md-4">
         <div class="ts-service-box-bg text-center h-100">
@@ -36,7 +36,7 @@
             <p>ancsecuritieslimited@gmail.com</p>
           </div>
         </div>
-      </div><!-- Col 2 end -->
+      </div>
 
       <div class="col-md-4">
         <div class="ts-service-box-bg text-center h-100">
@@ -48,9 +48,9 @@
             <p>(+88) 01844-547916</p>
           </div>
         </div>
-      </div><!-- Col 3 end -->
+      </div>
 
-    </div><!-- 1st row end -->
+    </div>
 
     <div class="gap-60"></div>
 

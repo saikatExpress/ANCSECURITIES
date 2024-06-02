@@ -56,3 +56,15 @@
     margin-bottom: 0;
 }
 
+.img-fluid {
+    transition: transform 0.2s ease-in-out;
+}
+
+.img-fluid:hover {
+    transform: scale(1.05);
+}
+
+.shadow {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+

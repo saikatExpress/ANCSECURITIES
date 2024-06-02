@@ -6,7 +6,7 @@
                     <li>
                         <i class="fas fa-map-marker-alt"></i>
                         <p class="info-text">
-                            9051 ANC Securites, Bangladesh
+                            1100, ANC Securites, Bangladesh
                         </p>
                     </li>
                 </ul>

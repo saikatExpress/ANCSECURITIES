@@ -30,4 +30,9 @@ class CompanyController extends Controller
     {
         return view('global.bo');
     }
+
+    public function gallery()
+    {
+        return view('global.gallery');
+    }
 }

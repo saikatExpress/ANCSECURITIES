@@ -20,7 +20,18 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'mobile',
+        'address',
+        'otp',
+        'role',
+        'user_agent',
+        'last_login_at',
+        'last_logout_at',
+        'email_verified_at',
         'password',
+        'status',
+        'is_block',
+        'flag',
     ];
 
     /**
@@ -39,7 +50,22 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'id'                => 'integer',
+        'name'              => 'string',
+        'email'             => 'string',
+        'mobile'            => 'string',
+        'address'           => 'string',
+        'otp'               => 'string',
+        'role'              => 'string',
+        'user_agent'        => 'string',
+        'last_login_at'     => 'datetime',
+        'last_logout_at'    => 'datetime',
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
+        'status'            => 'string',
+        'is_block'          => 'integer',
+        'flag'              => 'integer',
+        'created_at'        => 'datetime',
+        'updated_at'        => 'datetime',
+        'deleted_at'        => 'datetime',
     ];
 }

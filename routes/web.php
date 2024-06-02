@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -42,6 +43,16 @@ Route::controller(CompanyController::class)->group(function(){
     Route::get('/about', 'about')->name('about.us');
     Route::get('/contact', 'contact')->name('contact.us');
     Route::get('/faq', 'faq')->name('faq.us');
+    Route::get('/gallery', 'gallery')->name('gallery.us');
     Route::get('/board/director', 'boardDirector')->name('board.director');
     Route::get('/online/bo/system', 'onlineBo')->name('online.bo');
+});
+
+Route::controller(AuthController::class)->group(function(){
+    $hashedUrl = md5('login');
+    Route::get('/' . $hashedUrl, 'login')->name(md5('login'));
+    $forpassUrl = md5('forgot/password');
+    Route::get('/' . $forpassUrl, 'forgetPassword')->name(md5('forgot.password'));
+    $signUp = md5('sign/up');
+    Route::get('/' . $signUp, 'signUp')->name('sign.up');
 });
