@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -35,4 +36,8 @@ Route::get('/clear-cache', function() {
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::controller(CompanyController::class)->group(function(){
+    Route::get('/about', 'about')->name('about.us');
 });
