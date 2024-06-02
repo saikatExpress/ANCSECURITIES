@@ -3,7 +3,7 @@
     <head>
 
     <meta charset="utf-8">
-    <title>ANC Securities - Construction Html5 Template</title>
+    <title>ANC Securities</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Construction Html5 Template">
