@@ -55,4 +55,6 @@ Route::controller(AuthController::class)->group(function(){
     Route::get('/' . $forpassUrl, 'forgetPassword')->name(md5('forgot.password'));
     $signUp = md5('sign/up');
     Route::get('/' . $signUp, 'signUp')->name('sign.up');
+    $hashedSignUpurl = md5('registation/store');
+    Route::post('/' . $hashedSignUpurl, 'store')->name('regisation.store');
 });
