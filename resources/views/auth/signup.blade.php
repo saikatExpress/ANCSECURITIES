@@ -75,35 +75,53 @@
                                 <label for="name">Name <span class="text-danger"> * </span></label>
                                 <input type="text" id="name" name="name" class="form-control">
                                 <small class="nameerror-message text-danger"></small>
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <!-- Email Field -->
                             <div class="form-group mb-3">
                                 <label for="email">Email <span class="text-danger"> * </span></label>
                                 <input type="email" id="email" name="email" class="form-control">
                                 <small class="emailerror-message text-danger"></small>
+                                @error('email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <!-- Mobile Field -->
                             <div class="form-group mb-3">
                                 <label for="mobile">Mobile Number <span class="text-danger"> * </span></label>
                                 <input type="tel" id="mobile" name="mobile" class="form-control">
                                 <small class="mobileerror-message text-danger"></small>
+                                @error('mobile')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group mb-3">
                                 <label for="mobile">Trading Code <span class="text-danger"> * </span></label>
                                 <input type="text" id="tradingCode" name="trading_code" class="form-control">
                                 <small class="tradingerror-message text-danger"></small>
+                                @error('trading_code')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <!-- Password Field -->
                             <div class="form-group mb-3">
                                 <label for="password">Password <span class="text-danger"> * </span></label>
                                 <input type="password" id="password" name="password" class="form-control">
                                 <small class="passworderror-message text-danger"></small>
+                                @error('password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <!-- Confirm Password Field -->
                             <div class="form-group mb-3">
                                 <label for="password_confirmation">Confirm Password <span class="text-danger"> * </span></label>
                                 <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
                                 <small class="conpassworderror-message text-danger"></small>
+                                @error('password_confirmation')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <!-- Submit Button -->
                             <button type="submit" class="btn btn-primary btn-block">Register</button>

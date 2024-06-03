@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'profile_image',
         'email',
         'mobile',
         'whatsapp',
@@ -58,6 +59,7 @@ class User extends Authenticatable
     protected $casts = [
         'id'                => 'integer',
         'name'              => 'string',
+        'profile_image'     => 'string',
         'email'             => 'string',
         'mobile'            => 'string',
         'whatsapp'          => 'string',

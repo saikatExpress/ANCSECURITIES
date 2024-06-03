@@ -6,6 +6,8 @@
     <title>Login | ANC Securities Ltd.</title>
     <link rel="shortcut icon" href="{{ asset('auth/security.png') }}" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -63,6 +65,15 @@
         .login-form .text-center a:hover {
             text-decoration: underline;
         }
+
+        .authErrorMessage{
+            color: #fff !important;
+            background-color: darkred;
+            padding: 5px 8px 5px;
+            margin: 5px 5px 5px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -75,16 +86,27 @@
                 </div>
             @endif
 
-            <form method="POST" action="">
+            <p id="authErrorMessage"></p>
+
+            <form method="POST" action="{{ route('log.store') }}" id="logForm">
+                @csrf
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Enter your email">
+                    <strong id="emailerror-message" class="text-danger"></strong>
+                    @error('email')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password">
+                    <strong id="passworderror-message" class="text-danger"></strong>
+                    @error('password')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Login</button>
                 <div class="text-center mt-3">
                     @php
                         $url = md5('forgot.password');
@@ -98,6 +120,7 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -110,6 +133,67 @@
             setTimeout(function() {
                 $('#successAlert').fadeOut('slow');
             }, 3000);
+        });
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $('#logForm').on('submit', function(e){
+                e.preventDefault();
+
+                var email    = $('#email').val().trim();
+                var password = $('#password').val().trim();
+
+                $('#emailerror-message').html('');
+                $('#passworderror-message').html('');
+
+                if (email === '') {
+                    $('#emailerror-message').html('Email field is empty!');
+                    return;
+                }
+
+                if (password === '') {
+                    $('#passworderror-message').html('Password field is empty!');
+                    return;
+                }
+
+                $('#submitBtn').attr('disabled', true);
+                $('#submitBtn').html('Login <span class="loader"></span>');
+
+                var formData   = $(this).serialize();
+                var csrfToken  = $('input[name="_token"]').val();
+                    formData  += '&_token=' + csrfToken;
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function(response){
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: response.success,
+                                showConfirmButton: false,
+                                timer: 2000 // Automatically close the alert after 2 seconds
+                            }).then(function() {
+                                // Redirect to the specified URL
+                                window.location.href = response.redirect;
+                            });
+                        } else if (response.validationerror) {
+                            $('#authErrorMessage').html(response.validationerror).addClass('authErrorMessage');
+                        } else {
+                            $('#authErrorMessage').html(response.error).addClass('authErrorMessage');
+                        }
+
+                    },
+                    error: function(xhr, status, error){
+                        alert('An error occurred. Please try again.');
+                        // Reset the button
+                        $('#submitBtn').attr('disabled', false);
+                        $('#submitBtn').html('Login');
+                    }
+                });
+            });
         });
     </script>
 </body>
