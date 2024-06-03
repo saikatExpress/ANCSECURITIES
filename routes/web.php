@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,12 @@ Route::middleware(['auth'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         $hashedAdminUrl = md5('admin/dashboard');
         Route::get('/'.$hashedAdminUrl, 'index')->name('admin.dashboard');
+    });
+
+    Route::controller(BannerController::class)->group(function(){
+        $hashedBannerUrl = md5('create/banner');
+        Route::get('/'.$hashedBannerUrl, 'create')->name('create.banner');
+        Route::post('/banner/store', 'store')->name('banner.store');
     });
 });
 

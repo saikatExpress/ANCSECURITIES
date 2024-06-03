@@ -216,7 +216,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="pages/examples/invoice.html">
+                        <a href="{{ route('create.banner') }}">
                             <i class="fa fa-circle-o"></i>
                             Add Banner
                         </a>

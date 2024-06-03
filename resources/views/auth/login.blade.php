@@ -81,7 +81,7 @@
         <div class="login-form">
             <h2 class="text-center">Login</h2>
             @if(session('message'))
-                <div class="alert alert-success" sid="succesAlert">
+                <div class="alert alert-success" id="successAlert">
                     {{ session('message') }}
                 </div>
             @endif
