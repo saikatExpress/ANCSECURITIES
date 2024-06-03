@@ -69,7 +69,13 @@
     <div class="login-container">
         <div class="login-form">
             <h2 class="text-center">Login</h2>
-            <form>
+            @if(session('message'))
+                <div class="alert alert-success" sid="succesAlert">
+                    {{ session('message') }}
+                </div>
+            @endif
+
+            <form method="POST" action="">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" placeholder="Enter your email">
@@ -87,9 +93,24 @@
                 </div>
             </form>
         </div>
+        <div class="card-footer text-center">
+            <p class="mb-0">Do you haven't an account? <a href="{{ route('sign.up') }}" class="text-primary">Registation</a></p>
+        </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Show the alert message
+            $('#successAlert').show();
+
+            // Hide the alert message after 3 seconds
+            setTimeout(function() {
+                $('#successAlert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
 </body>
 </html>

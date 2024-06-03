@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -60,11 +61,14 @@ class AuthController extends Controller
 
             DB::commit();
             if($res){
+                session()->flash('message', 'Registration successful! Please log in.');
                 return response()->json(['success' => true]);
             }
         } catch (\Exception $e) {
             DB::rollback();
             info($e);
+            Log::error($e->getMessage());
+            return response()->json(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
         }
     }
 

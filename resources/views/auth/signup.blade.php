@@ -209,9 +209,9 @@
                         }
 
                         // Reset the form and button
-                        // $('#submitBtn').attr('disabled', false);
-                        // $('#submitBtn').html('Register');
-                        // $('#signUpform')[0].reset();
+                        $('#submitBtn').attr('disabled', false);
+                        $('#submitBtn').html('Register');
+                        $('#signUpform')[0].reset();
                     },
                     error: function(xhr, status, error) {
                         // Handle error response
