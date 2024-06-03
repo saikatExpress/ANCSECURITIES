@@ -83,13 +83,13 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="pages/charts/chartjs.html">
+                        <a href="{{ route('create.form') }}">
                             <i class="fa fa-circle-o"></i>
                             Form Upload
                         </a>
                     </li>
                     <li>
-                        <a href="pages/charts/morris.html">
+                        <a href="{{ route('form.list') }}">
                             <i class="fa fa-circle-o"></i>
                             Form List
                         </a>

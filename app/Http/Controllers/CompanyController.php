@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FormUpload;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
@@ -34,5 +36,11 @@ class CompanyController extends Controller
     public function gallery()
     {
         return view('global.gallery');
+    }
+
+    public function formDownload($id)
+    {
+        $form = FormUpload::findOrFail($id);
+        return Storage::download($form->form_file);
     }
 }

@@ -55,6 +55,7 @@ class BannerController extends Controller
             $bannerObj->banner_title      = $request->input('banner_title');
             $bannerObj->short_title       = $request->input('short_title');
             $bannerObj->short_description = $request->input('short_description');
+            $bannerObj->created_by        = auth()->user()->name;
 
             $res = $bannerObj->save();
 

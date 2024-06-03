@@ -37,9 +37,19 @@
                                 <li class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">FORM DOWNLOAD <i class="fa fa-angle-down"></i></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="projects.html">BO Closing Form</a></li>
-                                        <li><a href="projects.html">Demat Form</a></li>
-                                        <li><a href="projects-single.html">DSE Mobile Registation</a></li>
+                                        @if (count($forms) > 0)
+                                            @foreach ($forms as $form)
+                                                <li>
+                                                    <a href="{{ route('form.download', ['id' => $form->id]) }}">
+                                                        {{ $form->form_title }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        @else
+                                            <p>
+                                                No forms availble here...
+                                            </p>
+                                        @endif
                                     </ul>
                                 </li>
 

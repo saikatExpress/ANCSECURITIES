@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,7 @@ Route::controller(CompanyController::class)->group(function(){
     Route::get('/gallery', 'gallery')->name('gallery.us');
     Route::get('/board/director', 'boardDirector')->name('board.director');
     Route::get('/online/bo/system', 'onlineBo')->name('online.bo');
+    Route::get('/form/download/{id}', 'formDownload')->name('form.download');
 });
 
 Route::controller(AuthController::class)->group(function(){
@@ -75,6 +77,16 @@ Route::middleware(['auth'])->group(function(){
         $hashedBannerUrl = md5('create/banner');
         Route::get('/'.$hashedBannerUrl, 'create')->name('create.banner');
         Route::post('/banner/store', 'store')->name('banner.store');
+    });
+
+    Route::controller(FormController::class)->group(function(){
+        $hashedFormIndexUrl = md5('form/list');
+        Route::get('/'.$hashedFormIndexUrl, 'index')->name('form.list');
+        $hashedFormUrl = md5('create/form');
+        Route::get('/'.$hashedFormUrl, 'create')->name('create.form');
+        Route::post('/form/store', 'store')->name('form.store');
+        Route::get('/get/form/{id}', 'download')->name('get.form');
+        Route::get('/form/delete/{id}', 'destroy');
     });
 });
 
