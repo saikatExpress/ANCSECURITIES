@@ -12,6 +12,11 @@
                 <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
+            <p style="text-align: right;">
+                <a class="btn btn-sm btn-primary" href="{{ route('banner.list') }}">
+                    Banner List
+                </a>
+            </p>
         </section>
 
         <section class="content">

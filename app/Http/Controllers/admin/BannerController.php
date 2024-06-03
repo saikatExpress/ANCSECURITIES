@@ -18,6 +18,14 @@ class BannerController extends Controller
         }
     }
 
+    public function index()
+    {
+        $data['pageTitle'] = 'Banner List';
+        $data['banners'] = Banner::all();
+
+        return view('admin.banner.index')->with($data);
+    }
+
     public function create()
     {
         $pageTitle = 'Create Banner';
@@ -62,6 +70,29 @@ class BannerController extends Controller
             DB::commit();
             if($res){
                 return redirect()->back()->with('message', 'Banner created successfully');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $banner = Banner::find($id);
+
+            if (!$banner) {
+                return response()->json(['message' => 'Banner not found.'], 404);
+            }
+
+            $res = $banner->delete();
+
+            DB::commit();
+            if($res){
+                return response()->json(['message' => 'Banner deleted successfully.']);
             }
         } catch (\Exception $e) {
             DB::rollback();

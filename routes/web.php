@@ -74,9 +74,12 @@ Route::middleware(['auth'])->group(function(){
     });
 
     Route::controller(BannerController::class)->group(function(){
+        $hashedbannerIndexUrl = md5('banner/list');
+        Route::get('/'.$hashedbannerIndexUrl, 'index')->name('banner.list');
         $hashedBannerUrl = md5('create/banner');
         Route::get('/'.$hashedBannerUrl, 'create')->name('create.banner');
         Route::post('/banner/store', 'store')->name('banner.store');
+        Route::get('/banner/delete/{id}', 'destroy');
     });
 
     Route::controller(FormController::class)->group(function(){

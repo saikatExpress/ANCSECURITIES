@@ -1,6 +1,6 @@
 $(document).ready(function(){
     $(document).on('click', '.deleteBtn', function(){
-        var formId = $(this).data("id");
+        var bannerId = $(this).data("id");
         var listItem = $(this).closest(".list-item"); // Adjust the selector based on your HTML structure
 
         // Use SweetAlert to confirm the deletion
@@ -17,7 +17,7 @@ $(document).ready(function(){
                 // If the user confirms, send an AJAX request to delete the pigeon
                 $.ajax({
                     type: "GET",
-                    url: "/form/delete/" + formId,
+                    url: "/banner/delete/" + bannerId,
                     success: function (response) {
                         // Remove the deleted item from the DOM
                         listItem.remove();
