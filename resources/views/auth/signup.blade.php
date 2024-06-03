@@ -106,7 +106,7 @@
                                 <small class="conpassworderror-message text-danger"></small>
                             </div>
                             <!-- Submit Button -->
-                            <button type="submit" class="btn btn-primary btn-block" id="submitBtn">Register</button>
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
                         </form>
                     </div>
                     <div class="card-footer text-center">
@@ -121,15 +121,15 @@
     </div>
 
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
 
     <script>
-        $(document).ready(function(){
-            $('#submitBtn').on('click', function(e){
+        $(document).ready(function() {
+            $('#signUpform').on('submit', function(e) {
                 e.preventDefault();
 
                 var nameValue             = $('#name').val().trim();
@@ -138,6 +138,14 @@
                 var tradingCode           = $('#tradingCode').val().trim();
                 var password              = $('#password').val().trim();
                 var password_confirmation = $('#password_confirmation').val().trim();
+
+                // Clear previous error messages
+                $('.nameerror-message').html('');
+                $('.emailerror-message').html('');
+                $('.mobileerror-message').html('');
+                $('.tradingerror-message').html('');
+                $('.passworderror-message').html('');
+                $('.conpassworderror-message').html('');
 
                 // Check if the trimmed value is empty
                 if (nameValue === '') {
@@ -166,40 +174,44 @@
                 }
 
                 if (password_confirmation === '') {
-                    $('.conpassworderror-message').html('Password field is empty!');
+                    $('.conpassworderror-message').html('Confirm Password field is empty!');
                     return;
                 }
 
-                if(password != password_confirmation){
-                    $('.conpassworderror-message').html('Password doesn"t match!');
+                if(password !== password_confirmation){
+                    $('.conpassworderror-message').html('Password doesn\'t match!');
+                    return;
                 }
 
-                // Add loader to the submit button
-                $(this).attr('disabled', true);
-                $(this).html('Registering <span class="loader"></span>');
+                // Disable the button and show loading text
+                $('#submitBtn').attr('disabled', true);
+                $('#submitBtn').html('Registering <span class="loader"></span>');
 
-                // Gather form data
-                var formData = $('#signUpForm').serialize();
+                var formData = $(this).serialize();
+                var actionUrl = $(this).attr('action');
+                var csrfToken = $('input[name="_token"]').val();
+
+                // Append CSRF token to the form data
+                formData += '&_token=' + csrfToken;
 
                 // AJAX request
                 $.ajax({
-                    url: $('#signUpForm').attr('action'),
-                    method: $('#signUpForm').attr('method'),
+                    url: actionUrl,
+                    method: 'POST',
                     data: formData,
                     success: function(response) {
-                        alert(7654);
                         // Handle success response
-                        if(response && response.success == true){
-                           var loginRouteName = "{{ md5('login') }}";
+                        if(response && response.success === true){
+                            var loginRouteName = "{{ md5('login') }}";
                             var baseUrl = "{{ url('') }}";
                             var loginUrl = baseUrl + '/' + loginRouteName;
                             window.location.href = loginUrl;
                         }
 
                         // Reset the form and button
-                        $('#submitBtn').attr('disabled', false);
-                        $('#submitBtn').html('Register');
-                        $('#signUpForm')[0].reset();
+                        // $('#submitBtn').attr('disabled', false);
+                        // $('#submitBtn').html('Register');
+                        // $('#signUpform')[0].reset();
                     },
                     error: function(xhr, status, error) {
                         // Handle error response
@@ -212,5 +224,6 @@
             });
         });
     </script>
+
 </body>
 </html>

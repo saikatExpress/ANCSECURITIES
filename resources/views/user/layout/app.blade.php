@@ -3,7 +3,7 @@
     <head>
 
     <meta charset="utf-8">
-    <title>ANC Securities</title>
+    <title>Home - ANC Securities</title>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Construction Html5 Template">
@@ -42,7 +42,9 @@
             </header>
             <!--/ Header end -->
             @yield('content')
-<x-footer/>
+
+
+            <x-footer/>
             <!-- Footer end -->
 
             <!-- initialize jQuery Library -->

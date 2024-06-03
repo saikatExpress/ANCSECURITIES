@@ -23,9 +23,9 @@ class AuthController extends Controller
 
     public function store(Request $request)
     {
-        return 1;
         try {
             DB::beginTransaction();
+
             $validator = Validator::make($request->all(), [
                 'name'                  => ['required'],
                 'email'                 => ['required', 'email', 'unique:users'],
@@ -43,20 +43,18 @@ class AuthController extends Controller
 
             $userObj = new User();
 
-
-
             $name         = Str::title($request->input('name'));
             $email        = $request->input('email');
             $mobile       = $request->input('mobile');
             $trading_code = $request->input('trading_code');
             $password     = $request->input('password');
 
-            $userObj->name = $name;
-            $userObj->email = $email;
-            $userObj->mobile = $mobile;
-            $userObj->whatsapp = $mobile;
+            $userObj->name         = $name;
+            $userObj->email        = $email;
+            $userObj->mobile       = $mobile;
+            $userObj->whatsapp     = $mobile;
             $userObj->trading_code = $trading_code;
-            $userObj->password = Hash::make($password);
+            $userObj->password     = Hash::make($password);
 
             $res = $userObj->save();
 
