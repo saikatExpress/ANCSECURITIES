@@ -8,4 +8,26 @@ use Illuminate\Database\Eloquent\Model;
 class Designation extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'description',
+        'created_by',
+        'updated_by',
+        'status',
+    ];
+
+    protected $casts = [
+        'id'          => 'integer',
+        'name'        => 'string',
+        'slug'        => 'string',
+        'description' => 'string',
+        'created_by'  => 'string',
+        'updated_by'  => 'string',
+        'status'      => 'integer',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => 'datetime',
+    ];
 }
