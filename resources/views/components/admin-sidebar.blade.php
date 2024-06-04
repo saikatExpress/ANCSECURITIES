@@ -167,7 +167,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>
+                        <a href="{{ route('director.create') }}"><i class="fa fa-circle-o"></i>
                             Board Directors
                         </a>
                     </li>
@@ -258,7 +258,14 @@
                 </span>
             </a>
             <ul class="treeview-menu">
-                <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+
+                <li>
+                    <a href="{{ route('designation.list') }}">
+                        <i class="fa fa-circle-o"></i>
+                        Designation
+                    </a>
+                </li>
+
                 <li class="treeview">
                 <a href="#"><i class="fa fa-circle-o"></i> Level One
                     <span class="pull-right-container">

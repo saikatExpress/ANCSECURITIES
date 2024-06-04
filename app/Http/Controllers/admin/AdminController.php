@@ -19,4 +19,11 @@ class AdminController extends Controller
     {
         return view('admin.home.index');
     }
+
+    public function create()
+    {
+        $pageTitle = 'Create Director';
+
+        return view('admin.director.create', compact('pageTitle'));
+    }
 }

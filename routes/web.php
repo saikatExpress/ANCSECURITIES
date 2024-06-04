@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AboutController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\AuthController;
@@ -74,6 +75,8 @@ Route::middleware(['auth'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         $hashedAdminUrl = md5('admin/dashboard');
         Route::get('/'.$hashedAdminUrl, 'index')->name('admin.dashboard');
+        $hashedDirectorUrl = md5('create/director');
+        Route::get('/'.$hashedDirectorUrl, 'create')->name('director.create');
     });
 
     Route::controller(BannerController::class)->group(function(){
@@ -96,6 +99,14 @@ Route::middleware(['auth'])->group(function(){
         $hashedAboutUrl = md5('create/about');
         Route::get('/'.$hashedAboutUrl, 'create')->name('about.create');
         Route::post('/about/store', 'store')->name('about.store');
+    });
+
+    Route::controller(DesignationController::class)->group(function(){
+        $hashedDesignationUrl = md5('designation/list');
+        Route::get('/'.$hashedDesignationUrl, 'index')->name('designation.list');
+        Route::post('/designation/store', 'store')->name('designation.store');
+        Route::post('/update/designation', 'update')->name('designation.update');
+        Route::get('/designation/delete/{id}', 'destroy');
     });
 
     Route::controller(FormController::class)->group(function(){
