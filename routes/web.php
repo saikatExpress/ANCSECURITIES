@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\AboutController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\FormController;
@@ -89,6 +90,12 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/'.$hashedGalleryList, 'index')->name('gallary.list');
         Route::post('/gallery/store', 'store')->name('gallery.store');
         Route::get('/gallery/delete/{id}', 'destroy');
+    });
+
+    Route::controller(AboutController::class)->group(function(){
+        $hashedAboutUrl = md5('create/about');
+        Route::get('/'.$hashedAboutUrl, 'create')->name('about.create');
+        Route::post('/about/store', 'store')->name('about.store');
     });
 
     Route::controller(FormController::class)->group(function(){

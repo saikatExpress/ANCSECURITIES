@@ -162,7 +162,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="pages/tables/simple.html"><i class="fa fa-circle-o"></i>
+                        <a href="{{ route('about.create') }}"><i class="fa fa-circle-o"></i>
                             About
                         </a>
                     </li>

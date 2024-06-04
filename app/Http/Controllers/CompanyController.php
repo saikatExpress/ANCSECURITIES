@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\About;
 use App\Models\BOForm;
-use App\Models\FormUpload;
 use App\Models\Gallery;
+use App\Models\FormUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,9 @@ class CompanyController extends Controller
 {
     public function about()
     {
-        return view('global.about');
+        $about = About::first();
+
+        return view('global.about', compact('about'));
     }
 
     public function contact()
