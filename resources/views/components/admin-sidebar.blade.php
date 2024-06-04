@@ -66,9 +66,24 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Create User</a></li>
-                    <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> User List</a></li>
-                    <li><a href="pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Role</a></li>
+                    <li>
+                        <a href="pages/layout/top-nav.html">
+                            <i class="fa fa-circle-o"></i>
+                            Create User
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pages/layout/boxed.html">
+                            <i class="fa fa-circle-o"></i>
+                            User List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('role.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            Role
+                        </a>
+                    </li>
                     <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Permission</a></li>
                 </ul>
             </li>

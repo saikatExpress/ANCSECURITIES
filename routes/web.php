@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
+use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
@@ -105,6 +106,11 @@ Route::middleware(['auth'])->group(function(){
     Route::controller(StaffController::class)->group(function(){
         $hashedStaffUrl = md5('staff/create');
         Route::get('/'.$hashedStaffUrl, 'create')->name('staff.create');
+    });
+
+    Route::controller(RoleController::class)->group(function(){
+        $hashedRoleUrl = md5('role/list');
+        Route::get('/'.$hashedRoleUrl, 'index')->name('role.list');
     });
 
     Route::controller(DesignationController::class)->group(function(){
