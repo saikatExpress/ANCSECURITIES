@@ -11,9 +11,9 @@
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
             <p style="text-align: right;">
-                <button id="openSidebarButton" type="button" class="btn btn-sm btn-primary">
+                <a href="{{ route('create.role') }}" class="btn btn-sm btn-primary">
                     Create Role
-                </button>
+                </a>
             </p>
         </section>
 
@@ -34,39 +34,33 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Image</th>
-                        <th>Title</th>
-                        <th>Created By</th>
-                        <th>Created Date</th>
+                        <th>Name</th>
+                        <th>Permissions</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @foreach ($galleries as $gallery)
+                    @foreach ($roles as $role)
                         <tr class="list-item">
-                            <td>{{ $gallery->id }}</td>
-                            <td>
-                                <img style="width: 50px; height:50px; border-radius:50%;" src="{{ asset('gallery_images/' . $gallery->gallery_images) }}" alt="Image">
+                            <td>{{ $role->id }}</td>
+                            <td style="text-transform: uppercase;">
+                                {{ $role->name }}
                             </td>
                             <td>
-                                {{ $gallery->title }}
-                            </td>
-                            <td>
-                                {{ ($gallery->created_by) ?? 'ANC ADMIN' }}
-                            </td>
-                            <td>
-                                {{ $gallery->created_at->format('d-M-Y') }}
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-primary">
-                                    Edit
+                                <button type="button" class="btn btn-sm btn-success permissionBtn" data-toggle="modal" data-id="{{ $role->id }}" data-target="#permissionModal">
+                                    <i class="fa-solid fa-eye"></i>
                                 </button>
-                                <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $gallery->id }}">
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-sm btn-primary">
+                                    Edit
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $role->id }}">
                                     Delete
                                 </button>
                             </td>
                         </tr>
-                    @endforeach --}}
+                    @endforeach
                 </tbody>
 
                 <tfoot>
@@ -75,7 +69,6 @@
                     <th>Browser</th>
                     <th>Platform(s)</th>
                     <th>Engine version</th>
-                    <th>CSS grade</th>
                     </tr>
                 </tfoot>
               </table>
@@ -83,7 +76,7 @@
           </div>
         </section>
     </div>
-    <div class="modal fade" id="modal-default">
+    <div class="modal fade" id="permissionModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -93,26 +86,7 @@
                     <h4 class="modal-title">Add Gallery</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('gallery.store') }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <div class="form-group">
-                            <label for="">Image Upload</label>
-                            <input type="file" class="form-control-file" name="gallery_image">
-                            @error('gallery_image')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="">Title</label>
-                            <input type="text" class="form-control" name="title">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Description</label>
-                            <textarea name="description" class="form-control"></textarea>
-                        </div>
 
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
@@ -123,7 +97,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('admin/assets/js/gallery.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/role.js') }}"></script>
 
     <script>
         $(document).ready(function() {
