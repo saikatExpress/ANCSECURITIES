@@ -199,7 +199,7 @@
             </li>
 
             <li>
-                <a href="pages/widgets.html">
+                <a href="{{ route('gallary.list') }}">
                     <i class="fa fa-th"></i> <span>GALLERY</span>
                     <span class="pull-right-container">
                         <small class="label pull-right bg-green">5</small>
@@ -252,7 +252,7 @@
 
             <li class="treeview">
             <a href="#">
-                <i class="fa fa-share"></i> <span>Settings</span>
+                <i class="fa-solid fa-gear"></i> <span>Settings</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                 </span>

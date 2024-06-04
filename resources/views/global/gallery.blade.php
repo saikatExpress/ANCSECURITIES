@@ -4,32 +4,31 @@
 <div class="container my-5">
     <h2 class="text-center mb-4">Photo Gallery</h2>
     <div class="row">
-        <!-- Repeat this block for each image in your gallery -->
-        <div class="col-md-4 mb-4">
-            <a href="path/to/large-image1.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
-                <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
-            </a>
-        </div>
-        <div class="col-md-4 mb-4">
-            <a href="path/to/large-image2.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
-                <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
-            </a>
-        </div>
-        <div class="col-md-4 mb-4">
-            <a href="path/to/large-image3.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
-                <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
-            </a>
-        </div>
-        <div class="col-md-4 mb-4">
-            <a href="path/to/large-image3.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
-                <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
-            </a>
-        </div>
-        <div class="col-md-4 mb-4">
-            <a href="path/to/large-image3.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
-                <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
-            </a>
-        </div>
+        @if (count($galleries) > 0)
+            @foreach ($galleries as $gallery)
+                <div class="col-md-4 mb-4">
+                    <a href="path/to/large-image1.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
+                        <img src="{{ asset('gallery_images/'.$gallery->gallery_images) }}" class="img-fluid rounded shadow">
+                    </a>
+                </div>
+            @endforeach
+        @else
+            <div class="col-md-4 mb-4">
+                <a href="path/to/large-image3.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
+                    <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="path/to/large-image3.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
+                    <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
+                </a>
+            </div>
+            <div class="col-md-4 mb-4">
+                <a href="path/to/large-image3.jpg" data-toggle="lightbox" data-gallery="gallery" class="col-md-4">
+                    <img src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg" class="img-fluid rounded shadow">
+                </a>
+            </div>
+        @endif
     </div>
 </div>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\BOForm;
 use App\Models\FormUpload;
+use App\Models\Gallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -98,7 +99,9 @@ class CompanyController extends Controller
 
     public function gallery()
     {
-        return view('global.gallery');
+        $galleries = Gallery::where('status', '1')->get();
+
+        return view('global.gallery', compact('galleries'));
     }
 
     public function formDownload($id)

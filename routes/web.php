@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\FormController;
+use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
@@ -81,6 +82,13 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/'.$hashedBannerUrl, 'create')->name('create.banner');
         Route::post('/banner/store', 'store')->name('banner.store');
         Route::get('/banner/delete/{id}', 'destroy');
+    });
+
+    Route::controller(GalleryController::class)->group(function(){
+        $hashedGalleryList = md5('gallery/list');
+        Route::get('/'.$hashedGalleryList, 'index')->name('gallary.list');
+        Route::post('/gallery/store', 'store')->name('gallery.store');
+        Route::get('/gallery/delete/{id}', 'destroy');
     });
 
     Route::controller(FormController::class)->group(function(){
