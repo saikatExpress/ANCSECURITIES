@@ -107,7 +107,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="pages/UI/general.html">
+                        <a href="{{ route('staff.create') }}">
                             <i class="fa fa-circle-o"></i>
                             Add Staff
                         </a>

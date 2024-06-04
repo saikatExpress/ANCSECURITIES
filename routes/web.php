@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
+use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
@@ -99,6 +100,11 @@ Route::middleware(['auth'])->group(function(){
         $hashedAboutUrl = md5('create/about');
         Route::get('/'.$hashedAboutUrl, 'create')->name('about.create');
         Route::post('/about/store', 'store')->name('about.store');
+    });
+
+    Route::controller(StaffController::class)->group(function(){
+        $hashedStaffUrl = md5('staff/create');
+        Route::get('/'.$hashedStaffUrl, 'create')->name('staff.create');
     });
 
     Route::controller(DesignationController::class)->group(function(){
