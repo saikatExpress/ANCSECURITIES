@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\LeaveController;
+use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AuthController;
@@ -130,6 +131,13 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/department/store', 'store')->name('department.store');
         Route::post('/department/update', 'update')->name('department.update');
         Route::get('/department/delete/{id}', 'destroy');
+    });
+
+    Route::controller(NewsController::class)->group(function(){
+        $hashedNewsUrl = md5('news.list');
+        Route::get('/'.$hashedNewsUrl, 'index')->name('news.portal');
+        Route::post('/news/store', 'store')->name('news.store');
+        Route::get('/news/delete/{id}', 'destroy');
     });
 
     Route::controller(RoleController::class)->group(function(){
