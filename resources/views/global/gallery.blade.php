@@ -1,5 +1,5 @@
 @extends('user.layout.app')
-
+<link rel="stylesheet" href="{{ asset('user/assets/css/bo.css') }}">
 @section('content')
 <div class="container my-5">
     <h2 class="text-center mb-4">Photo Gallery</h2>

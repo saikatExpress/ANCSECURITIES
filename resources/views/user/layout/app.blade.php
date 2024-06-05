@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="utf-8">
+        <title>Home - ANC Securities</title>
 
-    <meta charset="utf-8">
-    <title>Home - ANC Securities</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Construction Html5 Template">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+        <meta name=author content="Themefisher">
+        <meta name=generator content="Themefisher Constra HTML Template v1.0">
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Construction Html5 Template">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <meta name=author content="Themefisher">
-    <meta name=generator content="Themefisher Constra HTML Template v1.0">
+        <link rel="icon" type="image/png" href="{{ asset('user/assets/logos/8022322.png') }}">
 
-    <link rel="icon" type="image/png" href="{{ asset('user/assets/logos/8022322.png') }}">
-
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="{{ asset('user/assets/plugins/bootstrap/bootstrap.min.css') }}">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="{{ asset('user/assets/plugins/fontawesome/css/all.min.css') }}">
-    <!-- Animation -->
-    <link rel="stylesheet" href="{{ asset('user/assets/plugins/animate-css/animate.css') }}">
-    <!-- slick Carousel -->
-    <link rel="stylesheet" href="{{ asset('user/assets/plugins/slick/slick.css') }}">
-    <link rel="stylesheet" href="{{ asset('user/assets/plugins/slick/slick-theme.css') }}">
-    <!-- Colorbox -->
-    <link rel="stylesheet" href="{{ asset('user/assets/plugins/colorbox/colorbox.css') }}">
-    <!-- Template styles-->
-    <link rel="stylesheet" href="{{ asset('user/assets/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('user/assets/css/bo.css') }}">
-
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="{{ asset('user/assets/plugins/bootstrap/bootstrap.min.css') }}">
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="{{ asset('user/assets/plugins/fontawesome/css/all.min.css') }}">
+        <!-- Animation -->
+        <link rel="stylesheet" href="{{ asset('user/assets/plugins/animate-css/animate.css') }}">
+        <!-- slick Carousel -->
+        <link rel="stylesheet" href="{{ asset('user/assets/plugins/slick/slick.css') }}">
+        <link rel="stylesheet" href="{{ asset('user/assets/plugins/slick/slick-theme.css') }}">
+        <!-- Colorbox -->
+        <link rel="stylesheet" href="{{ asset('user/assets/plugins/colorbox/colorbox.css') }}">
+        <!-- Template styles-->
+        <link rel="stylesheet" href="{{ asset('user/assets/css/style.css') }}">
     </head>
 
     <body>
