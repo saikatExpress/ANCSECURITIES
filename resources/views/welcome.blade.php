@@ -9,16 +9,16 @@
             <div class="container">
                 <div class="action-style-box">
                     <div class="row align-items-center">
-                    <div class="col-md-8 text-center text-md-left">
-                        <div class="call-to-action-text">
-                            <h3 class="action-title">We understand your needs on construction</h3>
+                        <div class="col-md-8 text-center text-md-left">
+                            <div class="call-to-action-text">
+                                <h3 class="action-title">Ready to enhance your investment portfolio?</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 text-center text-md-right mt-3 mt-md-0">
-                        <div class="call-to-action-btn">
-                            <a class="btn btn-dark" href="{{ route('contact.us') }}">Request Quote</a>
+                        <div class="col-md-4 text-center text-md-right mt-3 mt-md-0">
+                            <div class="call-to-action-btn">
+                                <a class="btn btn-dark" href="{{ route('contact.us') }}">Get Started</a>
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             </div>
