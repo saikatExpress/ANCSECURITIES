@@ -601,67 +601,90 @@
                 <!--/ Title row end -->
 
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="latest-post">
-                            <div class="latest-post-media">
-                                <a href="news-single.html" class="latest-post-img">
-                                    <img loading="lazy" class="img-fluid" src="{{ asset('user/assets/logos/chart-trading-courses-forex.jpg') }}" alt="img">
-                                </a>
-                            </div>
-                            <div class="post-body">
-                                <h4 class="post-title">
-                                    <a href="news-single.html" class="d-inline-block">Stock Market Analysis: Trends and Insights</a>
-                                </h4>
-                                <div class="latest-post-meta">
-                                    <span class="post-item-date">
-                                        <i class="fa fa-clock-o"></i> July 20, 2024
-                                    </span>
+                    @if (count($news) > 0)
+                        @foreach ($news as $item)
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="latest-post">
+                                    <div class="latest-post-media">
+                                        <a href="{{ route('news.read', ['id' => $item->id]) }}" class="latest-post-img">
+                                            <img loading="lazy" style="width: 100%; height:250px;" src="{{ asset('storage/' . $item->news_image) }}" alt="img">
+                                        </a>
+                                    </div>
+                                    <div class="post-body">
+                                        <h4 class="post-title">
+                                            <a href="{{ route('news.read', ['id' => $item->id]) }}" class="d-inline-block">{{ $item->news_title }}</a>
+                                        </h4>
+                                        <div class="latest-post-meta">
+                                            <span class="post-item-date">
+                                                <i class="fa fa-clock-o"></i> {{ $item->created_at->format('Y - d M') }}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div><!-- Latest post end -->
-                    </div><!-- 1st post col end -->
+                        @endforeach
+                    @else
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="latest-post">
+                                <div class="latest-post-media">
+                                    <a href="news-single.html" class="latest-post-img">
+                                        <img loading="lazy" class="img-fluid" src="{{ asset('user/assets/logos/chart-trading-courses-forex.jpg') }}" alt="img">
+                                    </a>
+                                </div>
+                                <div class="post-body">
+                                    <h4 class="post-title">
+                                        <a href="news-single.html" class="d-inline-block">Stock Market Analysis: Trends and Insights</a>
+                                    </h4>
+                                    <div class="latest-post-meta">
+                                        <span class="post-item-date">
+                                            <i class="fa fa-clock-o"></i> July 20, 2024
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="latest-post">
-                            <div class="latest-post-media">
-                                <a href="news-single.html" class="latest-post-img">
-                                    <img loading="lazy" class="img-fluid" src="{{ asset('user/assets/logos/sd-eu-retail-investment-strategy-v1-page-10-temporay.jpg') }}" alt="img">
-                                </a>
-                            </div>
-                            <div class="post-body">
-                                <h4 class="post-title">
-                                    <a href="news-single.html" class="d-inline-block">Investment Strategies for Volatile Markets</a>
-                                </h4>
-                                <div class="latest-post-meta">
-                                    <span class="post-item-date">
-                                        <i class="fa fa-clock-o"></i> June 17, 2024
-                                    </span>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="latest-post">
+                                <div class="latest-post-media">
+                                    <a href="news-single.html" class="latest-post-img">
+                                        <img loading="lazy" class="img-fluid" src="{{ asset('user/assets/logos/sd-eu-retail-investment-strategy-v1-page-10-temporay.jpg') }}" alt="img">
+                                    </a>
                                 </div>
-                            </div>
-                        </div><!-- Latest post end -->
-                    </div><!-- 2nd post col end -->
+                                <div class="post-body">
+                                    <h4 class="post-title">
+                                        <a href="news-single.html" class="d-inline-block">Investment Strategies for Volatile Markets</a>
+                                    </h4>
+                                    <div class="latest-post-meta">
+                                        <span class="post-item-date">
+                                            <i class="fa fa-clock-o"></i> June 17, 2024
+                                        </span>
+                                    </div>
+                                </div>
+                            </div><!-- Latest post end -->
+                        </div>
 
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="latest-post">
-                            <div class="latest-post-media">
-                                <a href="news-single.html" class="latest-post-img">
-                                    <img loading="lazy" class="img-fluid" src="{{ asset('user/assets/logos/1702981193757.jpg') }}" alt="img">
-                                </a>
-                            </div>
-                            <div class="post-body">
-                                <h4 class="post-title">
-                                    <a href="news-single.html" class="d-inline-block">Economic Outlook: Prospects for Growth in Q3</a>
-                                </h4>
-                                <div class="latest-post-meta">
-                                    <span class="post-item-date">
-                                        <i class="fa fa-clock-o"></i> Aug 13, 2024
-                                    </span>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="latest-post">
+                                <div class="latest-post-media">
+                                    <a href="news-single.html" class="latest-post-img">
+                                        <img loading="lazy" class="img-fluid" src="{{ asset('user/assets/logos/1702981193757.jpg') }}" alt="img">
+                                    </a>
                                 </div>
-                            </div>
-                        </div><!-- Latest post end -->
-                    </div><!-- 3rd post col end -->
+                                <div class="post-body">
+                                    <h4 class="post-title">
+                                        <a href="news-single.html" class="d-inline-block">Economic Outlook: Prospects for Growth in Q3</a>
+                                    </h4>
+                                    <div class="latest-post-meta">
+                                        <span class="post-item-date">
+                                            <i class="fa fa-clock-o"></i> Aug 13, 2024
+                                        </span>
+                                    </div>
+                                </div>
+                            </div><!-- Latest post end -->
+                        </div>
+                    @endif
                 </div>
-                <!--/ Content row end -->
 
                 <div class="general-btn text-center mt-4">
                     <a class="btn btn-primary" href="news-left-sidebar.html">See All News</a>

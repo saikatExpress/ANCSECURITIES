@@ -6,12 +6,20 @@ use App\Models\About;
 use App\Models\BOForm;
 use App\Models\Gallery;
 use App\Models\FormUpload;
+use App\Models\NewsPortal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
+    public function welcome()
+    {
+        $data['news'] = NewsPortal::latest()->limit(3)->get();
+
+        return view('welcome')->with($data);
+    }
     public function about()
     {
         $about = About::first();
@@ -98,6 +106,14 @@ class CompanyController extends Controller
             DB::rollback();
             info($e);
         }
+    }
+
+    public function newsRead($id)
+    {
+        $news = NewsPortal::findOrFail($id);
+        $tags = explode(',', $news->tags);
+
+        return view('user.news.read', compact('news', 'tags'));
     }
 
     public function gallery()

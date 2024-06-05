@@ -22,4 +22,22 @@ class NewsPortal extends Model
         'is_read',
         'news_date',
     ];
+
+    protected $casts = [
+        'id'          => 'integer',
+        'category'    => 'integer',
+        'news_title'  => 'string',
+        'quotes'      => 'string',
+        'description' => 'string',
+        'news_image'  => 'string',
+        'tags'        => 'string',
+        'created_by'  => 'string',
+        'updated_by'  => 'string',
+        'is_view'     => 'integer',
+        'is_read'     => 'integer',
+        'news_date'   => 'datetime',
+        'created_at'  => 'datetime',
+        'updated_at'  => 'datetime',
+        'deleted_at'  => 'datetime',
+    ];
 }

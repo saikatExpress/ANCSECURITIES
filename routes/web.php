@@ -46,14 +46,14 @@ Route::get('/clear-cache', function() {
     return "Cache is cleared";
 })->name('clear.cache');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CompanyController::class, 'welcome']);
 
 Route::controller(CompanyController::class)->group(function(){
     Route::get('/about', 'about')->name('about.us');
     Route::get('/contact', 'contact')->name('contact.us');
     Route::get('/faq', 'faq')->name('faq.us');
+    $hashedNewsreadUrl = md5('news/read');
+    Route::get('/'.$hashedNewsreadUrl.'/{id}', 'newsRead')->name('news.read');
     Route::get('/gallery', 'gallery')->name('gallery.us');
     Route::get('/board/director', 'boardDirector')->name('board.director');
     Route::get('/online/bo/system', 'onlineBo')->name('online.bo');
