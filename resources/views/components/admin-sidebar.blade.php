@@ -146,7 +146,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="pages/UI/timeline.html">
+                        <a href="{{ route('leave.list') }}">
                             <i class="fa fa-circle-o"></i>
                             Leave
                         </a>

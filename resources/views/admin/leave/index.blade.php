@@ -13,7 +13,7 @@
             </ol>
             <p style="text-align: right;">
                 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-default">
-                    Add Gallery Items
+                    Add Leave
                 </button>
             </p>
         </section>
@@ -28,45 +28,50 @@
 
             <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Gallery List</h3>
+              <h3 class="box-title">Form List</h3>
             </div>
             <div class="box-body">
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Image</th>
                         <th>Title</th>
+                        <th>No of Leaves</th>
                         <th>Created By</th>
-                        <th>Created Date</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($galleries as $gallery)
+                    @php
+                        $sl = 1;
+                    @endphp
+                    @foreach ($leaves as $leave)
                         <tr class="list-item">
-                            <td>{{ $gallery->id }}</td>
+                            <td>{{ $sl }}</td>
                             <td>
-                                <img style="width: 50px; height:50px; border-radius:50%;" src="{{ asset('gallery_images/' . $gallery->gallery_images) }}" alt="Image">
+                                {{ $leave->leave_type }}
                             </td>
                             <td>
-                                {{ $gallery->title }}
+                                {{ $leave->number_of_leave }}
                             </td>
                             <td>
-                                {{ ($gallery->created_by) ?? 'ANC ADMIN' }}
+                                {{ ($leave->created_by) ?? 'ANC ADMIN' }}
                             </td>
                             <td>
-                                {{ $gallery->created_at->format('d-M-Y') }}
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-sm btn-primary">
+                                <button type="button" class="btn btn-sm btn-primary editBtn"
+                                    data-id="{{ $leave->id }}" data-name="{{ $leave->leave_type }}"
+                                    data-number_of_leave="{{ $leave->number_of_leave }}"
+                                    data-toggle="modal" data-target="#editModal">
                                     Edit
                                 </button>
-                                <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $gallery->id }}">
+                                <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $leave->id }}">
                                     Delete
                                 </button>
                             </td>
                         </tr>
+                        @php
+                            $sl++;
+                        @endphp
                     @endforeach
                 </tbody>
 
@@ -92,28 +97,65 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Add Gallery</h4>
+                    <h4 class="modal-title">Add Leave Type</h4>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('gallery.store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('leave.store') }}" method="post">
                         @csrf
+
                         <div class="form-group">
-                            <label for="">Image Upload</label>
-                            <input type="file" class="form-control-file" name="gallery_image">
-                            @error('gallery_image')
+                            <label for="">Title</label>
+                            <input type="text" class="form-control" name="leave_type" placeholder="Leave type..">
+                            @error('leave_type')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="">Title</label>
-                            <input type="text" class="form-control" name="title">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Description</label>
-                            <textarea name="description" class="form-control"></textarea>
+                            <label for="">Number of leave</label>
+                            <input type="number" class="form-control" name="number_of_leave">
+                            @error('number_of_leave')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Add Leave</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Update Leave Type</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('leave.update') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="leaveId" id="leaveId">
+                        <div class="form-group">
+                            <label for="">Title</label>
+                            <input type="text" class="form-control" id="ltype" name="leave_type" placeholder="Leave type..">
+                            @error('leave_type')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="">Number of leave</label>
+                            <input type="text" class="form-control" id="noOfleav" name="number_of_leave">
+                            @error('number_of_leave')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update Leave</button>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -125,7 +167,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('admin/assets/js/gallery.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/leave.js') }}"></script>
 
     <script>
         $(document).ready(function() {

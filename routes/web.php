@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
+use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AuthController;
@@ -112,6 +113,14 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/'.$hashedAttedanceUrl, 'createAttendance')->name('staff.attendance');
         Route::post('/staff/store', 'store')->name('staff.store');
         Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
+    });
+
+    Route::controller(LeaveController::class)->group(function(){
+        $hashedLeaveUrl = md5('leave/list');
+        Route::get('/'.$hashedLeaveUrl, 'index')->name('leave.list');
+        Route::post('/leave/store', 'store')->name('leave.store');
+        Route::post('/leave/update', 'update')->name('leave.update');
+        Route::get('/leave/delete/{id}', 'destroy');
     });
 
     Route::controller(RoleController::class)->group(function(){
