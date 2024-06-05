@@ -128,7 +128,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="pages/UI/icons.html">
+                        <a href="{{ route('staff.list') }}">
                             <i class="fa fa-circle-o"></i>
                             Staff List
                         </a>
@@ -140,7 +140,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="pages/UI/sliders.html">
+                        <a href="{{ route('staff.attendance') }}">
                             <i class="fa fa-circle-o"></i>
                             Staff Attendance
                         </a>
@@ -148,7 +148,7 @@
                     <li>
                         <a href="pages/UI/timeline.html">
                             <i class="fa fa-circle-o"></i>
-                            Staff Leave
+                            Leave
                         </a>
                     </li>
                 </ul>

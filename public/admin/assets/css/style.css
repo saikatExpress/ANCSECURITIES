@@ -1,0 +1,123 @@
+.attendaceBlock{
+    background-color: greenyellow;
+    padding: 8px 10px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f2f2f2;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table td {
+    color: #555;
+}
+
+.status-present {
+    color: green;
+    font-weight: bold;
+}
+
+.status-absent {
+    color: red;
+    font-weight: bold;
+}
+
+.status-late {
+    color: orange;
+    font-weight: bold;
+}
+
+.status-switch {
+    display: inline-block;
+    position: relative;
+    width: 60px;
+    height: 30px;
+}
+
+.status-switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 30px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(30px);
+}
+
+.status-label {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.status-present {
+    color: green;
+}
+
+.status-absent {
+    color: red;
+}
+
+.absent-details {
+    display: none;
+    margin-top: 10px;
+}
+
+.absent-details input, .absent-details select, .absent-details label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.absent-details label {
+    font-weight: bold;
+}
+

@@ -104,8 +104,14 @@ Route::middleware(['auth'])->group(function(){
     });
 
     Route::controller(StaffController::class)->group(function(){
+        $hashedStaffIndexUrl = md5('staff/list');
+        Route::get('/'.$hashedStaffIndexUrl, 'index')->name('staff.list');
         $hashedStaffUrl = md5('staff/create');
         Route::get('/'.$hashedStaffUrl, 'create')->name('staff.create');
+        $hashedAttedanceUrl = md5('staff/attendace');
+        Route::get('/'.$hashedAttedanceUrl, 'createAttendance')->name('staff.attendance');
+        Route::post('/staff/store', 'store')->name('staff.store');
+        Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
     });
 
     Route::controller(RoleController::class)->group(function(){

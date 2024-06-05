@@ -8,19 +8,18 @@ use Illuminate\Support\Facades\Hash;
 
 class StaffService
 {
-    public function userCreate($name, $email, $mobile,$branchSlug, $role)
+    public function userCreate(string $name, $email, $mobile, string $role)
     {
         try {
             DB::beginTransaction();
 
             $userObj = new User;
 
-            $userObj->branch_slug = $branchSlug;
-            $userObj->first_name  = $name;
-            $userObj->email       = $email;
-            $userObj->mobile      = $mobile;
-            $userObj->password    = Hash::make('123456');
-            $userObj->role        = $role;
+            $userObj->name     = $name;
+            $userObj->email    = $email;
+            $userObj->mobile   = $mobile;
+            $userObj->password = Hash::make('123456');
+            $userObj->role     = $role;
 
             $res = $userObj->save();
 

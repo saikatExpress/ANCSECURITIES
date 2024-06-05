@@ -13,7 +13,7 @@
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
             <p style="text-align: right;">
-                <a class="btn btn-sm btn-primary" href="{{ route('form.list') }}">
+                <a class="btn btn-sm btn-primary" href="{{ route('staff.list') }}">
                     Staff List
                 </a>
             </p>
@@ -33,7 +33,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('staff.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="form-group">
@@ -44,20 +44,20 @@
                             @enderror
                         </div>
 
-                        {{-- <div class="form-group">
+                        <div class="form-group">
                             <label for="">Branch</label>
                             <select name="branch-slug" id="branchSlug" class="form-control">
                                 <option value="">Nothing select</option>
-                                @foreach ($branches as $key => $branch)
+                                {{-- @foreach ($branches as $key => $branch)
                                     <option value="{{ $branch->slug }}">{{ $branch->branch_name }}</option>
-                                @endforeach
+                                @endforeach --}}
                             </select>
 
                             @error('branch-slug')
                                 <div class="alert alert-danger">{{ $message }}</div>
                             @enderror
 
-                        </div> --}}
+                        </div>
 
                         <div class="form-group">
                             <label>Name</label>
@@ -167,9 +167,9 @@
                             <label>Role</label>
                             <select name="role" class="form-control">
                                 <option>Select Role</option>
-                                <option value="">Admin</option>
-                                <option value="">Customer</option>
-                                <option value="">Executive</option>
+                                <option value="admin">Admin</option>
+                                <option value="user">Customer</option>
+                                <option value="employee">Employee</option>
                             </select>
                         </div>
 
