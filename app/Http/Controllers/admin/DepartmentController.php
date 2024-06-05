@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\admin;
 
 use Carbon\Carbon;
-use App\Models\Designation;
+use App\Models\Department;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use SebastianBergmann\CodeUnit\FunctionUnit;
 
-class DesignationController extends Controller
+class DepartmentController extends Controller
 {
     public function __construct()
     {
@@ -22,10 +23,10 @@ class DesignationController extends Controller
 
     public function index()
     {
-        $data['pageTitle'] = 'Designation List';
-        $data['designations'] = Designation::all();
+        $data['pageTitle'] = 'Department List';
+        $data['departments'] = Department::all();
 
-        return view('admin.designation.index')->with($data);
+        return view('admin.department.index')->with($data);
     }
 
     public function store(Request $request)
@@ -34,7 +35,7 @@ class DesignationController extends Controller
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'name' => ['required'],
+                'name' => ['required', 'string'],
             ]);
 
             if ($validator->fails()) {
@@ -43,21 +44,18 @@ class DesignationController extends Controller
                             ->withInput();
             }
 
-            $name        = $request->input('name');
-            $description = $request->input('description', NULL);
+            $departmentObj = new Department();
 
-            $designationObj = new Designation();
+            $departmentObj->name        = Str::title($request->input('name'));
+            $departmentObj->slug        = Str::slug($request->input('name'), '-');
+            $departmentObj->description = Str::title($request->input('description'));
+            $departmentObj->created_by  = auth()->user()->name;
 
-            $designationObj->name        = Str::title($name);
-            $designationObj->slug        = Str::slug($name, '-');
-            $designationObj->description = $description;
-            $designationObj->created_by  = auth()->user()->name;
-
-            $res = $designationObj->save();
+            $res = $departmentObj->save();
 
             DB::commit();
             if($res){
-                return back()->with('message', 'Designation created successfully');
+                return back()->with('message','Department created successfully');
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -81,22 +79,22 @@ class DesignationController extends Controller
                             ->withInput();
             }
 
-            $designationId        = $request->input('designationId');
-            $designation = Designation::findOrFail($designationId);
+            $departmentId = $request->input('departmentId');
+            $department   = Department::findOrFail($departmentId);
 
             $name        = $request->input('dName');
-            $description = $request->input('dDescription', NULL);
             $status      = $request->input('status');
+            $description = $request->input('dDescription', NULL);
 
-            if($designation){
-                $designation->name        = Str::title($name);
-                $designation->slug        = Str::slug($name, '-');
-                $designation->description = $description;
-                $designation->updated_by  = auth()->user()->name;
-                $designation->status      = $status;
-                $designation->updated_at  = Carbon::now();
+            if($department){
+                $department->name        = Str::title($name);
+                $department->slug        = Str::slug($name, '-');
+                $department->description = $description;
+                $department->updated_by  = auth()->user()->name;
+                $department->status      = $status;
+                $department->updated_at  = Carbon::now();
 
-                $res = $designation->save();
+                $res = $department->save();
 
                 DB::commit();
                 if($res){
@@ -117,17 +115,17 @@ class DesignationController extends Controller
         try {
             DB::beginTransaction();
 
-            $designation = Designation::find($id);
+            $department = Department::find($id);
 
-            if (!$designation) {
-                return response()->json(['message' => 'Designation not found.'], 404);
+            if (!$department) {
+                return response()->json(['message' => 'Department not found.'], 404);
             }
 
-            $res = $designation->delete();
+            $res = $department->delete();
 
             DB::commit();
             if($res){
-                return response()->json(['message' => 'Designation deleted successfully.']);
+                return response()->json(['message' => 'Department deleted successfully.']);
             }
         } catch (\Exception $e) {
             DB::rollback();

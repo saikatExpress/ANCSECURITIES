@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AboutController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
@@ -121,6 +122,14 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/leave/store', 'store')->name('leave.store');
         Route::post('/leave/update', 'update')->name('leave.update');
         Route::get('/leave/delete/{id}', 'destroy');
+    });
+
+    Route::controller(DepartmentController::class)->group(function(){
+        $hashedDepartmentUrl = md5('department/list');
+        Route::get('/'.$hashedDepartmentUrl, 'index')->name('department.list');
+        Route::post('/department/store', 'store')->name('department.store');
+        Route::post('/department/update', 'update')->name('department.update');
+        Route::get('/department/delete/{id}', 'destroy');
     });
 
     Route::controller(RoleController::class)->group(function(){
