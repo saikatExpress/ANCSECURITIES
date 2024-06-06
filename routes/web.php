@@ -79,7 +79,7 @@ Route::controller(AuthController::class)->group(function(){
     Route::post('/log/store', 'logStore')->name('log.store');
 });
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth', 'CheckAdmin'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         $hashedAdminUrl = md5('admin/dashboard');
         Route::get('/'.$hashedAdminUrl, 'index')->name('admin.dashboard');
