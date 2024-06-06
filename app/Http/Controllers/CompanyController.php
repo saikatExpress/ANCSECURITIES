@@ -96,6 +96,7 @@ class CompanyController extends Controller
             $boFormObj = new BOForm();
 
             $client_name     = $request->input('client_name');
+            $clientSlug      = Str::slug($request->input('client_name'), '-');
             $father_name     = $request->input('father_name');
             $mother_name     = $request->input('mother_name');
             $gender          = $request->input('gender');
@@ -133,14 +134,98 @@ class CompanyController extends Controller
                 $image = $request->file('user_photo');
                 $user_photo = time().'.'.$image->getClientOriginalExtension();
                 $image->move(public_path('user_photo'), $user_photo);
-                $boFormObj->nid_attachment = $user_photo;
+                $boFormObj->user_photo = $user_photo;
             }
 
             if ($request->hasFile('user_signature')) {
                 $image = $request->file('user_signature');
                 $user_signature = time().'.'.$image->getClientOriginalExtension();
                 $image->move(public_path('user_signature'), $user_signature);
-                $boFormObj->nid_attachment = $user_signature;
+                $boFormObj->user_signature = $user_signature;
+            }
+
+            if ($request->hasFile('cheque_leaf')) {
+                $image = $request->file('cheque_leaf');
+                $cheque_leaf = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('cheque_leaf'), $cheque_leaf);
+                $boFormObj->cheque_leaf = $cheque_leaf;
+            }
+
+            if ($request->hasFile('n_nid_attachment')) {
+                $image = $request->file('n_nid_attachment');
+                $n_nid_attachment = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('n_nid_attachment'), $n_nid_attachment);
+                $boFormObj->n_nid_attachment = $n_nid_attachment;
+            }
+
+            if ($request->hasFile('n_photo')) {
+                $image = $request->file('n_photo');
+                $n_photo = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('n_photo'), $n_photo);
+                $boFormObj->n_photo = $n_photo;
+            }
+
+            if ($request->hasFile('n_signature')) {
+                $image = $request->file('n_signature');
+                $n_signature = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('n_signature'), $n_signature);
+                $boFormObj->n_signature = $n_signature;
+            }
+
+            if ($request->hasFile('j_nid_attachment')) {
+                $image = $request->file('j_nid_attachment');
+                $j_nid_attachment = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('j_nid_attachment'), $j_nid_attachment);
+                $boFormObj->j_nid_attachment = $j_nid_attachment;
+            }
+
+            if ($request->hasFile('j_signature')) {
+                $image = $request->file('j_signature');
+                $j_signature = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('j_signature'), $j_signature);
+                $boFormObj->j_signature = $j_signature;
+            }
+
+            if ($request->hasFile('j_photo')) {
+                $image = $request->file('j_photo');
+                $j_photo = time().'.'.$image->getClientOriginalExtension();
+                $image->move(public_path('j_photo'), $j_photo);
+                $boFormObj->j_photo = $j_photo;
+            }
+
+            $boFormObj->client_name     = Str::title($request->input('client_name'));
+            $boFormObj->father_name     = Str::title($request->input('father_name'));
+            $boFormObj->mother_name     = Str::title($request->input('mother_name'));
+            $boFormObj->gender          = $request->input('gender');
+            $boFormObj->dob             = $request->input('dob');
+            $boFormObj->occupation      = $request->input('occupation');
+            $boFormObj->address         = $request->input('address');
+            $boFormObj->city            = $request->input('city');
+            $boFormObj->postal_code     = $request->input('postal_code');
+            $boFormObj->division        = $request->input('division');
+            $boFormObj->country         = $request->input('country');
+            $boFormObj->mobile          = $request->input('mobile');
+            $boFormObj->email           = $request->input('email');
+            $boFormObj->nid_no          = $request->input('nid_no');
+            $boFormObj->bank_name       = Str::title($request->input('bank_name'));
+            $boFormObj->branch_name     = Str::title($request->input('branch_name'));
+            $boFormObj->bank_account_no = $request->input('bank_account_no');
+            $boFormObj->routing_number  = $request->input('routing_number');
+            $boFormObj->nominee_name    = Str::title($request->input('nominee_name'));
+            $boFormObj->n_relationship  = $request->input('n_relationship');
+            $boFormObj->percentage      = $request->input('percentage');
+            $boFormObj->n_mobile        = $request->input('n_mobile');
+            $boFormObj->n_nid           = $request->input('n_nid');
+            $boFormObj->j_name          = $request->input('j_name');
+            $boFormObj->j_mobile        = $request->input('j_mobile');
+            $boFormObj->j_gender        = $request->input('j_gender');
+            $boFormObj->j_nid           = $request->input('j_nid');
+
+            $res = $boFormObj->save();
+
+            DB::commit();
+            if($res){
+                return back()->with('message', 'Your form was submitted successfully');
             }
 
         } catch (\Exception $e) {

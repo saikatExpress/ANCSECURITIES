@@ -19,6 +19,7 @@
             </h6>
 
             <form action="{{ route('bo.store') }}" method="post" style="width: 100%;" enctype="multipart/form-data">
+                @csrf
                 <div style="box-shadow: 0 0 10px rgba(0,0,0,0.1); padding:5px 8px 5px;">
                     <div class="row">
                         <div class="col-md-6">
