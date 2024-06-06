@@ -181,7 +181,7 @@
 
                                 <div class="entry-content">
                                     <p>
-                                        {{ implode(' ', array_slice(str_word_count($post->description, 1), 0, 100)) }} ...
+                                        {{ truncate_text($post->description, 150, isBangla($post->description)) }}
                                     </p>
                                 </div>
 
