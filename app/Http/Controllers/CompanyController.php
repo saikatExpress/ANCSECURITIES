@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\About;
 use App\Models\BOForm;
+use App\Models\Contact;
 use App\Models\Gallery;
 use App\Models\FormUpload;
 use App\Models\NewsPortal;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
@@ -30,6 +33,44 @@ class CompanyController extends Controller
     public function contact()
     {
         return view('global.contact');
+    }
+
+    public function contactStore(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'name'    => ['required', 'string'],
+                'email'   => ['required', 'email'],
+                'subject' => ['required', 'string'],
+                'message' => ['required', 'string'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+            $contactObj = new Contact();
+
+            $contactObj->name    = Str::title($request->input('name'));
+            $contactObj->email   = $request->input('email');
+            $contactObj->subject = Str::title($request->input('subject'));
+            $contactObj->message = $request->input('message');
+
+            $res = $contactObj->save();
+
+            DB::commit();
+            if($res){
+                return response()->json(['success' => true]);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            return;
+        }
     }
 
     public function faq()

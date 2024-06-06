@@ -51,6 +51,7 @@ Route::get('/', [CompanyController::class, 'welcome']);
 Route::controller(CompanyController::class)->group(function(){
     Route::get('/about', 'about')->name('about.us');
     Route::get('/contact', 'contact')->name('contact.us');
+    Route::post('/contact/store', 'contactStore')->name('contact.store');
     Route::get('/faq', 'faq')->name('faq.us');
     $hashedNewsreadUrl = md5('news/read');
     Route::get('/'.$hashedNewsreadUrl.'/{id}', 'newsRead')->name('news.read');

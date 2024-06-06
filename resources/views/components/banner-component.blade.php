@@ -1,4 +1,24 @@
 <div class="banner-carousel banner-carousel-1 mb-0">
+    @if (count($banners) > 0)
+        @foreach ($banners as $banner)
+            <div class="banner-carousel-item" style="background-image:url({{ asset('banner_images/'. $banner->banner_image) }})">
+                <div class="slider-content">
+                    <div class="container h-100">
+                    <div class="row align-items-center h-100">
+                        <div class="col-md-12 text-center">
+                            <h2 class="slide-title" data-animation-in="slideInLeft">{{ $banner->banner_title }}</h2>
+                            <h3 class="slide-sub-title" data-animation-in="slideInRight">{{ $banner->short_title }}</h3>
+                            <p data-animation-in="slideInLeft" data-duration-in="1.2">
+                                <a href="#" class="slider btn btn-primary">Our Services</a>
+                                <a href="{{ route('contact.us') }}" class="slider btn btn-primary border">Contact Now</a>
+                            </p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @else
         <div class="banner-carousel-item" style="background-image:url({{ asset('user/assets/banner/banner1.jpg') }})">
             <div class="slider-content">
                 <div class="container h-100">
@@ -50,4 +70,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    @endif
+</div>
