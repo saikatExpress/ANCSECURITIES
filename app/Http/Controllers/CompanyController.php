@@ -108,12 +108,29 @@ class CompanyController extends Controller
         }
     }
 
+    public function allNews()
+    {
+        $data['recentPosts'] = NewsPortal::latest()->limit(3)->get();
+        $data['allPosts'] = NewsPortal::paginate(3);
+        $data['allTags'] = NewsPortal::all();
+
+        $tags = array();
+        foreach($data['allTags'] as $post){
+            $tags = array_merge($tags, explode(',', $post->tags));
+        }
+
+        $data['uniqueTags'] = array_unique($tags);
+
+        return view('user.news.index')->with($data);
+    }
+
     public function newsRead($id)
     {
-        $news = NewsPortal::findOrFail($id);
-        $tags = explode(',', $news->tags);
+        $news        = NewsPortal::findOrFail($id);
+        $tags        = explode(',', $news->tags);
+        $recentPosts = NewsPortal::whereNot('id', $id)->latest()->limit(3)->get();
 
-        return view('user.news.read', compact('news', 'tags'));
+        return view('user.news.read', compact('news', 'tags', 'recentPosts'));
     }
 
     public function gallery()

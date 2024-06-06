@@ -687,7 +687,7 @@
                 </div>
 
                 <div class="general-btn text-center mt-4">
-                    <a class="btn btn-primary" href="news-left-sidebar.html">See All News</a>
+                    <a class="btn btn-primary" href="{{ route('all.news') }}">See All News</a>
                 </div>
 
             </div>

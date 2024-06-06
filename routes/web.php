@@ -54,6 +54,8 @@ Route::controller(CompanyController::class)->group(function(){
     Route::get('/faq', 'faq')->name('faq.us');
     $hashedNewsreadUrl = md5('news/read');
     Route::get('/'.$hashedNewsreadUrl.'/{id}', 'newsRead')->name('news.read');
+    $hashedAllnewsUrl = md5('all/news');
+    Route::get('/'.$hashedAllnewsUrl, 'allNews')->name('all.news');
     Route::get('/gallery', 'gallery')->name('gallery.us');
     Route::get('/board/director', 'boardDirector')->name('board.director');
     Route::get('/online/bo/system', 'onlineBo')->name('online.bo');
