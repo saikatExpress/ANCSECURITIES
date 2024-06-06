@@ -205,10 +205,10 @@
             </li>
 
             <li>
-                <a href="pages/widgets.html">
+                <a href="{{ route('bo.list') }}">
                     <i class="fa fa-th"></i> <span>BO FORM</span>
                     <span class="pull-right-container">
-                    <small class="label pull-right bg-green">5</small>
+                    <small class="label pull-right bg-green">{{ $totalForms }}</small>
                     </span>
                 </a>
             </li>

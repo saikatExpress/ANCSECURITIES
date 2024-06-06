@@ -85,6 +85,10 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/'.$hashedAdminUrl, 'index')->name('admin.dashboard');
         $hashedDirectorUrl = md5('create/director');
         Route::get('/'.$hashedDirectorUrl, 'create')->name('director.create');
+        $hashedBoUrl = md5('bo/list');
+        Route::get('/'.$hashedBoUrl, 'boIndex')->name('bo.list');
+        $hashedShowFormUrl = md5('show/form');
+        Route::get('/'.$hashedShowFormUrl.'/{id}', 'showForm')->name('show.form');
     });
 
     Route::controller(BannerController::class)->group(function(){

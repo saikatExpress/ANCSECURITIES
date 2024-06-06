@@ -4,6 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BOForm;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -25,5 +26,18 @@ class AdminController extends Controller
         $pageTitle = 'Create Director';
 
         return view('admin.director.create', compact('pageTitle'));
+    }
+
+    public function boIndex()
+    {
+        $pageTitle = 'BO Form List';
+        $boForms = BOForm::latest()->get();
+
+        return view('admin.bo.index', compact('pageTitle', 'boForms'));
+    }
+
+    public function showForm($id)
+    {
+        return view('admin.bo.show');
     }
 }
