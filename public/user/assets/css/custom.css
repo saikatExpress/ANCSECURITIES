@@ -1,0 +1,17 @@
+.bocard{
+    text-align: center;
+    background-color: #f1f1f1;
+    color: black;
+    padding: 10px;
+    border-radius: 15px;
+    height: 150px;
+    transition: 0.3s;
+}
+
+.bocard i{
+    color: green;
+}
+.bocard {
+    color: #000;
+    font-weight: 600;
+}

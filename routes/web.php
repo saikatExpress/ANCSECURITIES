@@ -61,6 +61,7 @@ Route::controller(CompanyController::class)->group(function(){
     Route::get('/gallery', 'gallery')->name('gallery.us');
     Route::get('/board/director', 'boardDirector')->name('board.director');
     Route::get('/online/bo/system', 'onlineBo')->name('online.bo');
+    Route::get('/new/bo', 'newBo')->name('new.bo');
     Route::post('/bo/store', 'store')->name('bo.store');
     Route::get('/form/download/{id}', 'formDownload')->name('form.download');
 });

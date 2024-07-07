@@ -85,7 +85,12 @@ class CompanyController extends Controller
 
     public function onlineBo()
     {
-        return view('global.bo');
+        return view('global.boinfo');
+    }
+
+    public function newBo()
+    {
+        return view('global.newbo');
     }
 
     public function store(Request $request)

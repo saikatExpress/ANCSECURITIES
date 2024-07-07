@@ -25,6 +25,7 @@
         <link rel="stylesheet" href="{{ asset('user/assets/plugins/colorbox/colorbox.css') }}">
         <!-- Template styles-->
         <link rel="stylesheet" href="{{ asset('user/assets/css/style.css') }}">
+        <link rel="stylesheet" href="{{ asset('user/assets/css/custom.css') }}">
     </head>
 
     <body>
