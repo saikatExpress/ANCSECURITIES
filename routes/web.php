@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AboutController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\admin\BoController;
 use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\FormController;
@@ -87,6 +88,9 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/'.$hashedDirectorUrl, 'create')->name('director.create');
         $hashedBoUrl = md5('bo/list');
         Route::get('/'.$hashedBoUrl, 'boIndex')->name('bo.list');
+    });
+
+    Route::controller(BoController::class)->group(function(){
         $hashedShowFormUrl = md5('show/form');
         Route::get('/'.$hashedShowFormUrl.'/{id}', 'showForm')->name('show.form');
     });

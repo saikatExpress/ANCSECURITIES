@@ -35,9 +35,4 @@ class AdminController extends Controller
 
         return view('admin.bo.index', compact('pageTitle', 'boForms'));
     }
-
-    public function showForm($id)
-    {
-        return view('admin.bo.show');
-    }
 }
