@@ -245,6 +245,29 @@
                 </ul>
             </li>
 
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-folder"></i> <span>DP</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="{{ route('create.dp') }}">
+                            <i class="fa fa-circle-o"></i>
+                            Add DP
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pages/examples/profile.html">
+                            <i class="fa fa-circle-o"></i>
+                            DP List
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
             <li>
                 <a href="pages/calendar.html">
                     <i class="fa fa-calendar"></i> <span>Calendar</span>

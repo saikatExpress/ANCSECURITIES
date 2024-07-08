@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\BoController;
 use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\admin\DesignationController;
+use App\Http\Controllers\admin\DpController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\LeaveController;
@@ -116,6 +117,12 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         $hashedAboutUrl = md5('create/about');
         Route::get('/'.$hashedAboutUrl, 'create')->name('about.create');
         Route::post('/about/store', 'store')->name('about.store');
+    });
+
+    Route::controller(DpController::class)->group(function(){
+        Route::get('/dp/list', 'index')->name('dp.list');
+        Route::get('/create/dp', 'create')->name('create.dp');
+        Route::post('/dp/store', 'store')->name('dp.store');
     });
 
     Route::controller(StaffController::class)->group(function(){
