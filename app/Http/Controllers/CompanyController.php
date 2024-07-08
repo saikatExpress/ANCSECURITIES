@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\About;
 use App\Models\BOForm;
 use App\Models\Contact;
+use App\Models\Country;
 use App\Models\Gallery;
 use App\Models\FormUpload;
 use App\Models\NewsPortal;
@@ -90,7 +91,9 @@ class CompanyController extends Controller
 
     public function newBo()
     {
-        return view('global.newbo');
+        $countries = Country::all();
+
+        return view('global.newbo', compact('countries'));
     }
 
     public function store(Request $request)
