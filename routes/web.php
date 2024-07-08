@@ -11,6 +11,7 @@ use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\NewsController;
+use App\Http\Controllers\admin\PortfolioController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AuthController;
@@ -117,6 +118,13 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         $hashedAboutUrl = md5('create/about');
         Route::get('/'.$hashedAboutUrl, 'create')->name('about.create');
         Route::post('/about/store', 'store')->name('about.store');
+    });
+
+    Route::controller(PortfolioController::class)->group(function(){
+        Route::get('/portfolio/list', 'index')->name('portfolio.list');
+        Route::get('/create/portfolio', 'create')->name('create.portfolio');
+        Route::post('/upload-pdfs', 'uploadPDFs');
+        Route::get('/delete/portfolio', 'destroy')->name('delete.portfolio');
     });
 
     Route::controller(DpController::class)->group(function(){

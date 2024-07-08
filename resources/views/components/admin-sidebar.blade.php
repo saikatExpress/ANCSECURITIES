@@ -247,6 +247,29 @@
 
             <li class="treeview">
                 <a href="#">
+                    <i class="fa-solid fa-file-pdf"></i> <span>Portfolio Statement</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="{{ route('create.portfolio') }}">
+                            <i class="fa fa-circle-o"></i>
+                            Upload Portfolio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('portfolio.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            Portfolio List
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="treeview">
+                <a href="#">
                     <i class="fa fa-folder"></i> <span>DP</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
