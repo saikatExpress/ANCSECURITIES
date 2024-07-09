@@ -96,6 +96,8 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
     Route::controller(BoController::class)->group(function(){
         $hashedShowFormUrl = md5('show/form');
         Route::get('/'.$hashedShowFormUrl.'/{id}', 'showForm')->name('show.form');
+        Route::get('/create/bo', 'create')->name('create.bo');
+        Route::post('/account/store', 'acStore')->name('acbo.store');
     });
 
     Route::controller(BannerController::class)->group(function(){

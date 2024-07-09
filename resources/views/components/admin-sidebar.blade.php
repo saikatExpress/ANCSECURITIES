@@ -79,6 +79,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('create.bo') }}">
+                            <i class="fa fa-circle-o"></i>
+                            Add BO ID
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('role.list') }}">
                             <i class="fa fa-circle-o"></i>
                             Role

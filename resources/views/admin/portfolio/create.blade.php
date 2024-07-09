@@ -114,7 +114,7 @@
             <h1>Upload Portfolio Statement</h1>
 
             <!-- Message prompting users to delete previous portfolio statement -->
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-danger" role="alert">
                 Please first delete the previous portfolio statement from the menu bar and then upload a new portfolio statement.
             </div>
 
