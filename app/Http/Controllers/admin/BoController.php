@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\BOForm;
+use App\Imports\BoImport;
+use App\Models\BoAccount;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\BoAccount;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 
 class BoController extends Controller
@@ -26,6 +28,25 @@ class BoController extends Controller
         $data['bos'] = BoAccount::latest()->get();
 
         return view('admin.bo.create')->with($data);
+    }
+
+    public function uploadExcel(Request $request)
+    {
+        $request->validate([
+            'bo_file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        if ($request->hasFile('bo_file')) {
+            $file = $request->file('bo_file');
+            $filePath = $file->storeAs('uploads', $file->getClientOriginalName());
+
+            // Import the data to the database
+            Excel::import(new BoImport, $filePath);
+
+            return redirect()->back()->with('message','File uploaded and data imported successfully');
+        }
+
+        return response()->json(['error' => 'File upload failed'], 500);
     }
 
     public function acStore(Request $request)

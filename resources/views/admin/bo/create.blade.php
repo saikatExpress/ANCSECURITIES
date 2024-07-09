@@ -55,15 +55,12 @@
                             </td>
 
                             <td>
-                                <a href="{{ route('show.form', ['id' => $form->id]) }}" class="btn btn-sm btn-primary">
-                                    View
-                                </a>
+                                <button type="button" class="btn btn-sm btn-primary">
+                                    Edit
+                                </button>
                                 <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $form->id }}">
                                     Delete
                                 </button>
-                                <a href="{{ route('get.form', ['id' => $form->id]) }}" class="btn btn-sm btn-warning">
-                                    Download
-                                </a>
                             </td>
                         </tr>
                     @endforeach
@@ -123,16 +120,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="" method="post" enctype="multipart/form-data">
+                <form id="uploadForm" method="post" action="{{ route('upload.excel') }}" enctype="multipart/form-data">
+                    @csrf
                     <div class="form-group">
                         <label for="">File Upload : <span class="text-danger"> * </span></label>
-                        <input type="text" name="bo_file" id="bo_file" class="form-control">
+                        <input type="file" name="bo_file" id="bo_file" class="form-control">
                     </div>
+
+                    <button type="submit" class="btn btn-primary" id="saveChanges">Upload File</button>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
             </div>
         </div>
@@ -152,4 +151,9 @@
             }, 3000);
         });
     </script>
+
+    <script>
+
+    </script>
+
 @endsection

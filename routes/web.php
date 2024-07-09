@@ -98,6 +98,8 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/'.$hashedShowFormUrl.'/{id}', 'showForm')->name('show.form');
         Route::get('/create/bo', 'create')->name('create.bo');
         Route::post('/account/store', 'acStore')->name('acbo.store');
+        Route::post('/upload-excel','uploadExcel')->name('upload.excel');
+
     });
 
     Route::controller(BannerController::class)->group(function(){
