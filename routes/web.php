@@ -16,6 +16,7 @@ use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -81,6 +82,12 @@ Route::controller(AuthController::class)->group(function(){
     $hashedSignUpurl = md5('registation/store');
     Route::post('/' . $hashedSignUpurl, 'store')->name('regisation.store');
     Route::post('/log/store', 'logStore')->name('log.store');
+});
+
+Route::middleware(['user.guard'])->group(function(){
+    Route::controller(PaymentController::class)->group(function(){
+        Route::get('/fund/withdraw', 'fundWithdrawCreate')->name('fund.withdraw');
+    });
 });
 
 Route::middleware(['auth', 'CheckAdmin'])->group(function(){

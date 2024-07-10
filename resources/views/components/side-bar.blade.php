@@ -56,8 +56,16 @@
                                 <li class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Services <i class="fa fa-angle-down"></i></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="services.html">Fund withdraw request generate</a></li>
-                                        <li><a href="service-single.html">Fund deposite request generate</a></li>
+                                        <li>
+                                            <a href="{{ route('fund.withdraw') }}">
+                                                Fund withdraw request generate
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="service-single.html">
+                                                Fund deposite request generate
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
 
