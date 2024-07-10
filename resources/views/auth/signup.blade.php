@@ -243,5 +243,24 @@
         });
     </script>
 
+    <script>
+        $(document).ready(function(){
+            $('#tradingCode').on('input', function(){
+                var id = $(this).val();
+
+                $.ajax({
+                    url: '/get/bo/id/' + id,
+                    method: 'GET',
+                    success: function(response){
+
+                    },
+                    error: function(error){
+
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>
