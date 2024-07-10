@@ -17,6 +17,7 @@ use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\UserCOntroller;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -93,6 +94,10 @@ Route::controller(AuthController::class)->group(function(){
 Route::middleware(['user.guard'])->group(function(){
     Route::controller(PaymentController::class)->group(function(){
         Route::get('/fund/withdraw', 'fundWithdrawCreate')->name('fund.withdraw');
+    });
+
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/user/dashboard', 'userDashboard')->name('user.dashboard');
     });
 });
 

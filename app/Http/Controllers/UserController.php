@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PaymentController extends Controller
+class UserController extends Controller
 {
     public function __construct()
     {
@@ -14,9 +14,8 @@ class PaymentController extends Controller
         }
     }
 
-
-    public function fundWithdrawCreate()
+    public function userDashboard()
     {
-        return view('user.fund.withdraw');
+        return view('authuser.index');
     }
 }
