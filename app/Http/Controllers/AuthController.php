@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\User;
+use App\Mail\OTPMail;
+use App\Models\BoAccount;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -44,34 +48,185 @@ class AuthController extends Controller
                             ->withInput();
             }
 
-            $userObj = new User();
+            $tradingCode = $request->input('trading_code');
 
-            $name         = Str::title($request->input('name'));
-            $email        = $request->input('email');
-            $mobile       = $request->input('mobile');
-            $trading_code = $request->input('trading_code');
-            $password     = $request->input('password');
+            $tradingExit = BoAccount::where('bo_id', $tradingCode)->first();
 
-            $userObj->name         = $name;
-            $userObj->email        = $email;
-            $userObj->mobile       = $mobile;
-            $userObj->whatsapp     = $mobile;
-            $userObj->trading_code = $trading_code;
-            $userObj->password     = Hash::make($password);
-
-            $res = $userObj->save();
-
-            DB::commit();
-            if($res){
-                session()->flash('message', 'Registration successful! Please log in.');
-                return response()->json(['success' => true]);
+            if(!$tradingExit){
+                return response()->json(['error' => false, 'message' => 'Sorry... Tradecode not match...!']);
             }
+
+            $inputName           = $request->input('name');
+            $formattedInputName  = strtolower(str_replace(' ', '', $inputName));
+            $formattedStoredName = strtolower(str_replace(' ', '', $tradingExit->name));
+            $inputEmail          = $request->input('email');
+            $inputMobile         = $request->input('mobile');
+
+            if ($formattedInputName === $formattedStoredName && $tradingExit->email == $inputEmail && $tradingExit->cell_no == $inputMobile) {
+                $otp = $this->generateOTP();
+
+                Session::put('otp', $otp);
+
+                Mail::to($request->input('email'))->send(new OTPMail($otp));
+
+                $userObj = new User();
+
+                $name        = Str::title($request->input('name'));
+                $inputEmail = $request->input('email');
+                $inputMobile = $request->input('mobile');
+                $password    = $request->input('password');
+
+                $userObj->name         = $name;
+                $userObj->email        = $inputEmail;
+                $userObj->mobile       = $inputMobile;
+                $userObj->whatsapp     = $inputMobile;
+                $userObj->otp          = $otp;
+                $userObj->trading_code = $tradingCode;
+                $userObj->password     = Hash::make($password);
+                $userObj->status       = 'deactive';
+
+                $res = $userObj->save();
+
+                DB::commit();
+                if($res){
+                    session()->flash('message', 'Registration successful! Please log in.');
+
+                    return response()->json(['success' => true]);
+                }
+            }else{
+                return response()->json(['error' => false, 'message' => 'Email or mobile number does not match with trading code']);
+            }
+
+
         } catch (\Exception $e) {
             DB::rollback();
             info($e);
             Log::error($e->getMessage());
             return response()->json(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
         }
+    }
+
+    public function checkOTP(Request $request)
+    {
+        $email = $request->query('email');
+        $otp = $request->query('otp');
+
+        if ($email && $otp) {
+            if ($this->verifyOTP($email, $otp)) {
+                return response()->json(['valid' => true, 'message' => 'OTP verified successfully']);
+            } else {
+                return response()->json(['valid' => false, 'message' => 'Invalid OTP']);
+            }
+        } else {
+            return response()->json(['valid' => false, 'message' => 'Email or OTP not provided']);
+        }
+    }
+
+    // Example function to verify OTP (replace with your actual verification logic)
+    private function verifyOTP($email, $otp)
+    {
+        $user = User::where('email', $email)->first();
+
+        $storedOTP = $user->otp;
+
+        return $otp === $storedOTP;
+    }
+
+    public function otpStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'otp_confirmation' => ['required'],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
+
+        $otp      = $request->input('otp_confirmation');
+        $otpEmail = $request->input('otpEmail');
+
+        $user = User::where('email', $otpEmail)->first();
+
+        if($user){
+            if($user->otp == $otp){
+                $user->update(['status' => 'active']);
+                session()->flash('message', 'Registration successful! Please log in.');
+
+                return response()->json(['success' => true]);
+            }
+        }
+        return response()->json(['success' => false, 'message' => 'An error occurred']);
+    }
+
+    public function getNameCheck(Request $request)
+    {
+        $name = $request->query('name');
+        $tradingCode = $request->query('tradingCode');
+
+        $clientInfo = BoAccount::where('bo_id', $tradingCode)->first();
+
+        if ($clientInfo) {
+            // Format both names for comparison
+            $formattedInputName = strtolower(str_replace(' ', '', $name));
+            $formattedStoredName = strtolower(str_replace(' ', '', $clientInfo->name));
+
+            if ($formattedInputName === $formattedStoredName) {
+                return response()->json(['success' => true]);
+            }
+        }
+
+        return response()->json(['error' => false]);
+    }
+
+    public function getEmailCheck(Request $request)
+    {
+        $email = $request->query('email');
+        $tradingCode = $request->query('tradingCode');
+
+        $clientInfo = BoAccount::where('bo_id', $tradingCode)->first();
+
+        if ($clientInfo) {
+
+            if ($clientInfo->email === $email) {
+                return response()->json(['success' => true]);
+            }
+        }
+
+        return response()->json(['error' => false]);
+    }
+
+    public function getMobileCheck(Request $request)
+    {
+        $mobile = $request->query('mobile');
+        $tradingCode = $request->query('tradingCode');
+
+        $clientInfo = BoAccount::where('bo_id', $tradingCode)->first();
+
+        if ($clientInfo) {
+
+            if ($clientInfo->cell_no === $mobile) {
+                return response()->json(['success' => true]);
+            }
+        }
+
+        return response()->json(['error' => false]);
+    }
+
+
+    private function generateOTP()
+    {
+        return str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+    }
+
+    public function getTradeCode($code)
+    {
+        $tradeCode = BoAccount::where('bo_id', $code)->first();
+
+        if($tradeCode){
+            return response()->json(['success' => true, 'traderInfo' => $tradeCode]);
+        }
+
+        return response()->json(['error' => false]);
     }
 
     public function logStore(Request $request)
@@ -105,12 +260,14 @@ class AuthController extends Controller
             }
 
             $credentials = $request->only('email', 'password');
+
             if (Auth::attempt($credentials)) {
                 $authUser = Auth::user();
                 $request->session()->regenerate();
                 $request->session()->put('user_id', $authUser->id);
 
                 if ($user->role === 'user') {
+                    return 'user';
                     $user->update(['otp' => null, 'user_agent' => $request->header('User-Agent'), 'last_login_at' => Carbon::now()]);
                     return response()->json(['success' => 'Login successful', 'redirect' => route('user.dashboard')]);
                 } elseif ($user->role === 'admin') {

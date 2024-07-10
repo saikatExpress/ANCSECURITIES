@@ -82,6 +82,12 @@ Route::controller(AuthController::class)->group(function(){
     $hashedSignUpurl = md5('registation/store');
     Route::post('/' . $hashedSignUpurl, 'store')->name('regisation.store');
     Route::post('/log/store', 'logStore')->name('log.store');
+    Route::get('/get/trade/code/{code}', 'getTradeCode');
+    Route::get('/otp/check', 'checkOTP');
+    Route::post('/otp/store', 'otpStore')->name('otp.store');
+    Route::get('/get/name/check', 'getNameCheck');
+    Route::get('/get/email/check', 'getEmailCheck');
+    Route::get('/get/mobile/check', 'getMobileCheck');
 });
 
 Route::middleware(['user.guard'])->group(function(){
