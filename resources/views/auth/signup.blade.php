@@ -232,11 +232,11 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
 
-    {{-- <script>
+    <script>
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
-    </script> --}}
+    </script>
 
     <script>
         $(document).ready(function() {

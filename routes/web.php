@@ -14,6 +14,7 @@ use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\PortfolioController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PaymentController;
@@ -94,10 +95,15 @@ Route::controller(AuthController::class)->group(function(){
 Route::middleware(['user.guard'])->group(function(){
     Route::controller(PaymentController::class)->group(function(){
         Route::get('/fund/withdraw', 'fundWithdrawCreate')->name('fund.withdraw');
+        Route::post('/withdraw/store', 'store')->name('withdraw.store');
     });
 
     Route::controller(UserController::class)->group(function(){
         Route::get('/user/dashboard', 'userDashboard')->name('user.dashboard');
+    });
+
+    Route::controller(AjaxController::class)->group(function(){
+        Route::get('/cancel/fund/request', 'cancelFundRequest');
     });
 });
 
