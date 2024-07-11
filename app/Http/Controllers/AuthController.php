@@ -233,15 +233,18 @@ class AuthController extends Controller
     {
         try {
             DB::beginTransaction();
+
+            // Validation
             $validator = Validator::make($request->all(), [
                 'email'    => ['required', 'email'],
                 'password' => ['required'],
             ]);
 
             if ($validator->fails()) {
+                DB::rollBack();
                 return redirect()->back()
-                            ->withErrors($validator)
-                            ->withInput();
+                    ->withErrors($validator)
+                    ->withInput();
             }
 
             $email    = $request->input('email');
@@ -249,14 +252,19 @@ class AuthController extends Controller
 
             $user = User::where('email', $email)->first();
 
-            if($user){
-                if($user->status === 'deactive'){
-                    return response()->json(['error' => 'This account is Deactive. If you want to activate your account, please contact with admin.']);
+            if ($user) {
+                if ($user->status === 'deactive') {
+                    DB::rollBack();
+                    return response()->json(['error' => 'This account is deactive. If you want to activate your account, please contact admin.']);
                 }
 
-                if($user->is_block == 1){
+                if ($user->is_block == 1) {
+                    DB::rollBack();
                     return response()->json(['error' => 'This account is blocked.']);
                 }
+            } else {
+                DB::rollBack();
+                return response()->json(['validationerror' => 'Email or password does not match.']);
             }
 
             $credentials = $request->only('email', 'password');
@@ -266,23 +274,38 @@ class AuthController extends Controller
                 $request->session()->regenerate();
                 $request->session()->put('user_id', $authUser->id);
 
-                if ($user->role === 'user') {
-                    $user->update(['otp' => null, 'user_agent' => $request->header('User-Agent'), 'last_login_at' => Carbon::now()]);
-                    return response()->json(['success' => 'Login successful', 'redirect' => route('user.dashboard')]);
-                } elseif ($user->role === 'admin') {
-                    $user->update(['otp' => null, 'user_agent' => $request->header('User-Agent'), 'last_login_at' => Carbon::now()]);
-                    return response()->json(['success' => 'Login successful', 'redirect' => route('admin.dashboard')]);
-                } elseif ($user->role === 'executive') {
-                    $user->update(['otp' => null, 'user_agent' => $request->header('User-Agent'), 'last_login_at' => Carbon::now()]);
-                    return response()->json(['success' => 'Login successful', 'redirect' => route('executive.dashboard')]);
+                $user->otp           = null;
+                $user->user_agent    = $request->header('User-Agent');
+                $user->last_login_at = Carbon::now();
+                $user->save();
+
+                DB::commit();
+
+                $redirectRoute = '';
+                switch ($user->role) {
+                    case 'user':
+                        $redirectRoute = route('user.dashboard');
+                        break;
+                    case 'admin':
+                        $redirectRoute = route('admin.dashboard');
+                        break;
+                    case 'executive':
+                        $redirectRoute = route('executive.dashboard');
+                        break;
+                    default:
+                        DB::rollBack();
+                        return response()->json(['error' => 'Invalid user role.']);
                 }
+
+                return response()->json(['success' => 'Login successful', 'redirect' => $redirectRoute]);
             } else {
+                DB::rollBack();
                 return response()->json(['validationerror' => 'Email or password does not match.']);
             }
         } catch (\Exception $e) {
-            DB::rollback();
-            info($e);
-            return;
+            DB::rollBack();
+            Log::error('Error during login process', ['exception' => $e]);
+            return response()->json(['error' => 'An error occurred during the login process. Please try again later.']);
         }
     }
 

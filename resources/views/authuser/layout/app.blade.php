@@ -211,7 +211,7 @@
                         Settings
                     </span>
                 </li>
-                <a href="login.html">
+                <a href="{{ route('logout.us') }}">
                     <li class="mdl-menu__item mdl-list__item">
                         <span class="mdl-list__item-primary-content">
                             <i class="material-icons mdl-list__item-icon text-color--secondary">exit_to_app</i>
