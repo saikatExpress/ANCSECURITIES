@@ -291,7 +291,7 @@
                                 <a class="mdl-navigation__link" href="{{ route('fund.withdraw') }}">
                                     Withdraw Fund
                                 </a>
-                                <a class="mdl-navigation__link" href="ui-cards.html">
+                                <a class="mdl-navigation__link" href="{{ route('deposite.money') }}">
                                     Deposite Fund
                                 </a>
                                 <a class="mdl-navigation__link" href="ui-colors.html">

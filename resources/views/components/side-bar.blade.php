@@ -62,7 +62,7 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="service-single.html">
+                                            <a href="{{ route('deposite.money') }}">
                                                 Fund deposite request generate
                                             </a>
                                         </li>

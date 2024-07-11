@@ -57,4 +57,9 @@ class PaymentController extends Controller
 
         return redirect()->back()->with('success', 'Fund request created successfully.');
     }
+
+    public function depositeMoney()
+    {
+        return view('user.fund.deposite');
+    }
 }
