@@ -90,16 +90,18 @@
             <div class="mdl-cell mdl-cell--5-col-desktop mdl-cell--5-col-tablet mdl-cell--2-col-phone">
                 <div class="mdl-card mdl-shadow--2dp cotoneaster">
                     <div class="mdl-card__title mdl-card--expand">
-                        <h2 class="mdl-card__title-text">Cotoneaster</h2>
+                        <h2 class="mdl-card__title-text">Portfolio</h2>
                     </div>
                     <div class="mdl-card__supporting-text">
                         <div>
-                            Cotoneaster is a genus of flowering plants in the rose family, Roseaceae, netive to the
-                            Palaearctic region, with a strong concentration of diversity in the genus in the
-                            mountains
-                            of southwestern China and the Himalayas.
+                            A portfolio is a collection of financial assets such as stocks, bonds, and cash equivalents,
+                            as well as their fund shares, including mutual, exchange-traded, and closed funds.
+                            These funds are held directly by an investor or managed by financial professionals,
+                            such as financial planners or financial advisors.
                         </div>
-                        <a href="https://en.wikipedia.org/wiki/Cotoneaster" target="_blank">Wikipedia</a>
+                        <a href="{{ asset($filePath) }}" class="fw-bold" target="_blank">
+                            View Portfolio
+                        </a>
                     </div>
                 </div>
             </div>
