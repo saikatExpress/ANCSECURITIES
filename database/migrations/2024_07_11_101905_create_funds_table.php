@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('ac_no',100)->nullable();
             $table->string('description', 500)->nullable();
             $table->string('feedback', 500)->nullable();
+            $table->string('category', 100)->nullable();
             $table->timestamp('withdraw_date')->nullable();
+            $table->string('remark', 250)->nullable();
             $table->unsignedInteger('complete_by')->nullable();
             $table->unsignedInteger('approved_by')->nullable();
             $table->unsignedInteger('declined_by')->nullable();

@@ -43,6 +43,7 @@ class PaymentController extends Controller
             'ac_no'         => $data['bank_account'],
             'withdraw_date' => $data['withdraw_date'],
             'description'   => $data['description'],
+            'category'      => 'withdraw',
         ];
 
         $clientInfo = User::find(Auth::id());
@@ -56,6 +57,16 @@ class PaymentController extends Controller
         $this->fundRepository->create($fundData);
 
         return redirect()->back()->with('success', 'Fund request created successfully.');
+    }
+
+    public function depositeStore(Request $request)
+    {
+        $data = $request->validate([
+            'amount'        => 'required|numeric',
+            'bank_account'  => 'required|string',
+            'withdraw_date' => 'required|date',
+            'description'   => 'nullable|string',
+        ]);
     }
 
     public function depositeMoney()

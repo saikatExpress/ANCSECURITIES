@@ -92,7 +92,7 @@
                                 {{ session('error') }}
                             </div>
                         @endif
-                        <form method="POST" action="">
+                        <form method="POST" action="{{ route('deposite.store') }}">
                             @csrf
                             <div class="form-group">
                                 <label for="amount">Amount <span class="text-danger">*</span></label>
@@ -105,6 +105,13 @@
                                 <label for="bank_account">Bank Account <span class="text-danger">*</span></label>
                                 <input type="text" id="bank_account" name="bank_account" class="form-control" placeholder="Enter your bank account number">
                                 @error('bank_account')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="bank_account">Bank Slip/ Screenshot <span class="text-danger">*</span></label>
+                                <input type="file" id="bank_slip" name="bank_slip" class="form-control">
+                                @error('bank_slip')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>

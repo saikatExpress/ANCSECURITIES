@@ -97,6 +97,7 @@ Route::middleware(['user.guard'])->group(function(){
         Route::get('/fund/withdraw', 'fundWithdrawCreate')->name('fund.withdraw');
         Route::get('/deposite/money', 'depositeMoney')->name('deposite.money');
         Route::post('/withdraw/store', 'store')->name('withdraw.store');
+        Route::post('/deposite/store', 'depositeStore')->name('deposite.store');
     });
 
     Route::controller(UserController::class)->group(function(){

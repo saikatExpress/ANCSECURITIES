@@ -65,7 +65,10 @@
                     <a class="nav-link" href="{{ route('user.dashboard') }}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Deposit Money</a>
+                    <a class="nav-link" href="{{ route('deposite.money') }}">Deposit Money</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('logout.us') }}">Logout</a>
                 </li>
             </ul>
         </div>
