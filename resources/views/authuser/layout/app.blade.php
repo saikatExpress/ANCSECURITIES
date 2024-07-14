@@ -315,21 +315,27 @@
                         <div class="sub-navigation">
                             <a class="mdl-navigation__link">
                                 <i class="material-icons">pages</i>
-                                Pages
+                                Market Overview
                                 <i class="material-icons">keyboard_arrow_down</i>
                             </a>
                             <div class="mdl-navigation">
-                                <a class="mdl-navigation__link" href="login.html">
-                                    Sign in
+                                <a class="mdl-navigation__link" href="https://www.dse.com.bd/top_20_share.php">
+                                    Top 20 Market Movers
                                 </a>
-                                <a class="mdl-navigation__link" href="sign-up.html">
-                                    Sign up
+                                <a class="mdl-navigation__link" href="https://dsebd.org/Company_AGM.htm" target="_blank">
+                                    Declaration & AGM
                                 </a>
-                                <a class="mdl-navigation__link" href="forgot-password.html">
-                                    Forgot password
+                                <a class="mdl-navigation__link" href="https://www.dse.com.bd/latest_share_price_scroll_l.php" target="_blank">
+                                    Historical Price & Volume
                                 </a>
-                                <a class="mdl-navigation__link" href="404.html">
-                                    404
+                                <a class="mdl-navigation__link" href="https://www.dse.com.bd/ipo.php" target="_blank">
+                                   New Issues (IPO)
+                                </a>
+                                <a class="mdl-navigation__link" href="https://www.dsebd.org/latest_PE.php" target="_blank">
+                                   EPS/PE
+                                </a>
+                                <a class="mdl-navigation__link" href="https://www.cnbc.com/futures-and-commodities/" target="_blank">
+                                   World Market
                                 </a>
                             </div>
                         </div>
