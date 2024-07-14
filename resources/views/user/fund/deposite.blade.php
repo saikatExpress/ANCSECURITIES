@@ -92,7 +92,7 @@
                                 {{ session('error') }}
                             </div>
                         @endif
-                        <form method="POST" action="{{ route('deposite.store') }}">
+                        <form method="POST" action="{{ route('deposite.store') }}" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="amount">Amount <span class="text-danger">*</span></label>
@@ -144,39 +144,104 @@
                                         <th>Amount</th>
                                         <th>Bank Account</th>
                                         <th>Description</th>
+                                        <th>Status</th>
                                         <th>Date</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                         $sl = 1;
                                     @endphp
-                                    {{-- @foreach ($deposits as $deposit)
+                                    @foreach ($depositeHistory as $deposit)
                                         <tr>
                                             <td>{{ $sl }}</td>
                                             <td>{{ $deposit->amount }}</td>
-                                            <td>{{ $deposit->bank_account }}</td>
+                                            <td>{{ $deposit->ac_no }}</td>
                                             <td>{{ $deposit->description }}</td>
-                                            <td>{{ $deposit->deposit_date->format('d-m-Y') }}</td>
+                                            <td class="text-danger">{{ $deposit->status }}</td>
+                                            <td>{{ $deposit->withdraw_date->format('d-m-Y') }}</td>
+                                            <td>
+                                                @if ($deposit->status == 'pending')
+                                                    <button type="button" class="btn btn-sm btn-danger cancelButton" data-id="{{ $deposit->id }}" data-user_id="{{ $deposit->client_id }}">Cancel</button>
+                                                @else
+                                                    <button type="button" class="btn btn-sm btn-success">View</button>
+                                                @endif
+                                            </td>
                                         </tr>
                                         @php
                                             $sl++;
                                         @endphp
-                                    @endforeach --}}
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        {{-- @if($deposits->isEmpty())
+                        @if($depositeHistory->isEmpty())
                             <p class="text-center">No deposit history found.</p>
-                        @endif --}}
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+
+            if (successMessage) {
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
+
+            if (errorMessage) {
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $('.cancelButton').on('click', function(){
+
+                const fundId   = $(this).data('id');
+                const clientId = $(this).data('user_id');
+                const $row     = $(this).closest('tr');
+
+                // Validate fundId and clientId
+                if (!fundId || !clientId) {
+                    console.error('Missing fundId or clientId.');
+                    return false;
+                }
+
+                // AJAX request to cancel fund request
+                $.ajax({
+                    url: '/cancel/fund/request',
+                    method: 'GET',
+                    data: {
+                        fundId: fundId,
+                        clientId: clientId
+                    },
+                    success: function(response){
+                        $row.fadeOut('slow', function(){
+                            $(this).remove();
+                        });
+                    },
+                    error: function(error){
+                        // Handle error response here
+                        console.error('Error cancelling fund request.', error);
+                        // Optionally display error message or handle UI updates
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

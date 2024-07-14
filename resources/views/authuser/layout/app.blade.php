@@ -254,30 +254,27 @@
                         <div class="sub-navigation">
                             <a class="mdl-navigation__link">
                                 <i class="material-icons">view_comfy</i>
-                                UI
+                                Company
                                 <i class="material-icons">keyboard_arrow_down</i>
                             </a>
                             <div class="mdl-navigation">
-                                <a class="mdl-navigation__link" href="ui-buttons.html">
-                                    Buttons
+                                <a class="mdl-navigation__link" href="{{ route('about.us') }}">
+                                    About Us
                                 </a>
-                                <a class="mdl-navigation__link" href="ui-cards.html">
-                                    Cards
+                                <a class="mdl-navigation__link" href="{{ route('board.director') }}">
+                                    Board Of Directors
                                 </a>
                                 <a class="mdl-navigation__link" href="ui-colors.html">
-                                    Colors
+                                    Management Team
                                 </a>
                                 <a class="mdl-navigation__link" href="ui-form-components.html">
-                                    Forms
+                                    Sister of concern
                                 </a>
-                                <a class="mdl-navigation__link" href="ui-icons.html">
-                                    Icons
+                                <a class="mdl-navigation__link" href="{{ route('faq.us') }}">
+                                    Faq
                                 </a>
                                 <a class="mdl-navigation__link" href="ui-typography.html">
-                                    Typography
-                                </a>
-                                <a class="mdl-navigation__link" href="ui-tables.html">
-                                    Tables
+                                    Pricing
                                 </a>
                             </div>
                         </div>
@@ -299,9 +296,9 @@
                                 </a>
                             </div>
                         </div>
-                        <a class="mdl-navigation__link" href="ui-components.html">
+                        <a class="mdl-navigation__link" href="{{ route('limit.request') }}">
                             <i class="material-icons">developer_board</i>
-                            Components
+                            Limit Request
                         </a>
                         <a class="mdl-navigation__link" href="forms.html">
                             <i class="material-icons" role="presentation">person</i>

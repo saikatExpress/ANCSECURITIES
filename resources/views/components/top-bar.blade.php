@@ -35,7 +35,7 @@
                                 </div>
                             </li>
                             <li class="header-get-a-quote">
-                                <a class="btn btn-primary" href="{{ route('contact.us') }}">Get A Quote</a>
+                                <a class="btn btn-primary" href="{{ route('limit.request') }}">Limit Request</a>
                             </li>
                         </ul>
                         <!-- Ul end -->

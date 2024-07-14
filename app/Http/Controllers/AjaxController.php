@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fund;
+use App\Models\LimitRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AjaxController extends Controller
 {
@@ -24,5 +26,18 @@ class AjaxController extends Controller
             return response()->json(['success' => true, 'message' => 'Fund withdraw request Cancel']);
         }
         return response()->json(['error' => false, 'message' => 'Fund not found']);
+    }
+
+    public function cancelRequest($id)
+    {
+        $requestInfo = LimitRequest::where('id', $id)->where('client_id', Auth::id())->first();
+
+        if($requestInfo){
+            $requestInfo->delete();
+
+            return response()->json(['success' => true, 'message' => 'Request cancelled successfully']);
+        }
+
+        return response()->json(['error' => false, 'message' => 'Request not found']);
     }
 }
