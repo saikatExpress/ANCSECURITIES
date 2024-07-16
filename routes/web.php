@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\PortfolioController;
+use App\Http\Controllers\admin\RequestController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
 use App\Http\Controllers\AjaxController;
@@ -129,6 +130,19 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/account/store', 'acStore')->name('acbo.store');
         Route::post('/upload-excel','uploadExcel')->name('upload.excel');
 
+    });
+
+    Route::controller(RequestController::class)->group(function(){
+        Route::get('/all/request', 'index')->name('all.request');
+        Route::get('/today/limit/request', 'limitIndex')->name('today.limit_request');
+        Route::get('/declined/request', 'declineIndex')->name('declined.request');
+        Route::get('/withdraw/request', 'withdrawIndex')->name('withdraw.request');
+        Route::get('/deposit/request', 'depositIndex')->name('deposit.request');
+        Route::post('/request/toggle/{id}', 'toggleStatus')->name('request.toggle');
+        Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');
+        Route::post('/request/deposit/{id}', 'requestDeposit')->name('request.deposit');
+        Route::get('/fetch-requests', 'fetchRequests')->name('fetch.requests');
+        Route::get('/limit/delete/{id}', 'limitDestroy');
     });
 
     Route::controller(BannerController::class)->group(function(){

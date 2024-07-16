@@ -62,35 +62,40 @@
                     <i class="fa fa-files-o"></i>
                     <span>USER</span>
                     <span class="pull-right-container">
-                    <span class="label label-primary pull-right">4</span>
+                        <span class="label label-primary pull-right">4</span>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     <li>
                         <a href="pages/layout/top-nav.html">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-user-plus"></i>
                             Create User
                         </a>
                     </li>
                     <li>
                         <a href="pages/layout/boxed.html">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-users"></i>
                             User List
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('create.bo') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-id-card"></i>
                             Add BO ID
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('role.list') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-user-tag"></i>
                             Role
                         </a>
                     </li>
-                    <li><a href="pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Permission</a></li>
+                    <li>
+                        <a href="pages/layout/collapsed-sidebar.html">
+                            <i class="fa fa-key"></i>
+                            Permission
+                        </a>
+                    </li>
                 </ul>
             </li>
 
@@ -99,19 +104,19 @@
                     <i class="fa fa-pie-chart"></i>
                     <span>Forms</span>
                     <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
+                        <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     <li>
                         <a href="{{ route('create.form') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-upload"></i>
                             Form Upload
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('form.list') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-list"></i>
                             Form List
                         </a>
                     </li>
@@ -129,31 +134,31 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="{{ route('staff.create') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-user-plus"></i>
                             Add Staff
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('staff.list') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-users"></i>
                             Staff List
                         </a>
                     </li>
                     <li>
                         <a href="pages/UI/buttons.html">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-money"></i>
                             Staff Salary
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('staff.attendance') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-calendar-check-o"></i>
                             Staff Attendance
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('leave.list') }}">
-                            <i class="fa fa-circle-o"></i>
+                            <i class="fa fa-calendar-times-o"></i>
                             Leave
                         </a>
                     </li>
@@ -168,44 +173,51 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="pages/forms/general.html"><i class="fa fa-circle-o"></i> Attendance Report</a></li>
-                    <li><a href="pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Salary Report</a></li>
-                    <li><a href="pages/forms/editors.html"><i class="fa fa-circle-o"></i> Leave Report</a></li>
+                    <li><a href="pages/forms/general.html"><i class="fa fa-calendar-check-o"></i> Attendance Report</a></li>
+                    <li><a href="pages/forms/advanced.html"><i class="fa fa-money"></i> Salary Report</a></li>
+                    <li><a href="pages/forms/editors.html"><i class="fa fa-calendar-times-o"></i> Leave Report</a></li>
                 </ul>
             </li>
 
             <li class="treeview">
                 <a href="#">
+                    <i class="fa fa-file-text"></i> <span>Client Request</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('today.limit_request') }}"><i class="fa fa-clock-o"></i> Todays Limit Request</a></li>
+                    <li><a href="{{ route('declined.request') }}"><i class="fa fa-times"></i> Decline Request</a></li>
+                    <li><a href="{{ route('all.request') }}"><i class="fa fa-list"></i> All Request</a></li>
+                    <li><a href="{{ route('withdraw.request') }}"><i class="fa fa-money"></i> Withdraw Request</a></li>
+                    <li><a href="{{ route('deposit.request') }}"><i class="fa fa-bank"></i> Deposit Request</a></li>
+                </ul>
+            </li>
+
+
+            <li class="treeview">
+                <a href="#">
                     <i class="fa fa-table"></i> <span>Company</span>
-                        <span class="pull-right-container">
+                    <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="{{ route('about.create') }}"><i class="fa fa-circle-o"></i>
-                            About
-                        </a>
+                        <a href="{{ route('about.create') }}"><i class="fa fa-info-circle"></i> About</a>
                     </li>
                     <li>
-                        <a href="{{ route('director.create') }}"><i class="fa fa-circle-o"></i>
-                            Board Directors
-                        </a>
+                        <a href="{{ route('director.create') }}"><i class="fa fa-users"></i> Board Directors</a>
                     </li>
                     <li>
-                        <a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>
-                            Management Teams
-                        </a>
+                        <a href="pages/tables/data.html"><i class="fa fa-users"></i> Management Teams</a>
                     </li>
                     <li>
-                        <a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>
-                            Sister Of Concern
-                        </a>
+                        <a href="pages/tables/data.html"><i class="fa fa-building-o"></i> Sister Of Concern</a>
                     </li>
                     <li>
-                        <a href="pages/tables/data.html"><i class="fa fa-circle-o"></i>
-                            FAQ
-                        </a>
+                        <a href="pages/tables/data.html"><i class="fa fa-question-circle"></i> FAQ</a>
                     </li>
                 </ul>
             </li>
@@ -238,14 +250,12 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="{{ route('create.banner') }}">
-                            <i class="fa fa-circle-o"></i>
-                            Add Banner
+                            <i class="fa fa-plus-circle"></i> Add Banner
                         </a>
                     </li>
                     <li>
                         <a href="pages/examples/profile.html">
-                            <i class="fa fa-circle-o"></i>
-                            Banner List
+                            <i class="fa fa-list"></i> Banner List
                         </a>
                     </li>
                 </ul>
@@ -261,20 +271,18 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="{{ route('create.portfolio') }}">
-                            <i class="fa fa-circle-o"></i>
-                            Upload Portfolio
+                            <i class="fa fa-upload"></i> Upload Portfolio
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('portfolio.list') }}">
-                            <i class="fa fa-circle-o"></i>
-                            Portfolio List
+                            <i class="fa fa-list-alt"></i> Portfolio List
                         </a>
                     </li>
                 </ul>
             </li>
 
-            <li class="treeview">
+           <li class="treeview">
                 <a href="#">
                     <i class="fa fa-folder"></i> <span>DP</span>
                     <span class="pull-right-container">
@@ -284,14 +292,12 @@
                 <ul class="treeview-menu">
                     <li>
                         <a href="{{ route('create.dp') }}">
-                            <i class="fa fa-circle-o"></i>
-                            Add DP
+                            <i class="fa fa-plus-circle"></i> Add DP
                         </a>
                     </li>
                     <li>
                         <a href="pages/examples/profile.html">
-                            <i class="fa fa-circle-o"></i>
-                            DP List
+                            <i class="fa fa-list"></i> DP List
                         </a>
                     </li>
                 </ul>
@@ -318,50 +324,50 @@
             </li>
 
             <li class="treeview">
-            <a href="#">
-                <i class="fa-solid fa-gear"></i> <span>Settings</span>
-                <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                </span>
-            </a>
-            <ul class="treeview-menu">
-
-                <li>
-                    <a href="{{ route('designation.list') }}">
-                        <i class="fa fa-circle-o"></i>
-                        Designation
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('department.list') }}">
-                        <i class="fa fa-circle-o"></i>
-                        Department
-                    </a>
-                </li>
-
-                <li class="treeview">
-                    <a href="#"><i class="fa fa-circle-o"></i> Level One
-                        <span class="pull-right-container">
+                <a href="#">
+                    <i class="fa-solid fa-gear"></i> <span>Settings</span>
+                    <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
-                        <li class="treeview">
-                        <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+
+                    <li>
+                        <a href="{{ route('designation.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            Designation
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('department.list') }}">
+                            <i class="fa fa-circle-o"></i>
+                            Department
+                        </a>
+                    </li>
+
+                    <li class="treeview">
+                        <a href="#"><i class="fa fa-circle-o"></i> Level One
                             <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                            <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                            <li class="treeview">
+                            <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                                <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                                <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                            </ul>
+                            </li>
                         </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
-            </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+                </ul>
             </li>
         </ul>
     </section>
