@@ -115,6 +115,7 @@
                                 <label for="mobile">
                                     Trading Code
                                     <span class="text-danger"> * </span>
+                                    <strong class="text-danger fw-bold ml-3" id="accountExits"></strong>
                                     <strong style="display: none;" id="avaiable" class="text-success fw-bold ml-3"><i class="fas fa-solid fa-check"></i> Avaiable</strong>
                                     <strong style="display: none;" id="notavaiable" class="text-danger fw-bold ml-3"><i class="fas fa-solid fa-circle-exclamation"></i> Not found</strong>
                                 </label>
@@ -232,11 +233,11 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
 
-    <script>
+    {{-- <script>
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
         });
-    </script>
+    </script> --}}
 
     <script>
         $(document).ready(function() {
@@ -454,7 +455,12 @@
                     url: '/get/trade/code/' + id,
                     method: 'GET',
                     success: function(response) {
-                        if (response && response.success) {
+                        if(response && response.warning == false){
+                            $('#accountExits').html('Sorry : This account already opended..!');
+                            return false;
+                        }
+
+                        if (response && response.success == true) {
                             $('#avaiable, .instructions, #register_form').show();
                             $('#notavaiable').hide();
 

@@ -222,6 +222,12 @@ class AuthController extends Controller
     {
         $tradeCode = BoAccount::where('bo_id', $code)->first();
 
+        $exitsUser = User::where('trading_code', $code)->where('role', 'user')->first();
+
+        if($exitsUser){
+            return response()->json(['warning' => false]);
+        }
+
         if($tradeCode){
             return response()->json(['success' => true, 'traderInfo' => $tradeCode]);
         }
