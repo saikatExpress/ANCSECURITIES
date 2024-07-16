@@ -47,4 +47,10 @@ class Fund extends Model
         'updated_at'    => 'datetime',
         'deleted_at'    => 'datetime',
     ];
+
+    //Relation Start
+    public function clients()
+    {
+        return $this->belongsTo(User::class, 'client_id', 'id');
+    }
 }

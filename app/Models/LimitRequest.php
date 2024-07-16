@@ -35,4 +35,10 @@ class LimitRequest extends Model
         'created_at'   => 'datetime',
         'updated_at'   => 'datetime',
     ];
+
+    //Relation Start
+    public function clients()
+    {
+        return $this->belongsTo(User::class, 'client_id', 'id');
+    }
 }

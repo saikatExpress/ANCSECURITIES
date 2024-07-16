@@ -51,45 +51,41 @@
     <!-- Notifications: style can be found in dropdown.less -->
     <li class="dropdown notifications-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="fa fa-bell-o"></i>
-        <span class="label label-warning">10</span>
+            <i class="fa fa-bell-o"></i>
+            <span class="label label-warning">{{ count($notifications) }}</span>
         </a>
         <ul class="dropdown-menu">
-        <li class="header">You have 10 notifications</li>
-        <li>
-            <!-- inner menu: contains the actual data -->
-            <ul class="menu">
+            <li class="header">You have {{ count($notifications) }} notifications</li>
             <li>
-                <a href="#">
-                <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                </a>
+                <!-- Inner menu: contains the actual data -->
+                <ul class="menu">
+                    @foreach($notifications as $notification)
+                        <li>
+                            <a href="#">
+                                @if($notification['type'] == 'limit')
+                                    <i class="fa fa-exclamation-circle text-aqua"></i> New Limit Request from {{ $notification['data']->clients->name }}<br>
+                                    <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                    <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->limit_amount }}</span><br>
+                                @elseif($notification['type'] == 'withdraw')
+                                    <i class="fa fa-money text-yellow"></i> New Withdraw Request from {{ $notification['data']->clients->name }}<br>
+                                    <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                    <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span><br>
+                                @elseif($notification['type'] == 'deposit')
+                                    <i class="fa fa-bank text-green"></i> New Deposit from {{ $notification['data']->clients->name }}<br>
+                                    <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                    <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span><br>
+                                @endif
+                                <small><i class="fa fa-clock-o"></i> {{ $notification['created_at']->format('Y-m-d h:i A') }}</small>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
             </li>
-            <li>
-                <a href="#">
-                <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
-                page and may cause design problems
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                <i class="fa fa-users text-red"></i> 5 new members joined
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                <i class="fa fa-user text-red"></i> You changed your username
-                </a>
-            </li>
-            </ul>
-        </li>
-        <li class="footer"><a href="#">View all</a></li>
+            <li class="footer"><a href="#">View all</a></li>
         </ul>
     </li>
+
+
     <!-- Tasks: style can be found in dropdown.less -->
     <li class="dropdown tasks-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
