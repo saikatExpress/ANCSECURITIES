@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\User;
+use App\Models\BOForm;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\BOForm;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -18,7 +19,10 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('admin.home.index');
+        $data['totalUsers'] = User::where('role', 'user')->count();
+        $data['latestUsers'] = User::where('role', 'user')->latest()->take(8)->get();
+
+        return view('admin.home.index')->with($data);
     }
 
     public function create()
