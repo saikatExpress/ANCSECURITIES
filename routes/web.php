@@ -115,12 +115,16 @@ Route::middleware(['user.guard'])->group(function(){
 
 Route::middleware(['auth', 'CheckAdmin'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
+        Route::get('/user/list', 'userIndex')->name('user.list');
         $hashedAdminUrl = md5('admin/dashboard');
         Route::get('/'.$hashedAdminUrl, 'index')->name('admin.dashboard');
         $hashedDirectorUrl = md5('create/director');
         Route::get('/'.$hashedDirectorUrl, 'create')->name('director.create');
         $hashedBoUrl = md5('bo/list');
         Route::get('/'.$hashedBoUrl, 'boIndex')->name('bo.list');
+        Route::get('/create/user', 'createUser')->name('create.user');
+        Route::post('/user/store', 'store')->name('user.store');
+        Route::post('/user/update', 'update')->name('user.update');
     });
 
     Route::controller(BoController::class)->group(function(){

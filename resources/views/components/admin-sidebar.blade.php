@@ -67,13 +67,13 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="pages/layout/top-nav.html">
+                        <a href="{{ route('create.user') }}">
                             <i class="fa fa-user-plus"></i>
                             Create User
                         </a>
                     </li>
                     <li>
-                        <a href="pages/layout/boxed.html">
+                        <a href="{{ route('user.list') }}">
                             <i class="fa fa-users"></i>
                             User List
                         </a>
