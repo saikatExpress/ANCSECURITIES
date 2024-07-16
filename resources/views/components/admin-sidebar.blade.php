@@ -226,7 +226,7 @@
                 <a href="{{ route('bo.list') }}">
                     <i class="fa fa-th"></i> <span>BO FORM</span>
                     <span class="pull-right-container">
-                    <small class="label pull-right bg-green">{{ $totalForms }}</small>
+                        <small class="label pull-right bg-green">{{ $totalForms }}</small>
                     </span>
                 </a>
             </li>

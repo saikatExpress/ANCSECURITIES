@@ -243,6 +243,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/'.$hashedFormUrl, 'create')->name('create.form');
         Route::post('/form/store', 'store')->name('form.store');
         Route::get('/get/form/{id}', 'download')->name('get.form');
+        Route::get('/show/test/{id}', 'showTest')->name('show.test');
         Route::get('/form/delete/{id}', 'destroy');
     });
 });

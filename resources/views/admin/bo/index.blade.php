@@ -62,6 +62,9 @@
                                 <a href="{{ route('show.form', ['id' => $form->id]) }}" class="btn btn-sm btn-primary">
                                     View
                                 </a>
+                                <a href="{{ route('show.test', ['id' => $form->id]) }}" class="btn btn-sm btn-primary">
+                                    Test
+                                </a>
                                 <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $form->id }}">
                                     Delete
                                 </button>

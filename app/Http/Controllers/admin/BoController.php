@@ -87,9 +87,9 @@ class BoController extends Controller
     public function showForm($id)
     {
         $client = BOForm::findOrFail($id);
-        // return $client;
-        return view('admin.bo.show', compact('client'));
-        $pdf = PDF::loadView('admin.bo.show', compact('client'));
+
+        // return view('admin.bo.show', compact('client'));
+        $pdf = PDF::loadView('admin.bo.test', compact('client'));
         return $pdf->download('client_information.pdf');
     }
 }

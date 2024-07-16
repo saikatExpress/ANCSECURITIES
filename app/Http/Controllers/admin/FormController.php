@@ -6,6 +6,7 @@ use App\Models\FormUpload;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\BOForm;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -80,6 +81,13 @@ class FormController extends Controller
     {
         $form = FormUpload::findOrFail($id);
         return Storage::download($form->form_file);
+    }
+
+    public function showTest($id)
+    {
+        $client = BOForm::findOrFail($id);
+
+        return view('admin.bo.test', compact('client'));
     }
 
     public function destroy($id)
