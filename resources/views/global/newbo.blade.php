@@ -5,768 +5,634 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BO Form | Anc Securities</title>
   <link rel="icon" type="image/png" href="{{ asset('user/assets/logos/8022322.png') }}">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
-      background-image: url(https://thumbs.dreamstime.com/z/blank-modern-digital-tablet-money-saving-account-passbo-passbook-book-bank-statement-middle-office-equipment-72000571.jpg);
+      /* background-image: url(https://thumbs.dreamstime.com/z/blank-modern-digital-tablet-money-saving-account-passbo-passbook-book-bank-statement-middle-office-equipment-72000571.jpg);
       background-size: cover;
       background-position: 50% 0;
       background-repeat: no-repeat;
-      min-height: 100vh;
+      min-height: 100vh; */
+      background-color: #DFEDCC;
+      font-family: Arial, sans-serif;
     }
-
-    .card-like {
-      margin-top: 50px;
-      margin-bottom: 50px;
-      color: rgba(0,0,0,0.8);
-      background-color: #fff;
-      border-radius: 6px;
-      padding: 50px;
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    .accordion-item {
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 10px;
     }
-
-    .btn-irv {
+    .accordion-item .card-header {
+      background-color: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+      padding: 15px;
+      cursor: pointer;
+      position: relative;
+    }
+    .accordion-item .card-header h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: bold;
+      display: inline-block;
+      position: relative;
+    }
+    .accordion-item .card-header h2:before {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background-color: #007bff;
+      transition: width 0.3s ease;
+    }
+    .accordion-item .card-header:hover h2:before {
       width: 100%;
-      background: #038dab;
-      color: #fff!important;
-      font-weight: bold;
-      padding: 10px 0;
-      transition: all 0.3s;
     }
-
-    .btn-irv:hover {
-      background: #02738d;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    .accordion-item .card-header .fas {
+      margin-right: 10px;
     }
-
-    .btn-irv-default {
-      font-weight: bold;
-      background: #bbb;
-      color: #fff!important;
+    .accordion-item .card-body {
+      padding: 15px;
     }
-
-    .btn-irv-default:hover {
-      background: #aaa;
-    }
-
-    .wizard {
-      overflow: hidden;
-    }
-
-    .wizard-header {
-      margin-bottom: 30px;
-    }
-
-    .wizard-header h1 {
-      margin-top: 0;
+    .accordion-item .card-body .form-group {
       margin-bottom: 20px;
     }
-
-    .wizard-header h1 small {
-      color: #bbb;
+    .btn-submit-container {
+      text-align: center;
+      margin-top: 20px;
     }
-
-    .wizard-header hr {
-      border-color: #038dab;
-      border-top-width: 2px;
+    .btn-submit {
+      margin-top: 10px;
     }
-
-    .wizard-header .steps {
-      height: 15px;
+    .page-title {
+      position: relative;
+      text-align: center;
+      margin-bottom: 20px;
     }
-
-    .wizard-header .steps .wizard-step {
-      background: #038dab;
-      width: 15px;
-      height: 15px;
+    .page-title h2 {
       display: inline-block;
-      margin: 0 10px;
-      opacity: 0.2;
-      border-radius: 50%;
-      transition: all 0.8s;
-    }
-
-    .wizard-header .steps .wizard-step.active {
-      opacity: 1;
-    }
-
-    .wizard-body {
       position: relative;
-      transition: all 0.3s cubic-bezier(0.68, -0.30, 0.37, 0.6);
+      font-size: 24px;
+      font-weight: bold;
+      color: #00814c;
+      padding-bottom: 10px; /* Adjust as needed */
     }
-
-    .wizard-body .step {
-      transition: all 0.3s ease-in-out;
+    .page-title h2:before {
+      content: '';
       position: absolute;
-      width: 100%;
-      top: 0;
-      right: -100%;
-      opacity: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%; /* Start at half-width */
+      height: 2px;
+      background-color: #007bff;
+      transition: width 0.3s ease;
     }
-
-    .wizard-body .step.initial {
-      position: relative;
+    .page-title h2:hover:before {
+      width: 100%; /* Expand to full-width on hover */
     }
-
-    .wizard-body .step.off {
-      opacity: 0!important;
-      right: 100%!important;
+    .label-required::after {
+        content: "*";
+        color: red;
     }
-
-    .wizard-body .step.active {
-      right: 0;
-      margin-left: 0;
-      margin-top: 0;
-      opacity: 1;
-      transition: all 0.4s linear;
-      transition-delay: 0.1s;
+    label.block {
+        display: block;
     }
-
-    .wizard-footer {
-      margin-top: 30px;
+    .c-select[id*="Day"] {
+        width: 29%;
+        display: inline-block;
+    }
+    .c-select[id*="Month"] {
+        width: 29%;
+        display: inline-block;
+    }
+    .c-select[id*="Year"] {
+        width: 29%;
+        display: inline-block;
     }
   </style>
 </head>
 <body>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
-        <div class="wizard card-like">
-          <form action="{{ route('bo.store') }}" method="post" style="width: 100%;" enctype="multipart/form-data">
-            <div class="wizard-header">
-              <div class="row">
-                <div class="col-xs-12">
-                    <div>
-                        <img style="width: 100px;margin-left: auto;margin-right: auto;display: block;height: 100px;" src="{{ asset('auth/ANCSECURITIES.png') }}" alt="">
-                    </div>
-                    <div class="mt-3 mb-3">
-                        <h4 class="text-danger text-center">পুজিবাজার ঝুকিপূর্ণ । জেনে ও বুঝে বিনিয়োগ করবেন।</h4>
-                        <br>
-                        <h4 class="text-center" style="color: #000; font-weight:600;">নতুন বিও আবেদন (New BO Application)</h4>
-                    </div>
-                  <hr />
-                  <div class="steps text-center">
-                    <div class="wizard-step active"></div>
-                    <div class="wizard-step"></div>
-                    <div class="wizard-step"></div>
-                    <div class="wizard-step"></div>
-                    <div class="wizard-step"></div>
-                    <div class="wizard-step"></div>
-                    <div class="wizard-step"></div>
-                    <div class="wizard-step"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="wizard-body">
-              <div class="step initial active">
-                <h4 class="text-center" style="color: #000; font-weight:600;">ডিপি ও বিও টাইপ নির্বাচন (Select DP & BO type)</h4>
-                <div class="row">
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label for="dpType">Choose DP <span class="text-danger">*</span></label>
-                      <select class="form-control" id="dpType" required>
-                        <option value="" selected disabled>Select</option>
-                        <option value="NSDL">NSDL</option>
-                        <option value="CDSL">CDSL</option>
-                      </select>
-                      <span id="dpTypeError" class="text-danger"></span>
-                    </div>
-                  </div>
 
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="">BO option <span class="text-danger">*</span> </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="boOption" id="newBo" required>
-                                <label class="form-check-label" for="newBo">
-                                    New BO
-                                </label>
-                            </div>
+    <div class="container mt-5">
 
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="boOption" id="linkBo" required>
-                                <label class="form-check-label" for="linkBo">
-                                    Link BO
-                                </label>
-                            </div>
-
-                            <div class="form-group" id="boCodeInput" style="display: none;">
-                                <label for="boCode">Enter your 8-digit existing BO code:</label>
-                                <input type="text" class="form-control" id="boCode" maxlength="8">
-                            </div>
-
-                            <span class="text-danger" id="boOptionError"></span>
-
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="">Residency <span class="text-danger">*</span> </label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="residency" id="residentRb" required>
-                                <label class="form-check-label" for="residentRb">
-                                    Resident in Bangladesh (RB)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="residency" id="nonResidentNrb">
-                                <label class="form-check-label" for="nonResidentNrb">
-                                    Non-Res in Bangladesh (NRB)
-                                </label>
-                            </div>
-                            <span id="residencyError" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="">BO Type <span class="text-danger">*</span></label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="boType" id="individual">
-                                <label class="form-check-label" for="individual">
-                                    Individual
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="boType" id="joint">
-                                <label class="form-check-label" for="joint">
-                                    Joint
-                                </label>
-                            </div>
-
-                            <span id="boTypeError" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-              </div>
-
-              <div class="step">
-                <div class="row">
-                    <h4 class="text-center" style="color: #000; font-weight:600;">মৌলিক তথ্য(Basic Information)</h4>
-                    <hr>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for=""><span class="text-danger"> * </span>Type of NID(Optional for NRB)</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="nidType" id="10DigitNid">
-                                <label class="form-check-label" for="10DigitNid">
-                                    10 Digit (Smartcard)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="nidType" id="17DigitNid">
-                                <label class="form-check-label" for="17DigitNid">
-                                    17 Digit (Old NID)
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="">Enter First Holder NID No.(optional for NRB)</label>
-                            <span style="cursor:pointer; background-color:green !important;" class="badge badge-pill badge-success" data-toggle="modal" data-target="#nidhelp">Help ?</span>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="firstname">Your name: <span class="fw-bold">(As per NID)</span></label>
-                        <input type="text" class="form-control" name="client_name" id="firstname">
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="lastname">Passport Number:</label>
-                        <input type="text" class="form-control" name="passposrtnumber" id="passposrtnumber">
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="lastname">Husband/Father Name:</label>
-                        <input type="text" class="form-control" name="father_name" id="father_name">
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="lastname">Issue place of passport:</label>
-                        <input type="text" class="form-control" name="issue_place_passport" id="issue_place_passport">
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="lastname">Mother Name:</label>
-                        <input type="text" class="form-control" name="mother_name" id="mother_name">
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="lastname">Issue date of passport :</label>
-                        <input type="date" class="form-control" name="issue_date_passport" id="issue_date_passport">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="email">Date of Birth: <span class="fw-blod">(As per NID)</span></label>
-                      <input type="date" class="form-control" id="dob" name="dob">
-                    </div>
-                  </div>
-
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="phone">Expiry Date of Passport:</label>
-                      <input type="date" class="form-control" name="expire_date_passport" id="expire_date_passport">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="phone">Sex:</label>
-                      <select name="gender" id="gender" class="form-control">
-                        <option value="" selected disabled>Select</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="step">
-
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="gender">Citizen/Resident Of:</label>
-                      <select class="form-control" name="country" id="country">
-                        <option value="" selected disabled>Select</option>
-                        @foreach ($countries as $country)
-                            <option value="{{ $country->id }}">{{ $country->name }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="occupation">Occupation:</label>
-                      <input type="text" class="form-control" name="occupation" id="occupation">
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="gender">Statement Cycle:</label>
-                      <select class="form-control" name="statement_cycle" id="statement_cycle">
-                        <option value="" selected disabled>Select</option>
-                        <option value="Male">Bangladesh</option>
-                        <option value="Female">India</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="income">TIN:</label>
-                      <input type="text" class="form-control" name="tin" id="tin">
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="step">
-                <div class="row">
-
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="addressLine1">Address Line 1:</label>
-                      <input type="text" class="form-control" name="address" id="addressLine1">
-                    </div>
-                  </div>
-
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="addressLine2">Address Line 2(optional):</label>
-                      <input type="text" class="form-control" name="addressLine2" id="addressLine2">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="city">City:</label>
-                      <input type="text" class="form-control" name="city" id="city">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="state">State/Division:</label>
-                      <input type="text" class="form-control" name="division" id="state">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="zipcode">Postal/Zip Code:</label>
-                      <input type="text" class="form-control" name="postal_code" id="zipcode">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="country">Country:</label>
-                      <input type="text" class="form-control">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="country">Phone:</label>
-                      <input type="text" class="form-control" name="mobile" id="mobile">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="country">Email:</label>
-                      <input type="text" class="form-control" name="email" id="email">
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="step">
-                <div class="row">
-
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="bankName">Routing Number:</label>
-                      <input type="text" class="form-control" name="routing_number" id="routingNumber" placeholder="Enter your 9 digit routing number...">
-                    </div>
-                  </div>
-
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="bankName">Bank Name:</label>
-                      <input type="text" class="form-control" name="bank_name" id="bankName">
-                    </div>
-                  </div>
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="branchName">Branch Name:</label>
-                        <input type="text" class="form-control" name="branch_name" id="branchName">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="ifscCode">District Name:</label>
-                        <input type="text" class="form-control" name="district_name" id="district_name">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                        <label for="accountNumber">Account Number:</label>
-                        <input type="text" class="form-control" name="bank_account_no" id="accountNumber" placeholder="Enter your 13 digit bank a/c number">
-                        </div>
-                    </div>
-                </div>
-              </div>
-
-              <div class="step">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="nomineeName">Nominee Name:</label>
-                      <input type="text" class="form-control" name="nominee_name" id="nomineeName">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="nomineeRelation">Nominee Relation:</label>
-                      <input type="text" class="form-control" name="n_relationship" id="nomineeRelation">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="nomineeDob">Nominee Date of Birth:</label>
-                      <input type="date" class="form-control" name="nomineeDob" id="nomineeDob">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="nomineeShare">Nominee Share (%):</label>
-                      <input type="text" class="form-control" name="nomineeShare" id="nomineeShare">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="step">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="uploadPhoto">Upload Photo:</label>
-                      <input type="file" class="form-control" name="user_photo" id="uploadPhoto">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="uploadSignature">Upload Signature:</label>
-                      <input type="file" class="form-control" name="user_signature" id="uploadSignature">
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="uploadPan">Upload Nominee Photo:</label>
-                      <input type="file" class="form-control" name="n_photo" id="n_photo">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label for="uploadAadhar">Upload Nominee NID Card:</label>
-                      <input type="file" class="form-control" name="n_nid_attachment" id="n_nid_attachment">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="step">
-                <div class="row">
-                  <div class="col-sm-12 text-center">
-                    <h3>Review and Finish</h3>
-                    <p>Please review all the information you have provided. Once you are sure everything is correct, click the "Submit" button below to complete the process.</p>
-                    <button id="wizard-subm" type="submit" class="btn btn-irv">Submit</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="wizard-footer">
-              <div class="row">
-                <div class="col-xs-6 pull-left block-center">
-                  <button id="wizard-prev" style="display:none" type="button" class="btn btn-irv btn-irv-default">
-                    Previous
-                  </button>
-                </div>
-                <div class="col-xs-6 pull-right text-center">
-                  <button id="wizard-next" type="button" class="btn btn-irv">
-                    Next
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
+        <div class="page-title">
+            <h2>New BO Account</h2>
         </div>
-      </div>
-    </div>
-  </div>
 
-    <div class="modal fade" id="nidhelp" tabindex="-1" aria-labelledby="nidhelpLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="nidhelpLabel">Your NID Number</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+        <form id="boForm" action="/submit" method="POST">
+            <div class="accordion" id="accordionExample">
+            <!-- Section 1 -->
+            <div class="accordion-item">
+                <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        <span class="fas fa-user"></span> Basic Information
+                    </button>
+                    </h2>
                 </div>
-                <div class="modal-body">
-                    <div>
-                        <p style="text-align: justify;line-height: 28px;color: #000;font-size: 1.6rem;padding: 5px 8px 5px;">
-                            Only 10 digit and 17 digit NID is accepted. If you have the old 13 digit NID, you should add your birthyear at the front of your NID to make
-                            it 17 digit.
-                            For example, if your 13 digit NID is 1917431000040 and your birthday (as on NID) is 01 January 1982, then your 17 digit NID is 19821917431000040.
-                        </p>
-                    </div>
 
-                    <div>
-                        <img style="width: 90%;display:block;margin-left:auto;margin-right:auto;" src="{{ asset('user/assets/logos/nidfront.png') }}" alt="">
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col">
+                                <label for="fullName">Account Type : </label>
+                                <select name="" id="" class="form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="single">Single</option>
+                                    <option value="joint">Joint</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="fullName">Introducer : </label>
+                                <select name="" id="" class="form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="single">Single</option>
+                                    <option value="joint">Joint</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
-        </div>
+
+            <!-- Section 2 -->
+            <div class="accordion-item">
+                <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <span class="fas fa-file-alt"></span> First Application Information
+                    </button>
+                    </h2>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="" class="label-required">
+                                    Name
+                                </label>
+                                <select name="" id="" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="mr">Mr</option>
+                                    <option value="mrs">Mrs</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label for="applicationNumber">Investor's First Name</label>
+                                <input type="text" class="form-control" id="applicationNumber" name="applicationNumber" placeholder="Enter first name">
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label for="applicationNumber">Investor's Last Name</label>
+                                <input type="text" class="form-control" id="applicationNumber" name="applicationNumber" placeholder="Enter last name">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="" class="label-required">
+                                    Father/Hus Name
+                                </label>
+                                <select name="" id="" class="c-select form-control">
+                                    <option value="father">Father Name</option>
+                                    <option value="husband">Husband Name</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label for="" class="blank-label">Father Name</label>
+                                <input type="text" class="form-control" id="applicationNumber" name="applicationNumber" placeholder="Enter father name">
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label for="" class="label-required">
+                                    Mother Name
+                                </label>
+                                <input type="text" class="form-control" id="applicationNumber" name="applicationNumber" placeholder="Enter mother name">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="" class="label-required block">
+                                    Date of Birth
+                                </label>
+                                <select name="" id="ddlinvdobDay" class="c-select form-control">
+                                    <option value="" selected disabled>Day</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                                <select name="" id="ddlinvdobMonth" class="c-select form-control">
+                                    <option value="" selected disabled>Day</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                                <select name="" id="ddlinvdobYear" class="c-select form-control">
+                                    <option value="" selected disabled>Day</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="">
+                                    Occupation
+                                </label>
+                                <select name="" id="" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="">Teacher</option>
+                                    <option value="">Businessman</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="">
+                                    Gender
+                                </label>
+                                <select name="" id="" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="">Male</option>
+                                    <option value="">Female</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="">
+                                    Maritial Status
+                                </label>
+                                <select name="" id="" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="">Married</option>
+                                    <option value="">Unmarried</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="">
+                                    Passport/NID
+                                </label>
+                                <select name="" id="" class="c-select form-control">
+                                    <option value="">Nid</option>
+                                    <option value="">Passport</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-5">
+                                <label for="">NID</label>
+                                <input type="text" class="form-control" placeholder="Enter NID number">
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label class="block" for="">Passport/NID Issue Date</label>
+                                <select name="" class="c-select form-control" id="ddlpassportissuebDay">
+                                    <option value="" selected disabled>Day</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                                <select name="" class="c-select form-control" id="ddlpassportissuebMonth">
+                                    <option value="" selected disabled>Month</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                                <select name="" class="c-select form-control" id="ddlpassportissuebYear">
+                                    <option value="" selected disabled>Month</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="" class="label-required">
+                                    State/Division
+                                </label>
+                                <select name="" id="ddlDivision" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="label-required">
+                                    City
+                                </label>
+                                <select name="" id="ddlCitylist" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="label-required">
+                                    ZIP/Post Code
+                                </label>
+                                <input type="text" id="txtZipCode" class="form-control" placeholder="Enter ZIP/Post Code">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="">Contact Address</label>
+                                <select name="" id="ddlContact" class="c-select form-control">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-10">
+                                <label for="" class="blank-label">Address</label>
+                                <textarea name="" id="txtPresentAddress" rows="1" class="form-control" placeholder="Enter Contact Address"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="">Present Address</label>
+                                <select name="" id="ddlContact" class="c-select form-control">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-10">
+                                <label for="" class="blank-label">Address</label>
+                                <textarea name="" id="txtPresentAddress" rows="1" class="form-control" placeholder="Enter Present Address"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="">Permanent Address</label>
+                                <select name="" id="txtPresentAddress" class="c-select form-control">
+                                    <option value="">Select</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-10">
+                                <label for="" class="blank-label">Address</label>
+                                <textarea name="" id="ddlPermanent" rows="1" class="form-control" placeholder="Enter Permanent Address"></textarea>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="">TIN (if any)</label>
+                                <input type="text" id="txtTin" class="form-control" placeholder="TIN (optional)">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="" class="label-required">Mobile</label>
+                                <input type="text" id="txtMobileNumber" class="form-control" placeholder="Primary Mobile Number">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="" class="label">Secondary Mobile(Optional)</label>
+                                <input type="text" id="txtMobileNumber" class="form-control" placeholder="Primary Mobile Number">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="" class="label">Email Address</label>
+                                <input type="email" id="txtEmailAddress" class="form-control" placeholder="Primary Mobile Number">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="" class="label">Email Address(Optional)</label>
+                                <input type="email" id="txtSecondaryEmailAddress" class="form-control" placeholder="Primary Mobile Number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="accordion-item">
+                <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <span class="fas fa-university"></span> Bank Information (1st Applicant)
+                    </button>
+                    </h2>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="" class="label-required">Bank</label>
+                                <select name="" id="ddlBanklist" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="">Brank Bank</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="label-required">Bank Branch</label>
+                                <select name="" id="ddlBanklist" class="c-select form-control">
+                                    <option value="" selected disabled>Select</option>
+                                    <option value="">Brank Bank</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="" class="label-required">Account Number</label>
+                                <input type="text" id="txtAccountNumber" class="form-control" placeholder="Enter Your Acoount Number">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Section 4 -->
+            <div class="accordion-item">
+                <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h2 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        <span class="fas fa-user-friends"></span> Nominee Information
+                    </button>
+                    </h2>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-8">
+                                <label for="">Nominee Name</label>
+                                <input type="text" id="txtNomineeName" class="form-control" placeholder="Nominee Name">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="">Relationship with Investor</label>
+                                <select name="" id="ddlRelationship" class="c-select form-control">
+                                    <option value="" disabled selected>Select Relationship</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label class="block" for="">Date Of Birth</label>
+                                <select name="" class="c-select form-control" id="ddlpassportissuebDay">
+                                    <option value="" selected disabled>Day</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                                <select name="" class="c-select form-control" id="ddlpassportissuebMonth">
+                                    <option value="" selected disabled>Month</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                                <select name="" class="c-select form-control" id="ddlpassportissuebYear">
+                                    <option value="" selected disabled>Month</option>
+                                    <option value="">1</option>
+                                    <option value="">2</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="">NID/Passport</label>
+                                <input type="text" id="txtNomineeNidPassport" class="form-control" name="nid/pass" placeholder="Nominee NID or Passport">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="">Contact Address</label>
+                                <input type="text" id="txtNomineeContactAddress" class="form-control" placeholder="Nominee Contact Address">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="" class="label-required">Mobile Number</label>
+                                <input type="text" id="txtNomineeMobile" class="form-control" placeholder="Nominee Mobile Number">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="" class="label">Email Address</label>
+                                <input type="email" id="txtNomineeEmail" class="form-control" placeholder="Nominee Email Address">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <!-- Section 5 -->
+            <div class="accordion-item">
+                <div class="card">
+                    <div class="card-header" id="headingFive">
+                        <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            <span class="fas fa-file-signature"></span> Power of Attorney Information (optional)
+                        </button>
+                        </h2>
+                    </div>
+                    <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="">POA Name</label>
+                                    <input type="text" name="" id="txtPoaName" class="form-control" placeholder="Power of Attorney Name">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="">Relationship with Investor</label>
+                                    <select name="" id="ddlRelationshipPoa" class="c-select form-control">
+                                        <option value="" selected disabled>Select Relationhip</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="" class="block">Date Of Birth</label>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebDay">
+                                        <option value="" selected disabled>Day</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebMonth">
+                                        <option value="" selected disabled>Month</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebYear">
+                                        <option value="" selected disabled>Month</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="">NID/Passport</label>
+                                    <input type="text" id="txtPoaNidPassport" class="form-control" placeholder="Power of Attorney NID/Pssport">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for="">Contact Address</label>
+                                    <input type="text" id="txtPoaContactAddress" class="form-control" placeholder="Power of Attorney Contact Address">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="" class="label-required">Mobile Number</label>
+                                    <input type="text" id="txtPoaMobileNumber" class="form-control" placeholder="Power of Attorney Mobile Number">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="">Email Address</label>
+                                    <input type="email" id="txtPoaEmailAddress" class="form-control" placeholder="Power of Attorney Email Address">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-5">
+                                    <label for="" class="block">Effective Date From</label>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebDay">
+                                        <option value="" selected disabled>Day</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebMonth">
+                                        <option value="" selected disabled>Month</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebYear">
+                                        <option value="" selected disabled>Month</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-1">
+                                    <label for="">.</label>
+                                    <input type="text" class="form-control text-center" name="" value="TO">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="" class="block">Effective Date From</label>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebDay">
+                                        <option value="" selected disabled>Day</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebMonth">
+                                        <option value="" selected disabled>Month</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                    <select name="" class="c-select form-control" id="ddlpassportissuebYear">
+                                        <option value="" selected disabled>Month</option>
+                                        <option value="">1</option>
+                                        <option value="">2</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+
+            <div class="btn-submit-container">
+            <button type="submit" class="btn btn-primary btn-submit">Submit</button>
+            </div>
+        </form>
     </div>
 
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script>
-        const checkButtons = (activeStep, stepsCount) => {
-            const prevBtn = $("#wizard-prev");
-            const nextBtn = $("#wizard-next");
-            const submBtn = $("#wizard-subm");
-
-            switch (activeStep) {
-                case 0: // First Step
-                prevBtn.hide();
-                submBtn.hide();
-                nextBtn.show();
-                break;
-                case stepsCount: // Last Step
-                nextBtn.hide();
-                prevBtn.show();
-                submBtn.show();
-                break;
-                default:
-                submBtn.hide();
-                prevBtn.show();
-                nextBtn.show();
-            }
-        };
-
-        const setWizardHeight = activeStepHeight => {
-            $(".wizard-body").height(activeStepHeight);
-        };
-
-        $(function() {
-            const wizardSteps = $(".wizard-header .wizard-step");
-            const steps = $(".wizard-body .step");
-            const stepsCount = steps.length - 1;
-            let activeStep = 0;
-            let activeStepHeight = $(steps[activeStep]).height();
-
-            checkButtons(activeStep, stepsCount);
-            setWizardHeight(activeStepHeight);
-
-            $(window).resize(function() {
-                setWizardHeight($(steps[activeStep]).height());
-            });
-
-            $("#wizard-prev").click(() => {
-                $(steps[activeStep]).removeClass("active");
-                $(wizardSteps[activeStep]).removeClass("active");
-
-                activeStep--;
-
-                $(steps[activeStep]).removeClass("off").addClass("active");
-                $(wizardSteps[activeStep]).addClass("active");
-
-                activeStepHeight = $(steps[activeStep]).height();
-                setWizardHeight(activeStepHeight);
-                checkButtons(activeStep, stepsCount);
-            });
-
-            $("#wizard-next").click(() => {
-                if (!validateCurrentStep()) {
-                    console.log("Validation failed. Aborting next step.");
-                    return;
-                }
-                $(steps[activeStep]).removeClass("initial").addClass("off").removeClass("active");
-                $(wizardSteps[activeStep]).removeClass("active");
-
-                activeStep++;
-
-                $(steps[activeStep]).addClass("active");
-                $(wizardSteps[activeStep]).addClass("active");
-
-                activeStepHeight = $(steps[activeStep]).height();
-                setWizardHeight(activeStepHeight);
-                checkButtons(activeStep, stepsCount);
-            });
-
-            function validateCurrentStep() {
-                let isValid = true;
-
-                // Validate select dropdown
-                const dpType = $("#dpType").val();
-                if (!dpType) {
-                    isValid = false;
-                    $("#dpType").addClass("is-invalid");
-                    $("#dpTypeError").text("Please select a DP type.");
-                } else {
-                    $("#dpType").removeClass("is-invalid");
-                    $("#dpType").next(".invalid-feedback").text("");
-                }
-
-                // Validate radio buttons for BO option
-                const boOptionNew = $("#newBo").prop("checked");
-                const boOptionLink = $("#linkBo").prop("checked");
-                if (!boOptionNew && !boOptionLink) {
-                    isValid = false;
-                    $(".form-check-input[name='boOption']").addClass("is-invalid");
-                    $("#boOptionError").text("Please select a BO option.");
-                } else {
-                    $(".form-check-input[name='boOption']").removeClass("is-invalid");
-                    $("#boOptionError").text("");
-                }
-
-                // Show/hide BO Code input based on selected BO option
-                if (boOptionLink) {
-                    const boCode = $("#boCode").val();
-                    if (!boCode || boCode.length !== 8) {
-                        isValid = false;
-                        $("#boCodeInput").addClass("is-invalid");
-                        $("#boCodeInput").find(".invalid-feedback").text("Please enter a valid 8-digit BO code.");
-                    } else {
-                        $("#boCodeInput").removeClass("is-invalid");
-                        $("#boCodeInput").find(".invalid-feedback").text("");
-                    }
-                } else {
-                    $("#boCodeInput").removeClass("is-invalid");
-                    $("#boCodeInput").find(".invalid-feedback").text("");
-                }
-
-                // Validate residency radio buttons
-                const residencyRB = $("#residentRb").prop("checked");
-                const residencyNRB = $("#nonResidentNrb").prop("checked");
-                if (!residencyRB && !residencyNRB) {
-                    isValid = false;
-                    $(".form-check-input[name='residency']").addClass("is-invalid");
-                    $("#residencyError").text("Please select a residency option.");
-                } else {
-                    $(".form-check-input[name='residency']").removeClass("is-invalid");
-                    $("#residencyError").text("");
-                }
-
-                // Validate BO Type radio buttons
-                const boTypeIndividual = $("#individual").prop("checked");
-                const boTypeJoint = $("#joint").prop("checked");
-                if (!boTypeIndividual && !boTypeJoint) {
-                    isValid = false;
-                    $(".form-check-input[name='boType']").addClass("is-invalid");
-                    $("#boTypeError").text("Please select a BO type.");
-                } else {
-                    $(".form-check-input[name='boType']").removeClass("is-invalid");
-                    $("#boTypeError").text("");
-                }
-
-                // Log validation result for debugging
-                console.log("Validation result:", isValid);
-
-                // Return validation result
-                return isValid;
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function(){
-            $('input[name="boOption"]').click(function(){
-                if ($('#linkBo').is(':checked')) {
-                    $('#boCodeInput').show();
-                } else {
-                    $('#boCodeInput').hide();
-                }
-            });
-        });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
