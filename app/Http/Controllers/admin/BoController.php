@@ -84,6 +84,11 @@ class BoController extends Controller
         }
     }
 
+    public function openBoForm()
+    {
+        return view('admin.bo.bo');
+    }
+
     public function showForm($id)
     {
         $client = BOForm::findOrFail($id);

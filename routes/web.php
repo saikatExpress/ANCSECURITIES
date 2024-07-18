@@ -131,6 +131,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         $hashedShowFormUrl = md5('show/form');
         Route::get('/'.$hashedShowFormUrl.'/{id}', 'showForm')->name('show.form');
         Route::get('/create/bo', 'create')->name('create.bo');
+        Route::get('/open/bo/form', 'openBoForm')->name('openbo.form');
         Route::post('/account/store', 'acStore')->name('acbo.store');
         Route::post('/upload-excel','uploadExcel')->name('upload.excel');
 

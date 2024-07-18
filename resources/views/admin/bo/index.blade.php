@@ -12,8 +12,8 @@
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
             <p style="text-align: right;">
-                <a class="btn btn-sm btn-primary" href="{{ route('create.form') }}">
-                    Add Form
+                <a class="btn btn-sm btn-primary" href="{{ route('openbo.form') }}">
+                    Open BO Account
                 </a>
             </p>
         </section>
