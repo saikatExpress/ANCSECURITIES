@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\Fund;
 use App\Models\User;
 use App\Models\BOForm;
+use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -24,7 +26,43 @@ class AdminController extends Controller
         $data['totalUsers'] = User::where('role', 'user')->count();
         $data['latestUsers'] = User::where('role', 'user')->latest()->take(8)->get();
 
-        return view('admin.home.index')->with($data);
+        $notifications = [];
+
+        $limits   = LimitRequest::with('clients:id,name,email,mobile,whatsapp,trading_code')->where('status', 'pending')->get();
+        $withdraw = Fund::with('clients:id,name,email,mobile,whatsapp,trading_code')->where('category', 'withdraw')->where('status', 'pending')->get();
+        $deposite = Fund::with('clients:id,name,email,mobile,whatsapp,trading_code')->where('category', 'deposit')->where('status', 'pending')->get();
+
+        foreach ($limits as $limit) {
+            $notifications[] = [
+                'type' => 'limit',
+                'data' => $limit,
+                'created_at' => $limit->created_at
+            ];
+        }
+
+        foreach ($withdraw as $withdraw) {
+            $notifications[] = [
+                'type' => 'withdraw',
+                'data' => $withdraw,
+                'created_at' => $withdraw->created_at
+            ];
+        }
+
+        foreach ($deposite as $deposit) {
+            $notifications[] = [
+                'type' => 'deposit',
+                'data' => $deposit,
+                'created_at' => $deposit->created_at
+            ];
+        }
+
+        usort($notifications, function($a, $b) {
+            return $b['created_at']->timestamp - $a['created_at']->timestamp;
+        });
+
+        $data['browserHistory'] = User::where('role', 'user')->pluck('user_agent');
+
+        return view('admin.home.index', compact('notifications'))->with($data);
     }
 
     public function userIndex()

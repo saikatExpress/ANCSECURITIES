@@ -77,6 +77,41 @@
                 <!-- /.col -->
             </div>
 
+            <div class="row">
+                <div class="ticker-container">
+                    <div class="ticker">
+                        @foreach ($notifications as $notification)
+                            @if ($notification['type'] == 'limit')
+                                <div class="ticker-item">
+                                    <a style="color: #fff;" href="{{ route('today.limit_request') }}">
+                                        <i class="fa fa-exclamation-circle text-aqua"></i> New Limit Request from {{ $notification['data']->clients->name }}<br>
+                                        <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                        <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->limit_amount }}</span>
+                                    </a>
+                                </div>
+                            @elseif($notification['type'] == 'withdraw')
+                                <div class="ticker-item">
+                                    <a style="color: #fff;" href="{{ route('withdraw.request') }}">
+                                        <i class="fa fa-money text-yellow"></i> New Withdraw Request from {{ $notification['data']->clients->name }}<br>
+                                        <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                        <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span>
+                                    </a>
+                                </div>
+                            @elseif($notification['type'] == 'deposit')
+                                <div class="ticker-item">
+                                    <a style="color: #fff;" href="{{ route('deposit.request') }}">
+                                        <i class="fa fa-bank text-green"></i> New Deposit from {{ $notification['data']->clients->name }}<br>
+                                        <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                        <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span>
+                                    </a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+
             <!-- Main row -->
             <div class="row">
                 <!-- Left col -->
@@ -143,7 +178,7 @@
 
                         <div class="box-tools pull-right">
                             <span data-toggle="tooltip" title="3 New Messages" class="badge bg-yellow">3</span>
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                             </button>
                             <button type="button" class="btn btn-box-tool" data-toggle="tooltip" title="Contacts"
                                     data-widget="chat-pane-toggle">
@@ -163,7 +198,7 @@
                                 <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
                             </div>
                             <!-- /.direct-chat-info -->
-                            <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
+                            <img class="direct-chat-img" src="{{ asset('admin/assets/dist/img/user1-128x128.jpg') }}" alt="message user image">
                             <!-- /.direct-chat-img -->
                             <div class="direct-chat-text">
                                 Is this template really for free? That's unbelievable!
@@ -179,7 +214,7 @@
                                 <span class="direct-chat-timestamp pull-left">23 Jan 2:05 pm</span>
                             </div>
                             <!-- /.direct-chat-info -->
-                            <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image">
+                            <img class="direct-chat-img" src="{{ asset('admin/assets/dist/img/user3-128x128.jpg') }}" alt="message user image">
                             <!-- /.direct-chat-img -->
                             <div class="direct-chat-text">
                                 You better believe it!
@@ -195,7 +230,7 @@
                                 <span class="direct-chat-timestamp pull-right">23 Jan 5:37 pm</span>
                             </div>
                             <!-- /.direct-chat-info -->
-                            <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
+                            <img class="direct-chat-img" src="{{ asset('admin/assets/dist/img/user1-128x128.jpg') }}" alt="message user image">
                             <!-- /.direct-chat-img -->
                             <div class="direct-chat-text">
                                 Working with AdminLTE on a great new app! Wanna join?
@@ -211,7 +246,7 @@
                                 <span class="direct-chat-timestamp pull-left">23 Jan 6:10 pm</span>
                             </div>
                             <!-- /.direct-chat-info -->
-                            <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image">
+                            <img class="direct-chat-img" src="{{ asset('admin/assets/dist/img/user3-128x128.jpg') }}" alt="message user image">
                             <!-- /.direct-chat-img -->
                             <div class="direct-chat-text">
                                 I would love to.
@@ -228,7 +263,7 @@
                             <ul class="contacts-list">
                             <li>
                                 <a href="#">
-                                <img class="contacts-list-img" src="dist/img/user1-128x128.jpg" alt="User Image">
+                                <img class="contacts-list-img" src="{{ asset('admin/assets/dist/img/user1-128x128.jpg') }}" alt="User Image">
 
                                 <div class="contacts-list-info">
                                         <span class="contacts-list-name">
@@ -243,7 +278,7 @@
                             <!-- End Contact Item -->
                             <li>
                                 <a href="#">
-                                <img class="contacts-list-img" src="dist/img/user7-128x128.jpg" alt="User Image">
+                                <img class="contacts-list-img" src="{{ asset('admin/assets/dist/img/user7-128x128.jpg') }}" alt="User Image">
 
                                 <div class="contacts-list-info">
                                         <span class="contacts-list-name">
@@ -258,7 +293,7 @@
                             <!-- End Contact Item -->
                             <li>
                                 <a href="#">
-                                <img class="contacts-list-img" src="dist/img/user3-128x128.jpg" alt="User Image">
+                                <img class="contacts-list-img" src="{{ asset('admin/assets/dist/img/user3-128x128.jpg') }}" alt="User Image">
 
                                 <div class="contacts-list-info">
                                         <span class="contacts-list-name">
@@ -342,15 +377,17 @@
                     <!-- USERS LIST -->
                     <div class="box box-danger">
                         <div class="box-header with-border">
-                        <h3 class="box-title">Latest Members</h3>
+                            <h3 class="box-title">Latest Members</h3>
 
-                        <div class="box-tools pull-right">
-                            <span class="label label-danger">{{ count($latestUsers) }} New Members</span>
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                            </button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
-                            </button>
-                        </div>
+                            <div class="box-tools pull-right">
+                                <span class="label label-danger">{{ count($latestUsers) }} New Members</span>
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
                         </div>
 
                         <div class="box-body no-padding">
@@ -361,9 +398,11 @@
                                             @if ($user->profile_image == NULL)
                                                 <img src="{{ asset('admin/assets/dist/img/user1-128x128.jpg') }}" alt="User Image">
                                             @else
-                                                <img src="{{ asset('storage/' . $user->profile_image) }}" alt="User Image">
+                                                <img src="{{ asset('storage/user_photo/' . $user->profile_image) }}" alt="User Image">
                                             @endif
-                                            <a class="users-list-name" href="#">{{ $user->name }}</a>
+                                            <a class="users-list-name" href="#">
+                                                {{ $user->name }}
+                                            </a>
                                             <span class="users-list-date">{{ $user->created_at }}</span>
                                         </li>
                                     @endforeach
@@ -389,13 +428,13 @@
                 <!-- TABLE: LATEST ORDERS -->
                 <div class="box box-info">
                     <div class="box-header with-border">
-                    <h3 class="box-title">Latest Orders</h3>
+                        <h3 class="box-title">Latest Orders</h3>
 
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                    </div>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -483,124 +522,136 @@
                 <!-- /.col -->
 
                 <div class="col-md-4">
-                <!-- Info Boxes Style 2 -->
-                <div class="info-box bg-yellow">
-                    <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
+                    <div class="info-box bg-yellow">
+                        <span class="info-box-icon"><i class="ion ion-ios-pricetag-outline"></i></span>
 
-                    <div class="info-box-content">
-                    <span class="info-box-text">Inventory</span>
-                    <span class="info-box-number">5,200</span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Inventory</span>
+                            <span class="info-box-number">5,200</span>
 
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 50%"></div>
+                            <div class="progress">
+                                <div class="progress-bar" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-description">
+                                50% Increase in 30 Days
+                            </span>
+                        </div>
                     </div>
-                    <span class="progress-description">
-                            50% Increase in 30 Days
-                        </span>
-                    </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
+
                 <div class="info-box bg-green">
                     <span class="info-box-icon"><i class="ion ion-ios-heart-outline"></i></span>
 
                     <div class="info-box-content">
-                    <span class="info-box-text">Mentions</span>
-                    <span class="info-box-number">92,050</span>
+                        <span class="info-box-text">Mentions</span>
+                        <span class="info-box-number">92,050</span>
 
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 20%"></div>
-                    </div>
-                    <span class="progress-description">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 20%"></div>
+                        </div>
+                        <span class="progress-description">
                             20% Increase in 30 Days
                         </span>
                     </div>
-                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box -->
+
                 <div class="info-box bg-red">
-                    <span class="info-box-icon"><i class="ion ion-ios-cloud-download-outline"></i></span>
+                    <span class="info-box-icon">
+                        <i class="ion ion-ios-cloud-download-outline"></i>
+                    </span>
 
                     <div class="info-box-content">
-                    <span class="info-box-text">Downloads</span>
-                    <span class="info-box-number">114,381</span>
+                        <span class="info-box-text">Downloads</span>
+                        <span class="info-box-number">114,381</span>
 
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 70%"></div>
-                    </div>
-                    <span class="progress-description">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 70%"></div>
+                        </div>
+                        <span class="progress-description">
                             70% Increase in 30 Days
                         </span>
                     </div>
-                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box -->
+
                 <div class="info-box bg-aqua">
-                    <span class="info-box-icon"><i class="ion-ios-chatbubble-outline"></i></span>
+                    <span class="info-box-icon">
+                        <i class="ion-ios-chatbubble-outline"></i>
+                    </span>
 
                     <div class="info-box-content">
-                    <span class="info-box-text">Direct Messages</span>
-                    <span class="info-box-number">163,921</span>
+                        <span class="info-box-text">Direct Messages</span>
+                        <span class="info-box-number">163,921</span>
 
-                    <div class="progress">
-                        <div class="progress-bar" style="width: 40%"></div>
-                    </div>
-                    <span class="progress-description">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: 40%"></div>
+                        </div>
+                        <span class="progress-description">
                             40% Increase in 30 Days
                         </span>
                     </div>
-                    <!-- /.info-box-content -->
                 </div>
-                <!-- /.info-box -->
 
                 <div class="box box-default">
                     <div class="box-header with-border">
-                    <h3 class="box-title">Browser Usage</h3>
+                        <h3 class="box-title">Browser Usage</h3>
 
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
                     </div>
-                    </div>
-                    <!-- /.box-header -->
+
                     <div class="box-body">
-                    <div class="row">
-                        <div class="col-md-8">
-                        <div class="chart-responsive">
-                            <canvas id="pieChart" height="150"></canvas>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="chart-responsive">
+                                    <div id="barChart" class="bar-chart"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <ul class="legend">
+                                    <li><span class="color-box" style="background-color: #FF6384;"></span> Chrome</li>
+                                    <li><span class="color-box" style="background-color: #36A2EB;"></span> IE</li>
+                                    <li><span class="color-box" style="background-color: #FFCE56;"></span> Firefox</li>
+                                    <li><span class="color-box" style="background-color: #4BC0C0;"></span> Safari</li>
+                                    <li><span class="color-box" style="background-color: #9966FF;"></span> Opera</li>
+                                    <li><span class="color-box" style="background-color: #C9CBCF;"></span> Navigator</li>
+                                </ul>
+                            </div>
                         </div>
-                        <!-- ./chart-responsive -->
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-md-4">
-                        <ul class="chart-legend clearfix">
-                            <li><i class="fa fa-circle-o text-red"></i> Chrome</li>
-                            <li><i class="fa fa-circle-o text-green"></i> IE</li>
-                            <li><i class="fa fa-circle-o text-yellow"></i> FireFox</li>
-                            <li><i class="fa fa-circle-o text-aqua"></i> Safari</li>
-                            <li><i class="fa fa-circle-o text-light-blue"></i> Opera</li>
-                            <li><i class="fa fa-circle-o text-gray"></i> Navigator</li>
+                    </div>
+
+                    {{-- <div class="box-footer no-padding">
+                        <ul class="nav nav-pills nav-stacked">
+                            <li>
+                                <a href="#">
+                                    United States of America
+                                    <span class="pull-right text-red">
+                                        <i class="fa fa-angle-down"></i>
+                                        12%
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    India
+                                    <span class="pull-right text-green">
+                                        <i class="fa fa-angle-up"></i>
+                                        4%
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">China
+                                    <span class="pull-right text-yellow">
+                                        <i class="fa fa-angle-left"></i>
+                                        0%
+                                    </span>
+                                </a>
+                            </li>
                         </ul>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
-                    </div>
-                    <!-- /.box-body -->
-                    <div class="box-footer no-padding">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li><a href="#">United States of America
-                        <span class="pull-right text-red"><i class="fa fa-angle-down"></i> 12%</span></a></li>
-                        <li><a href="#">India <span class="pull-right text-green"><i class="fa fa-angle-up"></i> 4%</span></a>
-                        </li>
-                        <li><a href="#">China
-                        <span class="pull-right text-yellow"><i class="fa fa-angle-left"></i> 0%</span></a></li>
-                    </ul>
-                    </div>
-                    <!-- /.footer -->
+                    </div> --}}
                 </div>
-                <!-- /.box -->
 
                 <!-- PRODUCT LIST -->
                 <div class="box box-primary">
@@ -684,7 +735,86 @@
         </section>
         <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Browser history data from the server-side
+            const browserHistory = @json($browserHistory);
+
+            // Function to count the occurrences of each browser type
+            function countBrowsers(history) {
+                const browserCount = {
+                    Chrome: 0,
+                    IE: 0,
+                    Firefox: 0,
+                    Safari: 0,
+                    Opera: 0,
+                    Navigator: 0
+                };
+
+                history.forEach(entry => {
+                    if (entry) {
+                        if (entry.includes("Chrome")) {
+                            browserCount.Chrome++;
+                        } else if (entry.includes("MSIE") || entry.includes("Trident")) {
+                            browserCount.IE++;
+                        } else if (entry.includes("Firefox")) {
+                            browserCount.Firefox++;
+                        } else if (entry.includes("Safari") && !entry.includes("Chrome")) {
+                            browserCount.Safari++;
+                        } else if (entry.includes("Opera") || entry.includes("OPR")) {
+                            browserCount.Opera++;
+                        } else if (entry.includes("Navigator")) {
+                            browserCount.Navigator++;
+                        }
+                    }
+                });
+
+                return browserCount;
+            }
+
+            const browserData = countBrowsers(browserHistory);
+            const total = Object.values(browserData).reduce((sum, count) => sum + count, 0);
+            const chartContainer = document.getElementById('barChart');
+
+            Object.keys(browserData).forEach(browser => {
+                const percentage = ((browserData[browser] / total) * 100).toFixed(2);
+
+                const barContainer = document.createElement('div');
+                barContainer.classList.add('bar');
+
+                const barLabel = document.createElement('div');
+                barLabel.classList.add('bar-label');
+                barLabel.textContent = `${browser}: ${percentage}%`;
+
+                const barValue = document.createElement('div');
+                barValue.classList.add('bar-value');
+                barValue.style.width = `${percentage}%`;
+                barValue.style.backgroundColor = getColorForBrowser(browser);
+
+                const barPercentage = document.createElement('div');
+                barPercentage.classList.add('bar-percentage');
+                barPercentage.textContent = `${percentage}%`;
+
+                barValue.appendChild(barPercentage);
+                barContainer.appendChild(barLabel);
+                barContainer.appendChild(barValue);
+                chartContainer.appendChild(barContainer);
+            });
+
+            function getColorForBrowser(browser) {
+                const colors = {
+                    Chrome: '#FF6384',
+                    IE: '#36A2EB',
+                    Firefox: '#FFCE56',
+                    Safari: '#4BC0C0',
+                    Opera: '#9966FF',
+                    Navigator: '#C9CBCF'
+                };
+                return colors[browser];
+            }
+        });
+    </script>
 @endsection
 
 

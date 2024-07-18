@@ -187,10 +187,30 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ route('today.limit_request') }}"><i class="fa fa-clock-o"></i> Todays Limit Request</a></li>
-                    <li><a href="{{ route('declined.request') }}"><i class="fa fa-times"></i> Decline Request</a></li>
-                    <li><a href="{{ route('all.request') }}"><i class="fa fa-list"></i> All Request</a></li>
-                    <li><a href="{{ route('withdraw.request') }}"><i class="fa fa-money"></i> Withdraw Request</a></li>
+                    <li>
+                        <a href="{{ route('today.limit_request') }}">
+                            <i class="fa fa-clock-o"></i>
+                            Todays Limit Request
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('declined.request') }}">
+                            <i class="fa fa-times"></i>
+                            Decline Request
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('all.request') }}">
+                            <i class="fa fa-list"></i>
+                            All Request
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('withdraw.request') }}">
+                            <i class="fa fa-money"></i>
+                            Withdraw Request
+                        </a>
+                    </li>
                     <li><a href="{{ route('deposit.request') }}"><i class="fa fa-bank"></i> Deposit Request</a></li>
                 </ul>
             </li>
