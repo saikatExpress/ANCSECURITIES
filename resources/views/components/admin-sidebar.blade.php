@@ -190,6 +190,12 @@
                     <li>
                         <a href="{{ route('today.limit_request') }}">
                             <i class="fa fa-clock-o"></i>
+                            Manual Request
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('today.limit_request') }}">
+                            <i class="fa fa-clock-o"></i>
                             Todays Limit Request
                         </a>
                     </li>
@@ -211,7 +217,12 @@
                             Withdraw Request
                         </a>
                     </li>
-                    <li><a href="{{ route('deposit.request') }}"><i class="fa fa-bank"></i> Deposit Request</a></li>
+                    <li>
+                        <a href="{{ route('deposit.request') }}">
+                            <i class="fa fa-bank"></i>
+                            Deposit Request
+                        </a>
+                    </li>
                 </ul>
             </li>
 

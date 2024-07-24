@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,5 +54,20 @@ class Fund extends Model
     public function clients()
     {
         return $this->belongsTo(User::class, 'client_id', 'id');
+    }
+
+    public static function createData($requestType, $clientId,$code,$name, $email, $mobile, $amount, $bankAccount, $date, $path)
+    {
+        Fund::create([
+            'client_id'     => $clientId,
+            'client_name'   => $name,
+            'amount'        => $amount,
+            'ac_no'         => $bankAccount,
+            'bank_slip'     => $path,
+            'withdraw_date' => $date,
+            'category'      => $requestType,
+            'approved_by'   => Auth::id(),
+            'status'        => 'approved',
+        ]);
     }
 }

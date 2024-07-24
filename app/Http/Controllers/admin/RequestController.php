@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\admin;
 
+use Carbon\Carbon;
 use App\Models\Fund;
+use App\Models\User;
+use App\Models\BoAccount;
 use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class RequestController extends Controller
@@ -28,6 +30,25 @@ class RequestController extends Controller
         return view('admin.Request.index', compact('pageTitle','limitRequests'));
     }
 
+    public function manuelRequest()
+    {
+        $pageTitle = 'Manual Request';
+
+        return view('admin.Request.manual', compact('pageTitle'));
+    }
+
+    public function getClientInfo($code)
+    {
+        $tradeCode = BoAccount::where('bo_id', $code)->first();
+
+        $exitsUser = User::where('trading_code', $code)->where('role', 'user')->first();
+
+        if($exitsUser){
+            return response()->json(['tradeInfo' => $tradeCode, 'user' => $exitsUser]);
+        }
+
+    }
+
     public function limitIndex()
     {
         $pageTitle = 'Today Limit Request';
@@ -44,6 +65,47 @@ class RequestController extends Controller
         $limitRequests = LimitRequest::with('clients:id,name,email,trading_code,mobile,whatsapp')->where('status', 'canceled')->get();
 
         return view('admin.Request.declined', compact('pageTitle','limitRequests'));
+    }
+
+    public function manualStore(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $requestType = $request->input('request');
+            $clientId    = $request->input('client_id');
+            $code        = $request->input('trading_code');
+            $name        = $request->input('name');
+            $email       = $request->input('email');
+            $mobile      = $request->input('mobile');
+            $amount      = $request->input('amount');
+            $bankAccount = $request->input('bank_account');
+            $date = $request->input('date');
+
+            DB::commit();
+
+            if ($request->hasFile('bank_slip')) {
+                $file                       = $request->file('bank_slip');
+                $path                       = $file->store('bank_slips', 'public');
+            } else {
+                $path = null;
+            }
+
+            if($requestType === 'limit'){
+                LimitRequest::createData($clientId,$code,$name, $email, $mobile, $amount);
+                return redirect()->back()->with('message', $requestType.' request saved successfully');
+            }elseif($requestType === 'withdraw'){
+                Fund::createData($requestType,$clientId,$code,$name, $email, $mobile, $amount, $bankAccount, $date, $path);
+                return redirect()->back()->with('message', $requestType.' request saved successfully');
+            }elseif($requestType === 'deposite'){
+                Fund::createData($requestType,$clientId,$code,$name, $email, $mobile, $amount, $bankAccount, $date, $path);
+                return redirect()->back()->with('message', $requestType.' request saved successfully');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            return false;
+        }
     }
 
     public function withdrawIndex()

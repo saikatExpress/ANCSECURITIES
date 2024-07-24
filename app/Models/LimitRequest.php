@@ -41,4 +41,17 @@ class LimitRequest extends Model
     {
         return $this->belongsTo(User::class, 'client_id', 'id');
     }
+
+    public static function createData($clientId,$code,$name, $email, $mobile, $amount)
+    {
+        LimitRequest::create([
+            'client_id'    => $clientId,
+            'trade_id'     => $code,
+            'client_name'  => $name,
+            'limit_amount' => $amount,
+            'reason'       => 'for trade',
+            'approved_by'  => auth()->user()->name,
+            'status'       => 'approved'
+        ]);
+    }
 }
