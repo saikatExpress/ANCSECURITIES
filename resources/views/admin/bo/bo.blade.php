@@ -387,20 +387,20 @@
 
                             <!-- Step 2 Content -->
                             <div id="step-2" class="step-content">
-                                <input type="hidden" name="bo_last_id" id="bo_last_id">
+
                                 <div class="card">
                                     <div class="card-header d-flex align-items-center justify-content-between view-profile-card-header">
                                         <h4 class="card-title mb-0">Bank Information</h4>
                                     </div>
                                 </div>
 
-                                <form id="step-2-form">
-
+                                <form id="step-2-form" action="{{ route('bank.store') }}" method="POST">
+                                    @csrf
                                     <div class="row p-2 pt-3">
 
                                         <div class="col-lg-12">
                                             <div class="mb-3">
-                                                <input name="user_id" type="hidden" value="95">
+                                                <input type="hidden" name="bo_last_id" id="bo_last_id">
                                             </div>
                                         </div>
 
@@ -477,7 +477,7 @@
                                                 <label for="branch_id" class="form-label">Bank Branch <span class="text-danger">*</span></label>
                                                 <select class="form-control required select2" id="branch_id" name="branch_id">
                                                     <option selected="selected" value="">Select Branch</option>
-                                                    <option value="main">Main Branch</option>
+                                                    <option value="1">Main Branch</option>
                                                 </select>
                                                 <span class="error-message" style="color: red; display: none;"></span>
                                             </div>
@@ -486,7 +486,7 @@
                                         <div class="col-lg-3">
                                             <div class="mb-3">
                                                 <label for="district_name" class="form-label">Bank District <span class="text-danger">*</span></label>
-                                                <input class="form-control required" placeholder="Enter Bank District Name" name="district_name" type="text" id="district_name">
+                                                <input class="form-control required" placeholder="Enter Bank District Name" name="bank_district_name" type="text" id="district_name">
                                                 <span class="error-message" style="color: red; display: none;"></span>
                                             </div>
                                         </div>
@@ -494,13 +494,13 @@
                                         <div class="col-lg-3">
                                             <div class="mb-3">
                                                 <label for="account_number" class="form-label">Bank A/C Number <span class="text-danger">*</span></label>
-                                                <input class="form-control required" placeholder="Enter Bank Account Number" name="account_number" type="text" id="account_number">
+                                                <input class="form-control required" placeholder="Enter Bank Account Number" name="bank_account_number" type="text" id="account_number">
                                                 <i class="help-text">** Bank AC must be 13 digits</i>
                                                 <span class="error-message" style="color: red; display: none;"></span>
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary next-step">Save & Next</button>
+                                    <button type="submit" class="btn btn-primary next-step">Save & Next</button>
                                     <button type="button" class="btn btn-secondary prev-step">Back</button>
                                 </form>
                             </div>
@@ -510,20 +510,21 @@
                                 <div class="card-header d-flex align-items-center justify-content-between  view-profile-card-header">
                                     <h4 class="card-title mb-0">Authorize</h4>
                                 </div>
-                                <form id="step-3-form">
+                                <form id="step-3-form" action="{{ route('authorize.store') }}" method="POST">
+                                    @csrf
                                     <div class="card-body">
                                         <div class="row p-3">
 
                                             <div class="col-md-12">
                                                 <div class="mb-3">
-                                                    <input name="user_id" type="hidden" value="95">
+                                                    <input name="user_id" class="user_id" type="hidden" value="">
                                                 </div>
                                             </div>
 
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="auth_courtesy_title" class="form-label">Courtesy Title <span class="text-danger">*</span></label>
-                                                <select class="form-control select2" id="auth_courtesy_title" maxlength="10" name="courtesy_title">
+                                                <select class="form-control select2" id="auth_courtesy_title" maxlength="10" name="auth_courtesy_title">
                                                     <option selected="selected" value="">Select</option>
                                                     <option value="Mr">Mr</option>
                                                     <option value="Mrs">Mrs</option>
@@ -533,71 +534,71 @@
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label for="firstname" class="form-label">First Name <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="100" placeholder="Enter First Name" name="firstname" type="text" id="firstname">
+                                                <input class="form-control" maxlength="100" placeholder="Enter First Name" name="auth_firstname" type="text" id="firstname">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="100" placeholder="Enter Last Name" name="lastname" type="text" id="lastname">
+                                                <input class="form-control" maxlength="100" placeholder="Enter Last Name" name="auth_lastname" type="text" id="lastname">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="occupation" class="form-label">Occupation <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="30" placeholder="Enter Occupation" name="occupation" type="text" id="occupation">
+                                                <input class="form-control" maxlength="30" placeholder="Enter Occupation" name="auth_occupation" type="text" id="occupation">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="date_of_birth" class="form-label">Date of Birth (YYYY-MM-DD) <span class="text-danger">*</span></label>
                                                 <div class="flatpickr">
-                                                    <input class="form-control birthdate required" placeholder="Enter Date of Birth" id="date_of_birth" name="date_of_birth" type="date">
+                                                    <input class="form-control birthdate" placeholder="Enter Date of Birth" id="auth_date_of_birth" name="auth_date_of_birth" type="date">
                                                 </div>
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="nid" class="form-label">NID <span class="text-danger">*</span></label>
-                                                <input class="form-control required" minlength="10" maxlength="20" placeholder="Enter NID" name="nid" type="text" id="nid">
+                                                <input class="form-control" minlength="10" maxlength="20" placeholder="Enter NID" name="auth_nid" type="text" id="nid">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="father_name" class="form-label">Father&#039;s Name <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="30" placeholder="Enter Father Name" name="father_name" type="text" id="father_name">
+                                                <input class="form-control" maxlength="30" placeholder="Enter Father Name" name="auth_father_name" type="text" id="father_name">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="mother_name" class="form-label">Mother&#039;s Name <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="30" placeholder="Enter Mother Name" name="mother_name" type="text" id="mother_name">
+                                                <input class="form-control" maxlength="30" placeholder="Enter Mother Name" name="auth_mother_name" type="text" id="mother_name">
                                             </div>
 
                                             <div class="col-md-12 mb-2">
                                                 <label for="address_line_1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="30" placeholder="Enter Address Line 1" name="address_line_1" type="text" id="address_line_1">
+                                                <input class="form-control" maxlength="30" placeholder="Enter Address Line 1" name="auth_address_line_1" type="text" id="address_line_1">
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label for="address_line_2" class="form-label">Address Line 2</label>
-                                                <input class="form-control" maxlength="30" placeholder="Enter Address Line 2" name="address_line_2" type="text" id="address_line_2">
+                                                <input class="form-control" maxlength="30" placeholder="Enter Address Line 2" name="auth_address_line_2" type="text" id="address_line_2">
                                             </div>
                                             <div class="col-md-6 mb-2">
                                                 <label for="address_line_3" class="form-label">Address Line 3</label>
-                                                <input class="form-control" maxlength="30" placeholder="Enter Address Line 3" name="address_line_3" type="text" id="address_line_3">
+                                                <input class="form-control" maxlength="30" placeholder="Enter Address Line 3" name="auth_address_line_3" type="text" id="address_line_3">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="city" class="form-label">City <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="25" placeholder="Enter City" name="city" type="text" id="city">
+                                                <input class="form-control" maxlength="25" placeholder="Enter City" name="auth_city" type="text" id="auth_city">
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label for="post_code" class="form-label">Post Code <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="10" placeholder="Enter Post Code" name="post_code" type="text" id="post_code">
+                                                <input class="form-control" maxlength="10" placeholder="Enter Post Code" name="auth_post_code" type="text" id="post_code">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="division" class="form-label">Division <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="25" placeholder="Enter Division" name="division" type="text" id="division">
+                                                <input class="form-control" maxlength="25" placeholder="Enter Division" name="auth_division" type="text" id="division">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="auth_country" class="form-label">Country <span class="text-danger">*</span></label>
-                                                <select class="form-control required select2" id="auth_country" name="country">
+                                                <select class="form-control select2" id="auth_country" name="auth_country">
                                                     <option selected="selected" value="">Select Country</option>
                                                     <option value="ban">Bangladesh</option>
                                                 </select>
@@ -605,26 +606,26 @@
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="80" placeholder="Enter Email Address" name="email" type="email" id="email">
+                                                <input class="form-control" maxlength="80" placeholder="Enter Email Address" name="auth_email" type="email" id="auth_email">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="mobile" class="form-label">Mobile <span class="text-danger">*</span></label>
-                                                <input class="form-control required" maxlength="20" placeholder="Enter Mobile Number" name="mobile" type="text" id="mobile">
+                                                <input class="form-control" maxlength="20" placeholder="Enter Mobile Number" name="auth_mobile" type="text" id="auth_mobile">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="telephone" class="form-label">Telephone</label>
-                                                <input class="form-control" maxlength="20" placeholder="Enter Telephone" name="telephone" type="text" id="telephone">
+                                                <input class="form-control" maxlength="20" placeholder="Enter Telephone" name="auth_telephone" type="text" id="auth_telephone">
                                             </div>
 
                                             <div class="col-md-3 mb-2">
                                                 <label for="fax" class="form-label">Fax</label>
-                                                <input class="form-control" maxlength="20" placeholder="Enter Fax" name="fax" type="text" id="fax">
+                                                <input class="form-control" maxlength="20" placeholder="Enter Fax" name="auth_fax" type="text" id="auth_fax">
                                             </div>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary next-step">Save & Next</button>
+                                    <button type="submit" class="btn btn-primary next-step">Save & Next</button>
                                     <button type="button" class="btn btn-secondary prev-step">Back</button>
                                 </form>
                             </div>
@@ -633,9 +634,10 @@
                                 <div class="card-header d-flex align-items-center justify-content-between  view-profile-card-header">
                                     <h4 class="card-title mb-0"> Nominee(s)</h4>
                                 </div>
-                                <form action="" method="post" id="step-4-form">
+                                <form action="{{ route('nominee.store') }}" method="post" id="step-4-form">
+                                    @csrf
                                     <div class="m-3">
-                                        <input name="user_id" type="hidden" value="95">
+                                        <input name="user_id" class="user_id" type="hidden" value="">
                                     </div>
 
                                     <div class="card mt-4">
@@ -646,26 +648,32 @@
 
                                             <div class="row p-3">
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_courtesy_title" class="form-label required">Courtesy Title</label>
-                                                    <select class="form-control select2" maxlength="10" id="nominee_1_courtesy_title" name="nominee_1_courtesy_title"><option selected="selected" value="">Select</option><option value="Mr">Mr</option><option value="Mrs">Mrs</option><option value="Ms">Ms</option><option value="Dr">Dr</option></select>
+                                                    <label for="nominee_1_courtesy_title" class="form-label">Courtesy Title <span class="text-danger">*</span></label>
+                                                    <select class="form-control select2" maxlength="10" id="nominee_1_courtesy_title" name="nominee_1_courtesy_title">
+                                                        <option selected="selected" value="">Select</option>
+                                                        <option value="Mr">Mr</option>
+                                                        <option value="Mrs">Mrs</option>
+                                                        <option value="Ms">Ms</option>
+                                                        <option value="Dr">Dr</option>
+                                                    </select>
                                                 </div>
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_firstname" class="form-label required">First Name</label>
+                                                    <label for="nominee_1_firstname" class="form-label">First Name <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="100" placeholder="Enter First Name" name="nominee_1_firstname" type="text" id="nominee_1_firstname">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_lastname" class="form-label required">Last Name</label>
+                                                    <label for="nominee_1_lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="100" placeholder="Enter Last Name" name="nominee_1_lastname" type="text" id="nominee_1_lastname">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_relationship" class="form-label required">Relationship</label>
+                                                    <label for="nominee_1_relationship" class="form-label">Relationship <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="100" placeholder="Relationship with A/C Holder" name="nominee_1_relationship" type="text" id="nominee_1_relationship">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_percentage" class="form-label required">Percentage</label>
+                                                    <label for="nominee_1_percentage" class="form-label">Percentage <span class="text-danger">*</span></label>
                                                     <div class="input-group">
                                                         <input class="form-control" placeholder="Enter Percentage(%)" id="nominee_1_percentage" min="0" max="100" autocomplete="off" name="nominee_1_percentage" type="number">
                                                         <button class="btn btn-light shadow-none ms-0 percentage_addon" type="button" id="percentage-addon">%</button>
@@ -674,38 +682,34 @@
 
                                                 <div class="col-md-3 my-3">
                                                     <p class="required"><b>Residential Status</b></p>
-                                                                <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" id="nominee_1_residency_Resident" checked="checked" name="nominee_1_residency" type="radio" value="Resident">
-                                                            <label for="nominee_1_residency_Resident" class="form-check-label">Resident</label>
-                                                        </div>
-                                                                <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" id="nominee_1_residency_Non_Resident" name="nominee_1_residency" type="radio" value="Non Resident">
-                                                            <label for="nominee_1_residency_Non_Resident" class="form-check-label">Non Resident</label>
-                                                        </div>
-                                                                <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" id="nominee_1_residency_Foreigner" name="nominee_1_residency" type="radio" value="Foreigner">
-                                                            <label for="nominee_1_residency_Foreigner" class="form-check-label">Foreigner</label>
-                                                        </div>
-
-                                                </div>
-
-                                                <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_date_of_birth" class="form-label required">Date of Birth (YYYY-MM-DD)</label>
-                                                    <div class="flatpickr">
-                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" id="nominee_1_date_of_birth" aria-label="date_of_birth" aria-describedby="date_of_birth-addon" autocomplete="off" name="nominee_1_date_of_birth" type="text">
-                                                        <a class="input-button" title="toggle" data-toggle>
-                                                            <i class="icon-calendar"></i>
-                                                        </a>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" id="nominee_1_residency_Resident" checked="checked" name="nominee_1_residency" type="radio" value="Resident">
+                                                        <label for="nominee_1_residency_Resident" class="form-check-label">Resident</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" id="nominee_1_residency_Non_Resident" name="nominee_1_residency" type="radio" value="Non Resident">
+                                                        <label for="nominee_1_residency_Non_Resident" class="form-check-label">Non Resident</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" id="nominee_1_residency_Foreigner" name="nominee_1_residency" type="radio" value="Foreigner">
+                                                        <label for="nominee_1_residency_Foreigner" class="form-check-label">Foreigner</label>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_nid" class="form-label required">NID</label>
+                                                    <label for="nominee_1_date_of_birth" class="form-label">Date of Birth (YYYY-MM-DD) <span class="text-danger">*</span></label>
+                                                    <div class="flatpickr">
+                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" id="nominee_1_date_of_birth" name="nominee_1_date_of_birth" type="date">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3 mb-2">
+                                                    <label for="nominee_1_nid" class="form-label">NID <span class="text-danger">*</span></label>
                                                     <input class="form-control" minlength="10" maxlength="20" placeholder="Enter NID" name="nominee_1_nid" type="text" id="nominee_1_nid">
                                                 </div>
 
                                                 <div class="col-md-12 mb-2">
-                                                    <label for="nominee_1_address_line_1" class="form-label required">Address Line 1</label>
+                                                    <label for="nominee_1_address_line_1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="30" placeholder="Enter Address Line 1" name="nominee_1_address_line_1" type="text" id="nominee_1_address_line_1">
                                                 </div>
                                                 <div class="col-md-6 mb-2">
@@ -718,21 +722,21 @@
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_city" class="form-label required">City</label>
+                                                    <label for="nominee_1_city" class="form-label">City <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="25" placeholder="Enter City" name="nominee_1_city" type="text" id="nominee_1_city">
                                                 </div>
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_post_code" class="form-label required">Post Code</label>
+                                                    <label for="nominee_1_post_code" class="form-label">Post Code <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="10" placeholder="Enter Post Code" name="nominee_1_post_code" type="text" id="nominee_1_post_code">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_division" class="form-label required">Division</label>
+                                                    <label for="nominee_1_division" class="form-label">Division <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="25" placeholder="Enter Division" name="nominee_1_division" type="text" id="nominee_1_division">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_country" class="form-label required">Country</label>
+                                                    <label for="nominee_1_country" class="form-label">Country <span class="text-danger">*</span></label>
                                                     <select class="form-control select2" id="nominee_1_country" name="nominee_1_country">
                                                         <option selected="selected" value="">Select Country</option>
                                                         <option value="ban">Bangladesh</option>
@@ -740,12 +744,12 @@
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_email" class="form-label ">Email</label>
+                                                    <label for="nominee_1_email" class="form-label">Email <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="80" placeholder="Enter Email Address" name="nominee_1_email" type="email" id="nominee_1_email">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_1_mobile" class="form-label required">Mobile</label>
+                                                    <label for="nominee_1_mobile" class="form-label">Mobile <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="20" placeholder="Enter Mobile Number" name="nominee_1_mobile" type="text" id="nominee_1_mobile">
                                                 </div>
 
@@ -761,14 +765,15 @@
 
                                                 <div class="col-md-12">
                                                     <div class="view-profile-card-header p-3 border border-info" role="alert">
-                                                        Do you want to add Nominee 1 Guardian (If Nominee is A Minor) ?
-                                                        <div class="form-check form-switch form-switch-lg switch" dir="ltr">
+                                                        Do you want to add Nominee 1 Guardian (If Nominee is A Minor)?
+                                                        <label class="custom-switch">
                                                             <input name="nominee_1_is_guardian" type="checkbox" value="1" class="form-check-input" id="nominee_1_is_guardian">
-                                                            <label class="form-check-label" for="nominee_1_is_guardian"></label>
-                                                        </div>
+                                                            <div class="custom-slider round"></div>
+                                                        </label>
                                                     </div>
                                                 </div>
 
+                                                {{-- Nominee 1 Guardian --}}
                                                 <div class="nominee_1_guardian" style="display:none">
                                                     <div class="card border-info border-top-0 border-radious-0">
                                                         <div class="card-header d-flex align-items-center justify-content-between  view-profile-card-header">
@@ -777,68 +782,61 @@
                                                         <div class="card-body">
                                                             <div class="row  p-2">
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_courtesy_title" class="form-label required">Courtesy Title</label>
+                                                                    <label for="guardian_of_nominee_1_courtesy_title" class="form-label">Courtesy Title <span class="text-danger">*</span></label>
                                                                     <select class="form-control select2" maxlength="10" id="guardian_of_nominee_1_courtesy_title" name="guardian_of_nominee_1_courtesy_title"><option selected="selected" value="">Select</option><option value="Mr">Mr</option><option value="Mrs">Mrs</option><option value="Ms">Ms</option><option value="Dr">Dr</option></select>
                                                                 </div>
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_firstname" class="form-label required">First Name</label>
+                                                                    <label for="guardian_of_nominee_1_firstname" class="form-label">First Name <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="100" placeholder="Enter First Name" name="guardian_of_nominee_1_firstname" type="text" id="guardian_of_nominee_1_firstname">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_lastname" class="form-label required">Last Name</label>
+                                                                    <label for="guardian_of_nominee_1_lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="100" placeholder="Enter Last Name" name="guardian_of_nominee_1_lastname" type="text" id="guardian_of_nominee_1_lastname">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_relationship" class="form-label required">Relationship</label>
+                                                                    <label for="guardian_of_nominee_1_relationship" class="form-label">Relationship <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="100" placeholder="Relationship with Nominee" name="guardian_of_nominee_1_relationship" type="text" id="guardian_of_nominee_1_relationship">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_maturity_date_of_minor" class="form-label required">Maturity Date of Minor (YYYY-MM-DD)</label>
+                                                                    <label for="guardian_of_nominee_1_maturity_date_of_minor" class="form-label">Maturity Date of Minor (YYYY-MM-DD) <span class="text-danger">*</span></label>
                                                                     <div class="flatpickr">
-                                                                        <input class="form-control datepicker" id="guardian_of_nominee_1_maturity_date_of_minor" placeholder="Enter Date of Birth" aria-label="maturity_date_of_minor" aria-describedby="maturity_date_of_minor-addon" autocomplete="off" name="guardian_of_nominee_1_maturity_date_of_minor" type="text">
-                                                                        <a class="input-button" title="toggle" data-toggle>
-                                                                            <i class="icon-calendar"></i>
-                                                                        </a>
+                                                                        <input class="form-control datepicker" id="guardian_of_nominee_1_maturity_date_of_minor" name="guardian_of_nominee_1_maturity_date_of_minor" type="date">
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-3 my-3">
                                                                     <p class="required"><b>Residential Status</b></p>
-                                                                                                <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" id="guardian_of_nominee_1_residency_Resident" checked="checked" name="guardian_of_nominee_1_residency" type="radio" value="Resident">
-                                                                            <label for="guardian_of_nominee_1_residency_Resident" class="form-check-label">Resident</label>
-                                                                        </div>
-                                                                                                <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" id="guardian_of_nominee_1_residency_Non_Resident" name="guardian_of_nominee_1_residency" type="radio" value="Non Resident">
-                                                                            <label for="guardian_of_nominee_1_residency_Non_Resident" class="form-check-label">Non Resident</label>
-                                                                        </div>
-                                                                                                <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" id="guardian_of_nominee_1_residency_Foreigner" name="guardian_of_nominee_1_residency" type="radio" value="Foreigner">
-                                                                            <label for="guardian_of_nominee_1_residency_Foreigner" class="form-check-label">Foreigner</label>
-                                                                        </div>
-
-                                                                </div>
-
-                                                                <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_date_of_birth" class="form-label required">Date of Birth (YYYY-MM-DD)</label>
-                                                                    <div class="flatpickr">
-                                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" aria-label="guardian_date_of_birth" aria-describedby="guardian_date_of_birth-addon" autocomplete="off" name="guardian_of_nominee_1_date_of_birth" type="text" id="guardian_of_nominee_1_date_of_birth">
-                                                                        <a class="input-button" title="toggle" data-toggle>
-                                                                            <i class="icon-calendar"></i>
-                                                                        </a>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" id="guardian_of_nominee_1_residency_Resident" checked="checked" name="guardian_of_nominee_1_residency" type="radio" value="Resident">
+                                                                        <label for="guardian_of_nominee_1_residency_Resident" class="form-check-label">Resident</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" id="guardian_of_nominee_1_residency_Non_Resident" name="guardian_of_nominee_1_residency" type="radio" value="Non Resident">
+                                                                        <label for="guardian_of_nominee_1_residency_Non_Resident" class="form-check-label">Non Resident</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" id="guardian_of_nominee_1_residency_Foreigner" name="guardian_of_nominee_1_residency" type="radio" value="Foreigner">
+                                                                        <label for="guardian_of_nominee_1_residency_Foreigner" class="form-check-label">Foreigner</label>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_nid" class="form-label required">NID</label>
+                                                                    <label for="guardian_of_nominee_1_date_of_birth" class="form-label">Date of Birth (YYYY-MM-DD) <span class="text-danger">*</span></label>
+                                                                    <div class="flatpickr">
+                                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" name="guardian_of_nominee_1_date_of_birth" type="date" id="guardian_of_nominee_1_date_of_birth">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-3 mb-2">
+                                                                    <label for="guardian_of_nominee_1_nid" class="form-label">NID <span class="text-danger">*</span></label>
                                                                     <input class="form-control" minlength="20" maxlength="16" placeholder="Enter NID" name="guardian_of_nominee_1_nid" type="text" id="guardian_of_nominee_1_nid">
                                                                 </div>
 
                                                                 <div class="col-md-12 mb-2">
-                                                                    <label for="guardian_of_nominee_1_address_line_1" class="form-label required">Address Line 1</label>
+                                                                    <label for="guardian_of_nominee_1_address_line_1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="30" placeholder="Enter Address Line 1" name="guardian_of_nominee_1_address_line_1" type="text" id="guardian_of_nominee_1_address_line_1">
                                                                 </div>
                                                                 <div class="col-md-6 mb-2">
@@ -851,21 +849,21 @@
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_city" class="form-label required">City</label>
+                                                                    <label for="guardian_of_nominee_1_city" class="form-label">City <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="25" placeholder="Enter City" name="guardian_of_nominee_1_city" type="text" id="guardian_of_nominee_1_city">
                                                                 </div>
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_post_code" class="form-label required">Post Code</label>
+                                                                    <label for="guardian_of_nominee_1_post_code" class="form-label">Post Code <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="10" placeholder="Enter Post Code" name="guardian_of_nominee_1_post_code" type="text" id="guardian_of_nominee_1_post_code">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_division" class="form-label required">Division</label>
+                                                                    <label for="guardian_of_nominee_1_division" class="form-label">Division <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="25" placeholder="Enter Division" name="guardian_of_nominee_1_division" type="text" id="guardian_of_nominee_1_division">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_country" class="form-label required">Country</label>
+                                                                    <label for="guardian_of_nominee_1_country" class="form-label">Country <span class="text-danger">*</span></label>
                                                                     <select class="form-control select2" id="guardian_of_nominee_1_country" name="guardian_of_nominee_1_country">
                                                                         <option selected="selected" value="">Select Country</option>
                                                                         <option value="ban">Bangladesh</option>
@@ -873,12 +871,12 @@
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_email" class="form-label ">Email</label>
+                                                                    <label for="guardian_of_nominee_1_email" class="form-label">Email <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="80" placeholder="Enter Email Address" name="guardian_of_nominee_1_email" type="email" id="guardian_of_nominee_1_email">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_1_mobile" class="form-label required">Mobile</label>
+                                                                    <label for="guardian_of_nominee_1_mobile" class="form-label">Mobile <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="20" placeholder="Enter Mobile Number" name="guardian_of_nominee_1_mobile" type="text" id="guardian_of_nominee_1_mobile">
                                                                 </div>
 
@@ -900,11 +898,11 @@
 
                                         <div class="mb-2 p-3">
                                             <div class="view-profile-card-header p-3 rounded-2 border border-warning" role="alert">
-                                                Do you want to add nominee 2 ?
-                                                <div class="form-check form-switch form-switch-lg switch" dir="ltr">
+                                                Do you want to add nominee 2?
+                                                <label class="custom-switch">
                                                     <input name="nominee_2" type="checkbox" value="1" class="form-check-input" id="add-nominee_2">
-                                                    <label class="form-check-label" for="add-nominee_2"></label>
-                                                </div>
+                                                    <div class="custom-slider round"></div>
+                                                </label>
                                             </div>
                                         </div>
 
@@ -916,27 +914,27 @@
 
                                             <div class="row p-3">
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_courtesy_title" class="form-label required">Courtesy Title</label>
+                                                    <label for="nominee_2_courtesy_title" class="form-label">Courtesy Title <span class="text-danger">*</span></label>
                                                     <select class="form-control select2" maxlength="10" id="nominee_2_courtesy_title" name="nominee_2_courtesy_title"><option selected="selected" value="">Select</option><option value="Mr">Mr</option><option value="Mrs">Mrs</option><option value="Ms">Ms</option><option value="Dr">Dr</option></select>
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_firstname" class="form-label required">First Name</label>
+                                                    <label for="nominee_2_firstname" class="form-label">First Name <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="100" placeholder="Enter First Name" name="nominee_2_firstname" type="text" id="nominee_2_firstname">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_lastname" class="form-label required">Last Name</label>
+                                                    <label for="nominee_2_lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="100" placeholder="Enter Last Name" name="nominee_2_lastname" type="text" id="nominee_2_lastname">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_relationship" class="form-label required">Relationship</label>
+                                                    <label for="nominee_2_relationship" class="form-label">Relationship <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="100" placeholder="Relationship with A/C Holder" name="nominee_2_relationship" type="text" id="nominee_2_relationship">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_percentage" class="form-label required">Percentage</label>
+                                                    <label for="nominee_2_percentage" class="form-label">Percentage <span class="text-danger">*</span></label>
                                                     <div class="input-group">
                                                         <input class="form-control" placeholder="Enter Percentage(%)" id="nominee_2_percentage" min="0" max="100" autocomplete="off" name="nominee_2_percentage" type="number">
                                                         <button class="btn btn-light shadow-none ms-0 percentage_addon" type="button" id="percentage-addon">%</button>
@@ -960,9 +958,9 @@
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_date_of_birth" class="form-label required">Date of Birth (YYYY-MM-DD)</label>
+                                                    <label for="nominee_2_date_of_birth" class="form-label">Date of Birth (YYYY-MM-DD) <span class="text-danger">*</span></label>
                                                     <div class="flatpickr">
-                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" id="nominee_2_date_of_birth" aria-label="date_of_birth" aria-describedby="date_of_birth-addon" autocomplete="off" name="nominee_2_date_of_birth" type="text">
+                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" id="nominee_2_date_of_birth" aria-label="date_of_birth" name="nominee_2_date_of_birth" type="date">
                                                         <a class="input-button" title="toggle" data-toggle>
                                                             <i class="icon-calendar"></i>
                                                         </a>
@@ -970,12 +968,12 @@
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_nid" class="form-label required">NID</label>
+                                                    <label for="nominee_2_nid" class="form-label">NID <span class="text-danger">*</span></label>
                                                     <input class="form-control" minlength="10" maxlength="20" placeholder="Enter NID" name="nominee_2_nid" type="text" id="nominee_2_nid">
                                                 </div>
 
                                                 <div class="col-md-12 mb-2">
-                                                    <label for="nominee_2_address_line_1" class="form-label required">Address Line 1</label>
+                                                    <label for="nominee_2_address_line_1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="30" placeholder="Enter Address Line 1" name="nominee_2_address_line_1" type="text" id="nominee_2_address_line_1">
                                                 </div>
                                                 <div class="col-md-6 mb-2">
@@ -988,21 +986,21 @@
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_city" class="form-label required">City</label>
+                                                    <label for="nominee_2_city" class="form-label">City <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="25" placeholder="Enter City" name="nominee_2_city" type="text" id="nominee_2_city">
                                                 </div>
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_post_code" class="form-label required">Post Code</label>
+                                                    <label for="nominee_2_post_code" class="form-label">Post Code <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="10" placeholder="Enter Post Code" name="nominee_2_post_code" type="text" id="nominee_2_post_code">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_division" class="form-label required">Division</label>
+                                                    <label for="nominee_2_division" class="form-label">Division <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="25" placeholder="Enter Division" name="nominee_2_division" type="text" id="nominee_2_division">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_country" class="form-label required">Country</label>
+                                                    <label for="nominee_2_country" class="form-label">Country <span class="text-danger">*</span></label>
                                                     <select class="form-control select2" id="nominee_2_country" name="nominee_2_country">
                                                         <option selected="selected" value="">Select Country</option>
                                                         <option value="ban">Bangladesh</option>
@@ -1010,12 +1008,12 @@
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_email" class="form-label ">Email</label>
+                                                    <label for="nominee_2_email" class="form-label">Email <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="80" placeholder="Enter Email Address" name="nominee_2_email" type="email" id="nominee_2_email">
                                                 </div>
 
                                                 <div class="col-md-3 mb-2">
-                                                    <label for="nominee_2_mobile" class="form-label required">Mobile</label>
+                                                    <label for="nominee_2_mobile" class="form-label">Mobile <span class="text-danger">*</span></label>
                                                     <input class="form-control" maxlength="20" placeholder="Enter Mobile Number" name="nominee_2_mobile" type="text" id="nominee_2_mobile">
                                                 </div>
 
@@ -1031,11 +1029,11 @@
 
                                                 <div class="col-md-12">
                                                     <div class="view-profile-card-header p-3 border border-info" role="alert">
-                                                        Do you want to add Nominee 2 Guardian (If Nominee is A Minor) ?
-                                                        <div class="form-check form-switch form-switch-lg switch" dir="ltr">
+                                                        Do you want to add Nominee 2 Guardian (If Nominee is A Minor)?
+                                                        <label class="custom-switch">
                                                             <input name="nominee_2_is_guardian" type="checkbox" value="1" class="form-check-input" id="nominee_2_is_guardian">
-                                                            <label class="form-check-label" for="nominee_2_is_guardian"></label>
-                                                        </div>
+                                                            <div class="custom-slider round"></div>
+                                                        </label>
                                                     </div>
                                                 </div>
 
@@ -1047,28 +1045,28 @@
                                                         <div class="card-body">
                                                             <div class="row  p-2">
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_courtesy_title" class="form-label required">Courtesy Title</label>
+                                                                    <label for="guardian_of_nominee_2_courtesy_title" class="form-label">Courtesy Title <span class="text-danger">*</span></label>
                                                                     <select class="form-control select2" maxlength="10" id="guardian_of_nominee_2_courtesy_title" name="guardian_of_nominee_2_courtesy_title"><option selected="selected" value="">Select</option><option value="Mr">Mr</option><option value="Mrs">Mrs</option><option value="Ms">Ms</option><option value="Dr">Dr</option></select>
                                                                 </div>
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_firstname" class="form-label required">First Name</label>
+                                                                    <label for="guardian_of_nominee_2_firstname" class="form-label">First Name <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="100" placeholder="Enter First Name" name="guardian_of_nominee_2_firstname" type="text" id="guardian_of_nominee_2_firstname">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_lastname" class="form-label required">Last Name</label>
+                                                                    <label for="guardian_of_nominee_2_lastname" class="form-label">Last Name <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="100" placeholder="Enter Last Name" name="guardian_of_nominee_2_lastname" type="text" id="guardian_of_nominee_2_lastname">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_relationship" class="form-label required">Relationship</label>
+                                                                    <label for="guardian_of_nominee_2_relationship" class="form-label">Relationship <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="100" placeholder="Relationship with Nominee" name="guardian_of_nominee_2_relationship" type="text" id="guardian_of_nominee_2_relationship">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_maturity_date_of_minor" class="form-label required">Maturity Date of Minor (YYYY-MM-DD)</label>
+                                                                    <label for="guardian_of_nominee_2_maturity_date_of_minor" class="form-label">Maturity Date of Minor (YYYY-MM-DD) <span class="text-danger">*</span></label>
                                                                     <div class="flatpickr">
-                                                                        <input class="form-control datepicker" id="guardian_of_nominee_2_maturity_date_of_minor" placeholder="Enter Date of Birth" aria-label="maturity_date_of_minor" aria-describedby="maturity_date_of_minor-addon" autocomplete="off" name="guardian_of_nominee_2_maturity_date_of_minor" type="text">
+                                                                        <input class="form-control datepicker" id="guardian_of_nominee_2_maturity_date_of_minor" name="guardian_of_nominee_2_maturity_date_of_minor" type="date">
                                                                         <a class="input-button" title="toggle" data-toggle>
                                                                             <i class="icon-calendar"></i>
                                                                         </a>
@@ -1077,38 +1075,34 @@
 
                                                                 <div class="col-md-3 my-3">
                                                                     <p class="required"><b>Residential Status</b></p>
-                                                                                                <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" id="guardian_of_nominee_2_residency_Resident" checked="checked" name="guardian_of_nominee_2_residency" type="radio" value="Resident">
-                                                                            <label for="guardian_of_nominee_2_residency_Resident" class="form-check-label">Resident</label>
-                                                                        </div>
-                                                                                                <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" id="guardian_of_nominee_2_residency_Non_Resident" name="guardian_of_nominee_2_residency" type="radio" value="Non Resident">
-                                                                            <label for="guardian_of_nominee_2_residency_Non_Resident" class="form-check-label">Non Resident</label>
-                                                                        </div>
-                                                                                                <div class="form-check form-check-inline">
-                                                                            <input class="form-check-input" id="guardian_of_nominee_2_residency_Foreigner" name="guardian_of_nominee_2_residency" type="radio" value="Foreigner">
-                                                                            <label for="guardian_of_nominee_2_residency_Foreigner" class="form-check-label">Foreigner</label>
-                                                                        </div>
-
-                                                                </div>
-
-                                                                <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_date_of_birth" class="form-label required">Date of Birth (YYYY-MM-DD)</label>
-                                                                    <div class="flatpickr">
-                                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" aria-label="guardian_date_of_birth" aria-describedby="guardian_date_of_birth-addon" autocomplete="off" name="guardian_of_nominee_2_date_of_birth" type="text" id="guardian_of_nominee_2_date_of_birth">
-                                                                        <a class="input-button" title="toggle" data-toggle>
-                                                                            <i class="icon-calendar"></i>
-                                                                        </a>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" id="guardian_of_nominee_2_residency_Resident" checked="checked" name="guardian_of_nominee_2_residency" type="radio" value="Resident">
+                                                                        <label for="guardian_of_nominee_2_residency_Resident" class="form-check-label">Resident</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" id="guardian_of_nominee_2_residency_Non_Resident" name="guardian_of_nominee_2_residency" type="radio" value="Non Resident">
+                                                                        <label for="guardian_of_nominee_2_residency_Non_Resident" class="form-check-label">Non Resident</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input class="form-check-input" id="guardian_of_nominee_2_residency_Foreigner" name="guardian_of_nominee_2_residency" type="radio" value="Foreigner">
+                                                                        <label for="guardian_of_nominee_2_residency_Foreigner" class="form-check-label">Foreigner</label>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_nid" class="form-label required">NID</label>
+                                                                    <label for="guardian_of_nominee_2_date_of_birth" class="form-label">Date of Birth (YYYY-MM-DD) <span class="text-danger">*</span></label>
+                                                                    <div class="flatpickr">
+                                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" name="guardian_of_nominee_2_date_of_birth" type="date" id="guardian_of_nominee_2_date_of_birth">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-3 mb-2">
+                                                                    <label for="guardian_of_nominee_2_nid" class="form-label">NID <span class="text-danger">*</span></label>
                                                                     <input class="form-control" minlength="20" maxlength="16" placeholder="Enter NID" name="guardian_of_nominee_2_nid" type="text" id="guardian_of_nominee_2_nid">
                                                                 </div>
 
                                                                 <div class="col-md-12 mb-2">
-                                                                    <label for="guardian_of_nominee_2_address_line_1" class="form-label required">Address Line 1</label>
+                                                                    <label for="guardian_of_nominee_2_address_line_1" class="form-label">Address Line 1 <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="30" placeholder="Enter Address Line 1" name="guardian_of_nominee_2_address_line_1" type="text" id="guardian_of_nominee_2_address_line_1">
                                                                 </div>
                                                                 <div class="col-md-6 mb-2">
@@ -1121,21 +1115,21 @@
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_city" class="form-label required">City</label>
+                                                                    <label for="guardian_of_nominee_2_city" class="form-label">City <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="25" placeholder="Enter City" name="guardian_of_nominee_2_city" type="text" id="guardian_of_nominee_2_city">
                                                                 </div>
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_post_code" class="form-label required">Post Code</label>
+                                                                    <label for="guardian_of_nominee_2_post_code" class="form-label">Post Code <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="10" placeholder="Enter Post Code" name="guardian_of_nominee_2_post_code" type="text" id="guardian_of_nominee_2_post_code">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_division" class="form-label required">Division</label>
+                                                                    <label for="guardian_of_nominee_2_division" class="form-label">Division <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="25" placeholder="Enter Division" name="guardian_of_nominee_2_division" type="text" id="guardian_of_nominee_2_division">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_country" class="form-label required">Country</label>
+                                                                    <label for="guardian_of_nominee_2_country" class="form-label">Country <span class="text-danger">*</span></label>
                                                                     <select class="form-control select2" id="guardian_of_nominee_2_country" name="guardian_of_nominee_2_country">
                                                                         <option selected="selected" value="">Select Country</option>
                                                                         <option value="ban">Bangladesh</option>
@@ -1143,12 +1137,12 @@
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_email" class="form-label ">Email</label>
+                                                                    <label for="guardian_of_nominee_2_email" class="form-label">Email <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="80" placeholder="Enter Email Address" name="guardian_of_nominee_2_email" type="email" id="guardian_of_nominee_2_email">
                                                                 </div>
 
                                                                 <div class="col-md-3 mb-2">
-                                                                    <label for="guardian_of_nominee_2_mobile" class="form-label required">Mobile</label>
+                                                                    <label for="guardian_of_nominee_2_mobile" class="form-label">Mobile <span class="text-danger">*</span></label>
                                                                     <input class="form-control" maxlength="20" placeholder="Enter Mobile Number" name="guardian_of_nominee_2_mobile" type="text" id="guardian_of_nominee_2_mobile">
                                                                 </div>
 
@@ -1168,9 +1162,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <button type="submit" class="btn btn-primary next-step">Save & Next</button>
+                                    <button type="button" class="btn btn-secondary prev-step">Back</button>
                                 </form>
-                                <button type="button" class="btn btn-primary next-step">Next</button>
-                                <button type="button" class="btn btn-secondary prev-step">Back</button>
                             </div>
 
                             <div id="step-5" class="step-content">
@@ -1483,6 +1477,7 @@
                                 text: 'Form ' + step + ' submitted successfully.'
                             }).then(function() {
                                 $('#bo_last_id').val(response.id);
+                                $('.user_id').val(response.id);
                                 $('#step-' + currentStep).removeClass('active');
                                 currentStep++;
                                 $('#step-' + currentStep).addClass('active');
@@ -1509,11 +1504,10 @@
             }
 
             $('.next-step').click(function(e) {
-                e.preventDefault(); // Prevent default form submission
+                e.preventDefault();
                 if (validateStep(currentStep)) {
                     submitStepForm(currentStep);
                 } else {
-                    // Scroll to the first invalid field
                     $('html, body').animate({
                         scrollTop: $('.is-invalid:first').offset().top
                     }, 500);
@@ -1521,7 +1515,7 @@
             });
 
             $('.prev-step').click(function(e) {
-                e.preventDefault(); // Prevent default form submission
+                e.preventDefault();
                 $('#step-' + currentStep).removeClass('active');
                 currentStep--;
                 $('#step-' + currentStep).addClass('active');

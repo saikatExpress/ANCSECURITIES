@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\BoAuthorize;
+use App\Models\BoNominee;
+use App\Models\CustomerBo;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
@@ -105,6 +108,138 @@ class BoController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollback();
+            return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
+        }
+    }
+
+    public function bankStore(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'bank_id'             => 'required|integer',
+                'branch_id'           => 'required|integer',
+                'bank_account_number' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'errors' => $validator->errors()->toArray()
+                ]);
+            }
+
+            $customerBoObj = new CustomerBo();
+
+            $customerBoObj->bo_id               = $request->input('bo_last_id');
+            $customerBoObj->bank_id             = $request->input('bank_id');
+            $customerBoObj->branch_id           = $request->input('branch_id');
+            $customerBoObj->bank_district_name  = $request->input('bank_district_name');
+            $customerBoObj->bank_account_number = $request->input('bank_account_number');
+
+            $res = $customerBoObj->save();
+
+            DB::commit();
+            if($res){
+                return response()->json([
+                'success' => true,
+                'id'      => $customerBoObj->bo_id
+            ]);
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
+        }
+    }
+
+    public function authorizeStore(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $boAuthorizeObj = new BoAuthorize();
+
+            $boAuthorizeObj->bo_id               = $request->input('user_id');
+            $boAuthorizeObj->auth_courtesy_title = $request->input('auth_courtesy_title');
+            $boAuthorizeObj->auth_firstname      = $request->input('auth_firstname');
+            $boAuthorizeObj->auth_lastname       = $request->input('auth_lastname');
+            $boAuthorizeObj->auth_occupation     = $request->input('auth_occupation');
+            $boAuthorizeObj->auth_date_of_birth  = $request->input('auth_date_of_birth');
+            $boAuthorizeObj->auth_nid            = $request->input('auth_nid');
+            $boAuthorizeObj->auth_father_name    = $request->input('auth_father_name');
+            $boAuthorizeObj->auth_mother_name    = $request->input('auth_mother_name');
+            $boAuthorizeObj->auth_address_line_1 = $request->input('auth_address_line_1');
+            $boAuthorizeObj->auth_address_line_2 = $request->input('auth_address_line_2');
+            $boAuthorizeObj->auth_address_line_3 = $request->input('auth_address_line_3');
+            $boAuthorizeObj->auth_city           = $request->input('auth_city');
+            $boAuthorizeObj->auth_post_code      = $request->input('auth_post_code');
+            $boAuthorizeObj->auth_division       = $request->input('auth_division');
+            $boAuthorizeObj->auth_country        = $request->input('auth_country');
+            $boAuthorizeObj->auth_email          = $request->input('auth_email');
+            $boAuthorizeObj->auth_mobile         = $request->input('auth_mobile');
+            $boAuthorizeObj->auth_telephone      = $request->input('auth_telephone');
+            $boAuthorizeObj->auth_fax            = $request->input('auth_fax');
+
+            $res = $boAuthorizeObj->save();
+
+            DB::commit();
+            if($res){
+                return response()->json([
+                    'success' => true,
+                    'id'      => $boAuthorizeObj->bo_id
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
+        }
+    }
+
+    public function nomineeStore(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $boNomineeObj = new BoNominee();
+
+            $boNomineeObj->bo_id                    = $request->input('user_id');
+            $boNomineeObj->nominee_1_courtesy_title = $request->input('nominee_1_courtesy_title');
+            $boNomineeObj->nominee_1_firstname      = $request->input('nominee_1_firstname');
+            $boNomineeObj->nominee_1_lastname       = $request->input('nominee_1_lastname');
+            $boNomineeObj->nominee_1_relationship   = $request->input('nominee_1_relationship');
+            $boNomineeObj->nominee_1_percentage     = $request->input('nominee_1_percentage');
+            $boNomineeObj->nominee_1_residency      = $request->input('nominee_1_residency');
+            $boNomineeObj->nominee_1_date_of_birth  = $request->input('nominee_1_date_of_birth');
+            $boNomineeObj->nominee_1_nid            = $request->input('nominee_1_nid');
+            $boNomineeObj->nominee_1_address_line_1 = $request->input('nominee_1_address_line_1');
+            $boNomineeObj->nominee_1_address_line_2 = $request->input('nominee_1_address_line_2');
+            $boNomineeObj->nominee_1_address_line_3 = $request->input('nominee_1_address_line_3');
+            $boNomineeObj->nominee_1_city           = $request->input('nominee_1_city');
+            $boNomineeObj->nominee_1_post_code      = $request->input('nominee_1_post_code');
+            $boNomineeObj->nominee_1_division       = $request->input('nominee_1_division');
+            $boNomineeObj->nominee_1_country        = $request->input('nominee_1_country');
+            $boNomineeObj->nominee_1_email          = $request->input('nominee_1_email');
+            $boNomineeObj->nominee_1_mobile         = $request->input('nominee_1_mobile');
+            $boNomineeObj->nominee_1_telephone      = $request->input('nominee_1_telephone');
+            $boNomineeObj->nominee_1_fax            = $request->input('nominee_1_fax');
+
+            $res = $boNomineeObj->save();
+
+            DB::commit();
+            if($res){
+                return response()->json([
+                    'success' => true,
+                    'id'      => $boNomineeObj->bo_id
+                ]);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
             return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
         }
     }

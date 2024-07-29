@@ -134,6 +134,9 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/open/bo/form', 'openBoForm')->name('openbo.form');
         Route::post('/account/store', 'acStore')->name('acbo.store');
         Route::post('/bo/account/store', 'store')->name('boaccount.store');
+        Route::post('/bank/store', 'bankStore')->name('bank.store');
+        Route::post('/authorize/store', 'authorizeStore')->name('authorize.store');
+        Route::post('/nominee/store', 'nomineeStore')->name('nominee.store');
         Route::post('/upload-excel','uploadExcel')->name('upload.excel');
     });
 
