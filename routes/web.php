@@ -139,7 +139,11 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/nominee/store', 'nomineeStore')->name('nominee.store');
 
         Route::post('/upload/bo/image', 'boDocumentupload')->name('upload.image');
-        Route::post('/delete-image', 'boDocumentClear')->name('clear.image');
+        Route::post('/upload/firstholderdriving/image', 'boDocumentfirstPassportupload');
+        Route::post('/upload/firstholderdrivingback/image', 'boDocumentfirstPassportBackupload');
+        Route::get('/delete/bo/image/{id}', 'boDocumentClear')->name('clear.image');
+        Route::get('/delete/firstapplicantpassport/front/image/{id}', 'firstapplicantpassportFrontClear');
+        Route::get('/delete/firstapplicantpassport/back/image/{id}', 'firstapplicantpassportBackClear');
 
         Route::post('/upload-excel','uploadExcel')->name('upload.excel');
     });

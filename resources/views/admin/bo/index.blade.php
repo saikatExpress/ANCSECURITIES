@@ -50,13 +50,13 @@
                                 <img style="width: 50px;height:50px;border-radius:50%;" src="{{ asset('user_photo/'.$form->user_photo) }}" alt="">
                             </td>
                             <td>
-                                {{ $form->client_name }}
+                                {{ $form->firstname . ' ' . $form->lastname }}
                             </td>
                             <td>
                                 {{ $form->email }}
                             </td>
                             <td>
-                                {{ $form->address }}
+                                {{ $form->address_line_1 }}
                             </td>
                             <td>
                                 <a href="{{ route('show.form', ['id' => $form->id]) }}" class="btn btn-sm btn-primary">

@@ -42,15 +42,76 @@ class BoController extends Controller
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'firstname' => 'required|max:100',
-                'lastname' => 'required|max:30',
-                // Add other validation rules here
+                'firstname'     => 'required|max:100',
+                'lastname'      => 'required|max:30',
+                'occupation'    => 'required',
+                'date_of_birth' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'success' => false,
                     'errors' => $validator->errors()->toArray()
+                ]);
+            }
+
+            $clientId = $request->input('user_id');
+
+            $existClient = BOForm::find($clientId);
+
+            if($existClient){
+                $existClient->bo_type              = $request->input('bo_type');
+                $existClient->type_of_client       = $request->input('type_of_client');
+                $existClient->courtesy_title       = $request->input('courtesy_title');
+                $existClient->firstname            = $request->input('firstname');
+                $existClient->lastname             = $request->input('lastname');
+                $existClient->occupation           = $request->input('occupation');
+                $existClient->father_name          = $request->input('father_name');
+                $existClient->mother_name          = $request->input('mother_name');
+                $existClient->dob                  = $request->input('date_of_birth');
+                $existClient->address_line_1       = $request->input('address_line_1', NULL);
+                $existClient->address_line_2       = $request->input('address_line_2', NULL);
+                $existClient->address_line_3       = $request->input('address_line_3', NULL);
+                $existClient->city                 = $request->input('city');
+                $existClient->postal_code          = $request->input('post_code');
+                $existClient->division             = $request->input('division');
+                $existClient->country              = $request->input('country');
+                $existClient->mobile               = $request->input('mobile');
+                $existClient->email                = $request->input('email');
+                $existClient->telephone            = $request->input('telephone');
+                $existClient->fax                  = $request->input('fax');
+                $existClient->nationality          = $request->input('nationality');
+                $existClient->nid_no               = $request->input('nid');
+                $existClient->tin                  = $request->input('tin');
+                $existClient->broker_branch        = $request->input('branch');
+                $existClient->residency            = $request->input('residency');
+                $existClient->gender               = $request->input('gender');
+                $existClient->director_company     = $request->input('director_company');
+                $existClient->joint_courtesy_title = $request->input('joint_courtesy_title');
+                $existClient->joint_firstname      = $request->input('joint_firstname');
+                $existClient->joint_lastname       = $request->input('joint_lastname');
+                $existClient->joint_occupation     = $request->input('joint_occupation');
+                $existClient->joint_date_of_birth  = $request->input('joint_date_of_birth');
+                $existClient->joint_father_name    = $request->input('joint_father_name');
+                $existClient->joint_mother_name    = $request->input('joint_mother_name');
+                $existClient->joint_nid            = $request->input('joint_nid');
+                $existClient->joint_address_line_1 = $request->input('joint_address_line_1');
+                $existClient->joint_address_line_2 = $request->input('joint_address_line_2');
+                $existClient->joint_address_line_3 = $request->input('joint_address_line_3');
+                $existClient->joint_city           = $request->input('joint_city');
+                $existClient->joint_post_code      = $request->input('joint_post_code');
+                $existClient->joint_division       = $request->input('joint_division');
+                $existClient->joint_country        = $request->input('joint_country');
+                $existClient->joint_email          = $request->input('joint_email');
+                $existClient->joint_mobile         = $request->input('joint_mobile');
+                $existClient->joint_telephone      = $request->input('joint_telephone');
+                $existClient->joint_fax            = $request->input('joint_fax');
+
+                DB::commit();
+                $existClient->save();
+                return response()->json([
+                    'success' => true,
+                    'id' => $clientId
                 ]);
             }
 
@@ -133,9 +194,31 @@ class BoController extends Controller
                 ]);
             }
 
+            $lastBoId = $request->input('bo_last_id');
+
+            $existBoBankInfo = CustomerBo::where('bo_id', $lastBoId)->first();
+
+            if($existBoBankInfo){
+                $existBoBankInfo->bo_id               = $lastBoId;
+                $existBoBankInfo->bank_id             = $request->input('bank_id');
+                $existBoBankInfo->branch_id           = $request->input('branch_id');
+                $existBoBankInfo->bank_district_name  = $request->input('bank_district_name');
+                $existBoBankInfo->bank_account_number = $request->input('bank_account_number');
+
+                $res = $existBoBankInfo->save();
+
+                DB::commit();
+                if($res){
+                    return response()->json([
+                        'success' => true,
+                        'id'      => $lastBoId
+                    ]);
+                }
+            }
+
             $customerBoObj = new CustomerBo();
 
-            $customerBoObj->bo_id               = $request->input('bo_last_id');
+            $customerBoObj->bo_id               = $lastBoId;
             $customerBoObj->bank_id             = $request->input('bank_id');
             $customerBoObj->branch_id           = $request->input('branch_id');
             $customerBoObj->bank_district_name  = $request->input('bank_district_name');
@@ -146,9 +229,9 @@ class BoController extends Controller
             DB::commit();
             if($res){
                 return response()->json([
-                'success' => true,
-                'id'      => $customerBoObj->bo_id
-            ]);
+                    'success' => true,
+                    'id'      => $customerBoObj->bo_id
+                ]);
             }
 
         } catch (\Exception $e) {
@@ -163,9 +246,46 @@ class BoController extends Controller
         try {
             DB::beginTransaction();
 
+            $userId = $request->input('user_id');
+
+            $exitsauthorizeInfo = BoAuthorize::where('bo_id', $userId)->first();
+
+            if($exitsauthorizeInfo){
+                $exitsauthorizeInfo->bo_id               = $userId;
+                $exitsauthorizeInfo->auth_courtesy_title = $request->input('auth_courtesy_title');
+                $exitsauthorizeInfo->auth_firstname      = $request->input('auth_firstname');
+                $exitsauthorizeInfo->auth_lastname       = $request->input('auth_lastname');
+                $exitsauthorizeInfo->auth_occupation     = $request->input('auth_occupation');
+                $exitsauthorizeInfo->auth_date_of_birth  = $request->input('auth_date_of_birth');
+                $exitsauthorizeInfo->auth_nid            = $request->input('auth_nid');
+                $exitsauthorizeInfo->auth_father_name    = $request->input('auth_father_name');
+                $exitsauthorizeInfo->auth_mother_name    = $request->input('auth_mother_name');
+                $exitsauthorizeInfo->auth_address_line_1 = $request->input('auth_address_line_1');
+                $exitsauthorizeInfo->auth_address_line_2 = $request->input('auth_address_line_2');
+                $exitsauthorizeInfo->auth_address_line_3 = $request->input('auth_address_line_3');
+                $exitsauthorizeInfo->auth_city           = $request->input('auth_city');
+                $exitsauthorizeInfo->auth_post_code      = $request->input('auth_post_code');
+                $exitsauthorizeInfo->auth_division       = $request->input('auth_division');
+                $exitsauthorizeInfo->auth_country        = $request->input('auth_country');
+                $exitsauthorizeInfo->auth_email          = $request->input('auth_email');
+                $exitsauthorizeInfo->auth_mobile         = $request->input('auth_mobile');
+                $exitsauthorizeInfo->auth_telephone      = $request->input('auth_telephone');
+                $exitsauthorizeInfo->auth_fax            = $request->input('auth_fax');
+
+                $res = $exitsauthorizeInfo->save();
+
+                DB::commit();
+                if($res){
+                    return response()->json([
+                        'success' => true,
+                        'id'      => $userId
+                    ]);
+                }
+            }
+
             $boAuthorizeObj = new BoAuthorize();
 
-            $boAuthorizeObj->bo_id               = $request->input('user_id');
+            $boAuthorizeObj->bo_id               = $userId;
             $boAuthorizeObj->auth_courtesy_title = $request->input('auth_courtesy_title');
             $boAuthorizeObj->auth_firstname      = $request->input('auth_firstname');
             $boAuthorizeObj->auth_lastname       = $request->input('auth_lastname');
@@ -208,9 +328,100 @@ class BoController extends Controller
         try {
             DB::beginTransaction();
 
+            $userId = $request->input('user_id');
+
+            $existBoNomineeInfo = BoNominee::where('bo_id', $userId)->first();
+
+            if($existBoNomineeInfo){
+                $existBoNomineeInfo->bo_id                    = $userId;
+                $existBoNomineeInfo->nominee_1_courtesy_title = $request->input('nominee_1_courtesy_title');
+                $existBoNomineeInfo->nominee_1_firstname      = $request->input('nominee_1_firstname');
+                $existBoNomineeInfo->nominee_1_lastname       = $request->input('nominee_1_lastname');
+                $existBoNomineeInfo->nominee_1_relationship   = $request->input('nominee_1_relationship');
+                $existBoNomineeInfo->nominee_1_percentage     = $request->input('nominee_1_percentage');
+                $existBoNomineeInfo->nominee_1_residency      = $request->input('nominee_1_residency');
+                $existBoNomineeInfo->nominee_1_date_of_birth  = $request->input('nominee_1_date_of_birth');
+                $existBoNomineeInfo->nominee_1_nid            = $request->input('nominee_1_nid');
+                $existBoNomineeInfo->nominee_1_address_line_1 = $request->input('nominee_1_address_line_1');
+                $existBoNomineeInfo->nominee_1_address_line_2 = $request->input('nominee_1_address_line_2');
+                $existBoNomineeInfo->nominee_1_address_line_3 = $request->input('nominee_1_address_line_3');
+                $existBoNomineeInfo->nominee_1_city           = $request->input('nominee_1_city');
+                $existBoNomineeInfo->nominee_1_post_code      = $request->input('nominee_1_post_code');
+                $existBoNomineeInfo->nominee_1_division       = $request->input('nominee_1_division');
+                $existBoNomineeInfo->nominee_1_country        = $request->input('nominee_1_country');
+                $existBoNomineeInfo->nominee_1_email          = $request->input('nominee_1_email');
+                $existBoNomineeInfo->nominee_1_mobile         = $request->input('nominee_1_mobile');
+                $existBoNomineeInfo->nominee_1_telephone      = $request->input('nominee_1_telephone');
+                $existBoNomineeInfo->nominee_1_fax            = $request->input('nominee_1_fax');
+
+                $res = $existBoNomineeInfo->save();
+                DB::commit();
+                if($res){
+
+                    $existBoNomineeTwoInfo = BoNomineeTwo::where('bo_id', $userId)->first();
+
+                    if($existBoNomineeTwoInfo){
+                        $existBoNomineeTwoInfo->bo_id                                        = $request->input('user_id');
+                        $existBoNomineeTwoInfo->nominee_id                                   = $existBoNomineeInfo->id;
+                        $existBoNomineeTwoInfo->nominee_2_courtesy_title                     = $request->input('nominee_2_courtesy_title');
+                        $existBoNomineeTwoInfo->nominee_2_firstname                          = $request->input('nominee_2_firstname');
+                        $existBoNomineeTwoInfo->nominee_2_lastname                           = $request->input('nominee_2_lastname');
+                        $existBoNomineeTwoInfo->nominee_2_relationship                       = $request->input('nominee_2_relationship');
+                        $existBoNomineeTwoInfo->nominee_2_percentage                         = $request->input('nominee_2_percentage');
+                        $existBoNomineeTwoInfo->nominee_2_residency                          = $request->input('nominee_2_residency');
+                        $existBoNomineeTwoInfo->nominee_2_date_of_birth                      = $request->input('nominee_2_date_of_birth');
+                        $existBoNomineeTwoInfo->nominee_2_nid                                = $request->input('nominee_2_nid');
+                        $existBoNomineeTwoInfo->nominee_2_address_line_1                     = $request->input('nominee_2_address_line_1');
+                        $existBoNomineeTwoInfo->nominee_2_address_line_2                     = $request->input('nominee_2_address_line_2');
+                        $existBoNomineeTwoInfo->nominee_2_address_line_3                     = $request->input('nominee_2_address_line_3');
+                        $existBoNomineeTwoInfo->nominee_2_city                               = $request->input('nominee_2_city');
+                        $existBoNomineeTwoInfo->nominee_2_post_code                          = $request->input('nominee_2_post_code');
+                        $existBoNomineeTwoInfo->nominee_2_division                           = $request->input('nominee_2_division');
+                        $existBoNomineeTwoInfo->nominee_2_country                            = $request->input('nominee_2_country');
+                        $existBoNomineeTwoInfo->nominee_2_email                              = $request->input('nominee_2_email');
+                        $existBoNomineeTwoInfo->nominee_2_mobile                             = $request->input('nominee_2_mobile');
+                        $existBoNomineeTwoInfo->nominee_2_telephone                          = $request->input('nominee_2_telephone');
+                        $existBoNomineeTwoInfo->nominee_2_fax                                = $request->input('nominee_2_fax');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_courtesy_title         = $request->input('guardian_of_nominee_2_courtesy_title');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_firstname              = $request->input('guardian_of_nominee_2_firstname');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_lastname               = $request->input('guardian_of_nominee_2_lastname');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_relationship           = $request->input('guardian_of_nominee_2_relationship');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_maturity_date_of_minor = $request->input('guardian_of_nominee_2_maturity_date_of_minor');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_residency              = $request->input('guardian_of_nominee_2_residency');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_date_of_birth          = $request->input('guardian_of_nominee_2_date_of_birth');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_nid                    = $request->input('guardian_of_nominee_2_nid');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_address_line_1         = $request->input('guardian_of_nominee_2_address_line_1');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_address_line_2         = $request->input('guardian_of_nominee_2_address_line_2');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_address_line_3         = $request->input('guardian_of_nominee_2_address_line_3');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_city                   = $request->input('guardian_of_nominee_2_city');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_post_code              = $request->input('guardian_of_nominee_2_post_code');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_division               = $request->input('guardian_of_nominee_2_division');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_country                = $request->input('guardian_of_nominee_2_country');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_email                  = $request->input('guardian_of_nominee_2_email');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_mobile                 = $request->input('guardian_of_nominee_2_mobile');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_telephone              = $request->input('guardian_of_nominee_2_telephone');
+                        $existBoNomineeTwoInfo->guardian_of_nominee_2_telephone              = $request->input('guardian_of_nominee_2_telephone');
+
+                        $result = $existBoNomineeTwoInfo->save();
+
+                        if($result){
+                            return response()->json([
+                                'success' => true,
+                                'id'      => $userId
+                            ]);
+                        }
+                    }
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'id'      => $userId
+                ]);
+            }
+
             $boNomineeObj = new BoNominee();
 
-            $boNomineeObj->bo_id                    = $request->input('user_id');
+            $boNomineeObj->bo_id                    = $userId;
             $boNomineeObj->nominee_1_courtesy_title = $request->input('nominee_1_courtesy_title');
             $boNomineeObj->nominee_1_firstname      = $request->input('nominee_1_firstname');
             $boNomineeObj->nominee_1_lastname       = $request->input('nominee_1_lastname');
@@ -298,14 +509,24 @@ class BoController extends Controller
     public function boDocumentupload(Request $request)
     {
         $request->validate([
-            'first_applicant_1st_holder_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $file = $request->file('first_applicant_1st_holder_photo');
-        $filePath = $file->store('images', 'public');
+        $file = $request->file('file');
+        $filePath = $file->store('first_applicant_images', 'public');
 
-        // Save the file path and other details to the database
-        // Example:
+        $userId = $request->input('user_id');
+
+        $existBoDocument = BoDocument::where('bo_id', $userId)->first();
+
+        if($existBoDocument){
+            $existBoDocument->bo_id                            = $request->input('user_id');
+            $existBoDocument->first_applicant_1st_holder_photo = $filePath;
+            $existBoDocument->save();
+
+            return response()->json(['success' => 'Image uploaded successfully!']);
+        }
+
         $boDocumentObj                                   = new BoDocument();
         $boDocumentObj->bo_id                            = $request->input('user_id');
         $boDocumentObj->first_applicant_1st_holder_photo = $filePath;
@@ -314,21 +535,116 @@ class BoController extends Controller
         return response()->json(['success' => 'Image uploaded successfully!']);
     }
 
-    public function boDocumentClear(Request $request)
+    public function boDocumentfirstPassportupload(Request $request)
     {
         $request->validate([
-            'id' => 'required|integer',
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Find and delete the image record from the database
-        // Example:
-        $image = BoDocument::where('bo_id', $request->input('id'));
-        if ($image) {
-            Storage::disk('public')->delete($image->first_applicant_1st_holder_photo);
-            $image->delete();
+        $file = $request->file('file');
+        $filePath = $file->store('first_applicant_passport_images', 'public');
+
+        $userId = $request->input('user_id');
+
+        $existBoDocument = BoDocument::where('bo_id', $userId)->first();
+
+        if($existBoDocument){
+            $existBoDocument->bo_id                            = $request->input('user_id');
+            $existBoDocument->first_applicant_1st_holder_NID_Passport_Driving_front_side = $filePath;
+            $existBoDocument->save();
+
+            return response()->json(['success' => 'Image uploaded successfully!']);
         }
 
-        return response()->json(['success' => 'Image cleared successfully!']);
+        $boDocumentObj                                   = new BoDocument();
+        $boDocumentObj->bo_id                            = $request->input('user_id');
+        $boDocumentObj->first_applicant_1st_holder_NID_Passport_Driving_front_side = $filePath;
+        $boDocumentObj->save();
+
+        return response()->json(['success' => 'Image uploaded successfully!']);
+    }
+
+    public function boDocumentfirstPassportBackupload(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $file = $request->file('file');
+        $filePath = $file->store('first_applicant_1st_holder_NID_Passport_Driving_back_side', 'public');
+
+        $userId = $request->input('user_id');
+
+        $existBoDocument = BoDocument::where('bo_id', $userId)->first();
+
+        if($existBoDocument){
+            $existBoDocument->bo_id                                                     = $request->input('user_id');
+            $existBoDocument->first_applicant_1st_holder_NID_Passport_Driving_back_side = $filePath;
+            $existBoDocument->save();
+
+            return response()->json(['success' => 'Image uploaded successfully!']);
+        }
+
+        $boDocumentObj                                   = new BoDocument();
+        $boDocumentObj->bo_id                            = $request->input('user_id');
+        $boDocumentObj->first_applicant_1st_holder_NID_Passport_Driving_back_side = $filePath;
+        $boDocumentObj->save();
+
+        return response()->json(['success' => 'Image uploaded successfully!']);
+    }
+
+    public function boDocumentClear(Request $request, $id)
+    {
+        // Find the image record in the database
+        $image = BoDocument::where('bo_id', $id)->first();
+
+        if ($image) {
+            Storage::delete($image->first_applicant_1st_holder_photo);
+
+            $image->first_applicant_1st_holder_photo = null;
+            $image->save();
+
+
+            return response()->json(['message' => 'Image cleared successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Image record not found'], 404);
+        }
+    }
+
+    public function firstapplicantpassportFrontClear(Request $request, $id)
+    {
+        // Find the image record in the database
+        $image = BoDocument::where('bo_id', $id)->first();
+
+        if ($image) {
+            Storage::delete($image->first_applicant_1st_holder_NID_Passport_Driving_front_side);
+
+            $image->first_applicant_1st_holder_NID_Passport_Driving_front_side = null;
+            $image->save();
+
+
+            return response()->json(['message' => 'Image cleared successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Image record not found'], 404);
+        }
+    }
+
+    public function firstapplicantpassportBackClear(Request $request, $id)
+    {
+        // Find the image record in the database
+        $image = BoDocument::where('bo_id', $id)->first();
+
+        if ($image) {
+            Storage::delete($image->first_applicant_1st_holder_NID_Passport_Driving_back_side);
+
+            $image->first_applicant_1st_holder_NID_Passport_Driving_back_side = null;
+            $image->save();
+
+
+            return response()->json(['message' => 'Image cleared successfully'], 200);
+        } else {
+            return response()->json(['message' => 'Image record not found'], 404);
+        }
     }
 
     public function uploadExcel(Request $request)

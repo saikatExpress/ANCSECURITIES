@@ -51,6 +51,7 @@
                             <div id="step-1" class="step-content active">
                                 <form id="step-1-form" action="{{ route('boaccount.store') }}" method="POST">
                                     @csrf
+                                    <input type="hidden" name="user_id" class="user_id">
                                     <div class="d-flex justify-content-between">
                                         <div class="form-group">
                                             <label for="field1">BO Type: <span class="text-danger">*</span></label> <br>
@@ -774,7 +775,7 @@
                                                 </div>
 
                                                 {{-- Nominee 1 Guardian --}}
-                                                {{-- <div class="nominee_1_guardian" style="display:none">
+                                                <div class="nominee_1_guardian" style="display:none">
                                                     <div class="card border-info border-top-0 border-radious-0">
                                                         <div class="card-header d-flex align-items-center justify-content-between  view-profile-card-header">
                                                             <h4 class="card-title mb-0">Nominee 1 Guardian (If Nominee is A Minor)</h4>
@@ -892,7 +893,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div> --}}
+                                                </div>
                                             </div>
                                         </div>
 
@@ -907,7 +908,7 @@
                                         </div>
 
                                         {{-- Nominee 2 Details --}}
-                                        {{-- <div class="mb-3" id="nominee_2-details" style="display:none">
+                                        <div class="mb-3" id="nominee_2-details" style="display:none">
                                             <div class="card-header d-flex align-items-center justify-content-between  view-profile-card-header">
                                                 <h4 class="card-title mb-0">Nominee 2</h4>
                                             </div>
@@ -1154,7 +1155,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div> --}}
+                                        </div>
 
                                     </div>
                                     <button type="submit" class="btn btn-primary next-step">Save & Next</button>
@@ -1169,17 +1170,15 @@
                                 <div class="row row p-2 pt-3">
                                     <div class="col-lg-3">
                                         <div class="mb-4">
-                                            <form method="POST" id="image-form" enctype="multipart/form-data">
+                                            <form method="POST" action="/upload/bo/image" class="document-frm" enctype="multipart/form-data">
                                                 @csrf
                                                 <input name="id" type="hidden" value="">
-                                                <input type="hidden" id="csrf-token" value="{{ csrf_token() }}">
-                                                <input name="user_id" class="user_id" type="hidden">
-                                                <input name="image_title" type="hidden" value="First Applicant (1st Holder) NID/Passport/Driving Front Side">
+                                                <input name="user_id" type="hidden" class="user_id">
+                                                <input name="title" type="hidden" value="First Applicant (1st Holder) NID/Passport/Driving Front Side">
                                                 <input name="image_preview" type="hidden" value="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
-
                                                 <div class="upload-preview">
                                                     <a href="javascript:void(0)" style="cursor:default">
-                                                        <img id="preview-image" class="img-fluid" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
+                                                        <img class="preview-image img-fluid" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
                                                     </a>
                                                 </div>
                                                 <div class="mt-3">
@@ -1189,29 +1188,29 @@
                                                 <div class="mt-2">
                                                     <div class="d-flex align-items-center">
                                                         <div class="custom-file-upload">
-                                                            <button type="button" class="btn btn-warning waves-effect waves-light btn-sm" id="choose-file-btn">Choose File</button>
-                                                            <input id="file-input" name="first_applicant_1st_holder_photo" type="file" style="display: none;">
+                                                            <button type="button" class="btn btn-warning waves-effect waves-light btn-sm choose-file-btn">Choose File</button>
+                                                            <input class="file-input" name="file" type="file" style="display: none;">
                                                         </div>
-                                                        <button type="button" id="clear-btn" class="upload-clear d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
-                                                        <button type="button" id="save-btn" class="upload-btn btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
+                                                        <button type="button" class="upload-clear d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
+                                                        <button type="button" class="upload-btn btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
 
-
                                     <div class="col-lg-3">
                                         <div class="mb-4">
-                                            <form method="POST" action="" class="document-frm" enctype="multipart/form-data">
+                                            <form method="POST" action="/upload/firstholderdriving/image" class="document-frm" enctype="multipart/form-data">
+                                                @csrf
                                                 <input name="id" type="hidden" value="">
-                                                <input name="user_id" type="hidden" value="95">
+                                                <input name="user_id" class="user_id" type="hidden">
                                                 <input name="title" type="hidden" value="First Applicant (1st Holder) NID/Passport/Driving Front Side">
                                                 <input name="image_preview" type="hidden" value="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
 
                                                 <div class="upload-preview">
                                                     <a href="javascript:void(0)" style="cursor:default">
-                                                        <img class="img-fluid" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
+                                                        <img class="preview-image1 img-fluid" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
                                                     </a>
                                                 </div>
                                                 <div class="mt-3">
@@ -1221,11 +1220,11 @@
                                                 <div class="mt-2">
                                                     <div class="d-flex align-items-center">
                                                         <div class="custom-file-upload">
-                                                            <button type="button" class="btn btn-warning waves-effect waves-light btn-sm">Choose File</button>
-                                                            <input name="file" type="file" />
+                                                            <button type="button" class="btn btn-warning waves-effect waves-light btn-sm choose-file-btn1">Choose File</button>
+                                                            <input class="file-input" name="file" type="file" style="display: none;">
                                                         </div>
-                                                        <button type="button" class="upload-clear d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
-                                                        <button type="submit" class="upload-btn btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
+                                                        <button type="button" class="upload-clear1 d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
+                                                        <button type="button" class="upload-btn1 btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -1234,31 +1233,30 @@
 
                                     <div class="col-lg-3">
                                         <div class="mb-4">
-                                            <form method="POST" action="https://onlinebo.uftfast.com/bo-account/document/store" accept-charset="UTF-8" class="document-frm" enctype="multipart/form-data">
-
+                                            <form method="POST" action="/upload/firstholderdrivingback/image" class="document-frm" enctype="multipart/form-data">
+                                                @csrf
                                                 <input name="id" type="hidden" value="">
-                                                <input name="user_id" type="hidden" value="95">
+                                                <input name="user_id" type="hidden" class="user_id">
                                                 <input name="title" type="hidden" value="First Applicant (1st Holder) NID/Passport/Driving Back Side">
                                                 <input name="image_preview" type="hidden" value="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
 
                                                 <div class="upload-preview">
                                                     <a href="javascript:void(0)" style="cursor:default">
-                                                        <img class="img-fluid" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
+                                                        <img class="preview-image2 img-fluid" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
                                                     </a>
                                                 </div>
                                                 <div class="mt-3">
                                                     <h5 class="m-0">First Applicant (1st Holder) NID/Passport/Driving Back Side</h5>
-                                                    <span class="text-info help-text">
-                                                                            </span>
+                                                    <span class="text-info help-text"></span>
                                                 </div>
                                                 <div class="mt-2">
                                                     <div class="d-flex align-items-center">
                                                         <div class="custom-file-upload">
-                                                            <button type="button" class="btn btn-warning waves-effect waves-light btn-sm">Choose File</button>
-                                                            <input name="file" type="file" />
+                                                            <button type="button" class="btn btn-warning waves-effect waves-light btn-sm choose-file-btn2">Choose File</button>
+                                                            <input class="file-input" name="file" type="file" style="display: none;">
                                                         </div>
-                                                        <button type="button" class="upload-clear d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
-                                                        <button type="submit" class="upload-btn btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
+                                                        <button type="button" class="upload-clear2 d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
+                                                        <button type="button" class="upload-btn2 btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -1433,6 +1431,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('admin/assets/js/bo.js') }}"></script>
     <script src="{{ asset('admin/assets/js/boupload.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/boupload1.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/boupload2.js') }}"></script>
     <!-- jQuery -->
     <script>
         $(document).ready(function() {
