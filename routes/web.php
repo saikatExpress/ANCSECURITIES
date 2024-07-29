@@ -137,6 +137,10 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/bank/store', 'bankStore')->name('bank.store');
         Route::post('/authorize/store', 'authorizeStore')->name('authorize.store');
         Route::post('/nominee/store', 'nomineeStore')->name('nominee.store');
+
+        Route::post('/upload/bo/image', 'boDocumentupload')->name('upload.image');
+        Route::post('/delete-image', 'boDocumentClear')->name('clear.image');
+
         Route::post('/upload-excel','uploadExcel')->name('upload.excel');
     });
 

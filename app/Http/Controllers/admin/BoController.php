@@ -5,15 +5,18 @@ namespace App\Http\Controllers\admin;
 use App\Models\BOForm;
 use App\Imports\BoImport;
 use App\Models\BoAccount;
+use App\Models\BoNominee;
+use App\Models\BoDocument;
+use App\Models\CustomerBo;
+use App\Models\BoAuthorize;
+use App\Models\BoNomineeTwo;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\BoAuthorize;
-use App\Models\BoNominee;
-use App\Models\CustomerBo;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BoController extends Controller
@@ -232,16 +235,100 @@ class BoController extends Controller
 
             DB::commit();
             if($res){
-                return response()->json([
-                    'success' => true,
-                    'id'      => $boNomineeObj->bo_id
-                ]);
+
+                $boNomineeTwoObj = new BoNomineeTwo();
+
+                $boNomineeTwoObj->bo_id                                        = $request->input('user_id');
+                $boNomineeTwoObj->nominee_id                                   = $boNomineeObj->id;
+                $boNomineeTwoObj->nominee_2_courtesy_title                     = $request->input('nominee_2_courtesy_title');
+                $boNomineeTwoObj->nominee_2_firstname                          = $request->input('nominee_2_firstname');
+                $boNomineeTwoObj->nominee_2_lastname                           = $request->input('nominee_2_lastname');
+                $boNomineeTwoObj->nominee_2_relationship                       = $request->input('nominee_2_relationship');
+                $boNomineeTwoObj->nominee_2_percentage                         = $request->input('nominee_2_percentage');
+                $boNomineeTwoObj->nominee_2_residency                          = $request->input('nominee_2_residency');
+                $boNomineeTwoObj->nominee_2_date_of_birth                      = $request->input('nominee_2_date_of_birth');
+                $boNomineeTwoObj->nominee_2_nid                                = $request->input('nominee_2_nid');
+                $boNomineeTwoObj->nominee_2_address_line_1                     = $request->input('nominee_2_address_line_1');
+                $boNomineeTwoObj->nominee_2_address_line_2                     = $request->input('nominee_2_address_line_2');
+                $boNomineeTwoObj->nominee_2_address_line_3                     = $request->input('nominee_2_address_line_3');
+                $boNomineeTwoObj->nominee_2_city                               = $request->input('nominee_2_city');
+                $boNomineeTwoObj->nominee_2_post_code                          = $request->input('nominee_2_post_code');
+                $boNomineeTwoObj->nominee_2_division                           = $request->input('nominee_2_division');
+                $boNomineeTwoObj->nominee_2_country                            = $request->input('nominee_2_country');
+                $boNomineeTwoObj->nominee_2_email                              = $request->input('nominee_2_email');
+                $boNomineeTwoObj->nominee_2_mobile                             = $request->input('nominee_2_mobile');
+                $boNomineeTwoObj->nominee_2_telephone                          = $request->input('nominee_2_telephone');
+                $boNomineeTwoObj->nominee_2_fax                                = $request->input('nominee_2_fax');
+                $boNomineeTwoObj->guardian_of_nominee_2_courtesy_title         = $request->input('guardian_of_nominee_2_courtesy_title');
+                $boNomineeTwoObj->guardian_of_nominee_2_firstname              = $request->input('guardian_of_nominee_2_firstname');
+                $boNomineeTwoObj->guardian_of_nominee_2_lastname               = $request->input('guardian_of_nominee_2_lastname');
+                $boNomineeTwoObj->guardian_of_nominee_2_relationship           = $request->input('guardian_of_nominee_2_relationship');
+                $boNomineeTwoObj->guardian_of_nominee_2_maturity_date_of_minor = $request->input('guardian_of_nominee_2_maturity_date_of_minor');
+                $boNomineeTwoObj->guardian_of_nominee_2_residency              = $request->input('guardian_of_nominee_2_residency');
+                $boNomineeTwoObj->guardian_of_nominee_2_date_of_birth          = $request->input('guardian_of_nominee_2_date_of_birth');
+                $boNomineeTwoObj->guardian_of_nominee_2_nid                    = $request->input('guardian_of_nominee_2_nid');
+                $boNomineeTwoObj->guardian_of_nominee_2_address_line_1         = $request->input('guardian_of_nominee_2_address_line_1');
+                $boNomineeTwoObj->guardian_of_nominee_2_address_line_2         = $request->input('guardian_of_nominee_2_address_line_2');
+                $boNomineeTwoObj->guardian_of_nominee_2_address_line_3         = $request->input('guardian_of_nominee_2_address_line_3');
+                $boNomineeTwoObj->guardian_of_nominee_2_city                   = $request->input('guardian_of_nominee_2_city');
+                $boNomineeTwoObj->guardian_of_nominee_2_post_code              = $request->input('guardian_of_nominee_2_post_code');
+                $boNomineeTwoObj->guardian_of_nominee_2_division               = $request->input('guardian_of_nominee_2_division');
+                $boNomineeTwoObj->guardian_of_nominee_2_country                = $request->input('guardian_of_nominee_2_country');
+                $boNomineeTwoObj->guardian_of_nominee_2_email                  = $request->input('guardian_of_nominee_2_email');
+                $boNomineeTwoObj->guardian_of_nominee_2_mobile                 = $request->input('guardian_of_nominee_2_mobile');
+                $boNomineeTwoObj->guardian_of_nominee_2_telephone              = $request->input('guardian_of_nominee_2_telephone');
+                $boNomineeTwoObj->guardian_of_nominee_2_telephone              = $request->input('guardian_of_nominee_2_telephone');
+
+                $result = $boNomineeTwoObj->save();
+
+                if($result){
+                    return response()->json([
+                        'success' => true,
+                        'id'      => $boNomineeObj->bo_id
+                    ]);
+                }
             }
         } catch (\Exception $e) {
             DB::rollback();
             info($e);
             return response()->json(['success' => false, 'message' => 'An error occurred. Please try again.']);
         }
+    }
+
+    public function boDocumentupload(Request $request)
+    {
+        $request->validate([
+            'first_applicant_1st_holder_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $file = $request->file('first_applicant_1st_holder_photo');
+        $filePath = $file->store('images', 'public');
+
+        // Save the file path and other details to the database
+        // Example:
+        $boDocumentObj                                   = new BoDocument();
+        $boDocumentObj->bo_id                            = $request->input('user_id');
+        $boDocumentObj->first_applicant_1st_holder_photo = $filePath;
+        $boDocumentObj->save();
+
+        return response()->json(['success' => 'Image uploaded successfully!']);
+    }
+
+    public function boDocumentClear(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        // Find and delete the image record from the database
+        // Example:
+        $image = BoDocument::where('bo_id', $request->input('id'));
+        if ($image) {
+            Storage::disk('public')->delete($image->first_applicant_1st_holder_photo);
+            $image->delete();
+        }
+
+        return response()->json(['success' => 'Image cleared successfully!']);
     }
 
     public function uploadExcel(Request $request)

@@ -72,7 +72,7 @@
                                                     <b>Type of Client <span class="text-danger">*</span></b>
                                                 </p>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" class="required" name="type_of_client" value="individual" type="radio" id="type_of_client_individual" checked="checked">
+                                                    <input class="form-check-input required" name="type_of_client" value="individual" type="radio" id="type_of_client_individual" checked="checked">
                                                     <label for="type_of_client_individual" class="form-check-label">Individual</label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
@@ -637,7 +637,7 @@
                                 <form action="{{ route('nominee.store') }}" method="post" id="step-4-form">
                                     @csrf
                                     <div class="m-3">
-                                        <input name="user_id" class="user_id" type="hidden" value="">
+                                        <input name="user_id" class="user_id" type="hidden">
                                     </div>
 
                                     <div class="card mt-4">
@@ -774,7 +774,7 @@
                                                 </div>
 
                                                 {{-- Nominee 1 Guardian --}}
-                                                <div class="nominee_1_guardian" style="display:none">
+                                                {{-- <div class="nominee_1_guardian" style="display:none">
                                                     <div class="card border-info border-top-0 border-radious-0">
                                                         <div class="card-header d-flex align-items-center justify-content-between  view-profile-card-header">
                                                             <h4 class="card-title mb-0">Nominee 1 Guardian (If Nominee is A Minor)</h4>
@@ -892,7 +892,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> --}}
                                             </div>
                                         </div>
 
@@ -907,7 +907,7 @@
                                         </div>
 
                                         {{-- Nominee 2 Details --}}
-                                        <div class="mb-3" id="nominee_2-details" style="display:none">
+                                        {{-- <div class="mb-3" id="nominee_2-details" style="display:none">
                                             <div class="card-header d-flex align-items-center justify-content-between  view-profile-card-header">
                                                 <h4 class="card-title mb-0">Nominee 2</h4>
                                             </div>
@@ -960,10 +960,7 @@
                                                 <div class="col-md-3 mb-2">
                                                     <label for="nominee_2_date_of_birth" class="form-label">Date of Birth (YYYY-MM-DD) <span class="text-danger">*</span></label>
                                                     <div class="flatpickr">
-                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" id="nominee_2_date_of_birth" aria-label="date_of_birth" name="nominee_2_date_of_birth" type="date">
-                                                        <a class="input-button" title="toggle" data-toggle>
-                                                            <i class="icon-calendar"></i>
-                                                        </a>
+                                                        <input class="form-control birthdate" placeholder="Enter Date of Birth" id="nominee_2_date_of_birth" name="nominee_2_date_of_birth" type="date">
                                                     </div>
                                                 </div>
 
@@ -1067,14 +1064,11 @@
                                                                     <label for="guardian_of_nominee_2_maturity_date_of_minor" class="form-label">Maturity Date of Minor (YYYY-MM-DD) <span class="text-danger">*</span></label>
                                                                     <div class="flatpickr">
                                                                         <input class="form-control datepicker" id="guardian_of_nominee_2_maturity_date_of_minor" name="guardian_of_nominee_2_maturity_date_of_minor" type="date">
-                                                                        <a class="input-button" title="toggle" data-toggle>
-                                                                            <i class="icon-calendar"></i>
-                                                                        </a>
                                                                     </div>
                                                                 </div>
 
                                                                 <div class="col-md-3 my-3">
-                                                                    <p class="required"><b>Residential Status</b></p>
+                                                                    <p><b>Residential Status</b></p>
                                                                     <div class="form-check form-check-inline">
                                                                         <input class="form-check-input" id="guardian_of_nominee_2_residency_Resident" checked="checked" name="guardian_of_nominee_2_residency" type="radio" value="Resident">
                                                                         <label for="guardian_of_nominee_2_residency_Resident" class="form-check-label">Resident</label>
@@ -1160,7 +1154,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
+
                                     </div>
                                     <button type="submit" class="btn btn-primary next-step">Save & Next</button>
                                     <button type="button" class="btn btn-secondary prev-step">Back</button>
@@ -1173,33 +1168,38 @@
                                 </div>
                                 <div class="row row p-2 pt-3">
                                     <div class="col-lg-3">
-                                        <form method="POST" action="/upload-image" class="document-frm" enctype="multipart/form-data">
-                                            <input name="id" type="hidden" value="">
-                                            <input name="user_id" type="hidden" value="95">
-                                            <input name="title" type="hidden" value="First Applicant (1st Holder) Photo">
-                                            <input name="image_preview" type="hidden" value="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
+                                        <div class="mb-4">
+                                            <form method="POST" id="image-form" enctype="multipart/form-data">
+                                                @csrf
+                                                <input name="id" type="hidden" value="">
+                                                <input type="hidden" id="csrf-token" value="{{ csrf_token() }}">
+                                                <input name="user_id" class="user_id" type="hidden">
+                                                <input name="image_title" type="hidden" value="First Applicant (1st Holder) NID/Passport/Driving Front Side">
+                                                <input name="image_preview" type="hidden" value="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
 
-                                            <div class="upload-preview">
-                                                <a href="javascript:void(0)" style="cursor:default">
-                                                    <img class="img-fluid preview-image" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
-                                                </a>
-                                            </div>
-                                            <div class="mt-3">
-                                                <h5 class="m-0">First Applicant (1st Holder) Photo</h5>
-                                                <span class="text-info help-text">(Image size 591x709 pixel)</span>
-                                            </div>
-                                            <div class="mt-2">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="custom-file-upload">
-                                                        <button type="button" class="btn btn-warning waves-effect waves-light btn-sm choose-file-btn">Choose File</button>
-                                                        <input name="file" type="file" class="file-input" style="display: none;">
-                                                    </div>
-                                                    <button type="button" class="upload-clear d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
-                                                    <button type="submit" class="upload-btn btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
+                                                <div class="upload-preview">
+                                                    <a href="javascript:void(0)" style="cursor:default">
+                                                        <img id="preview-image" class="img-fluid" alt="" src="https://onlinebo.uftfast.com/assets/images/Not-found-image.svg">
+                                                    </a>
                                                 </div>
-                                            </div>
-                                        </form>
+                                                <div class="mt-3">
+                                                    <h5 class="m-0">First Applicant (1st Holder) NID/Passport/Driving Front Side</h5>
+                                                    <span class="text-info help-text"></span>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="custom-file-upload">
+                                                            <button type="button" class="btn btn-warning waves-effect waves-light btn-sm" id="choose-file-btn">Choose File</button>
+                                                            <input id="file-input" name="first_applicant_1st_holder_photo" type="file" style="display: none;">
+                                                        </div>
+                                                        <button type="button" id="clear-btn" class="upload-clear d-none btn btn-soft-danger waves-effect waves-light btn-sm" style="margin-right:5px">Clear</button>
+                                                        <button type="button" id="save-btn" class="upload-btn btn btn-soft-info waves-effect waves-light btn-sm d-none">Save</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
+
 
                                     <div class="col-lg-3">
                                         <div class="mb-4">
@@ -1216,8 +1216,7 @@
                                                 </div>
                                                 <div class="mt-3">
                                                     <h5 class="m-0">First Applicant (1st Holder) NID/Passport/Driving Front Side</h5>
-                                                    <span class="text-info help-text">
-                                                                            </span>
+                                                    <span class="text-info help-text"></span>
                                                 </div>
                                                 <div class="mt-2">
                                                     <div class="d-flex align-items-center">
@@ -1433,6 +1432,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('admin/assets/js/bo.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/boupload.js') }}"></script>
     <!-- jQuery -->
     <script>
         $(document).ready(function() {
@@ -1440,27 +1440,28 @@
             var totalSteps = $('#step-wizard .step-content').length;
 
             function validateStep(step) {
-                var isValid = true;
-                $('#step-' + step + '-form .required').each(function() {
-                    var $input = $(this);
-                    var $errorMessage = $input.next('.error-message');
+                // var isValid = true;
+                // $('#step-' + step + '-form .required').each(function() {
+                //     var $input = $(this);
+                //     var $errorMessage = $input.next('.error-message');
 
-                    // Check if joint option is selected and the input is part of the joint form
-                    if ($('#type_of_client:checked').val() === 'joint' || !$input.closest('.joint_applicant').length) {
-                        if (!$input.val()) {
-                            isValid = false;
-                            $input.addClass('is-invalid');
-                            $errorMessage.text('This field is required.').show();
-                        } else {
-                            $input.removeClass('is-invalid');
-                            $errorMessage.hide();
-                        }
-                    } else {
-                        $input.removeClass('is-invalid');
-                        $errorMessage.hide();
-                    }
-                });
-                return isValid;
+                //     // Check if joint option is selected and the input is part of the joint form
+                //     if ($('#type_of_client:checked').val() === 'joint' || !$input.closest('.joint_applicant').length) {
+                //         if (!$input.val()) {
+                //             isValid = false;
+                //             $input.addClass('is-invalid');
+                //             $errorMessage.text('This field is required.').show();
+                //         } else {
+                //             $input.removeClass('is-invalid');
+                //             $errorMessage.hide();
+                //         }
+                //     } else {
+                //         $input.removeClass('is-invalid');
+                //         $errorMessage.hide();
+                //     }
+                // });
+                // return isValid;
+                return true;
             }
 
             function submitStepForm(step) {
