@@ -133,8 +133,8 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/create/bo', 'create')->name('create.bo');
         Route::get('/open/bo/form', 'openBoForm')->name('openbo.form');
         Route::post('/account/store', 'acStore')->name('acbo.store');
+        Route::post('/bo/account/store', 'store')->name('boaccount.store');
         Route::post('/upload-excel','uploadExcel')->name('upload.excel');
-
     });
 
     Route::controller(RequestController::class)->group(function(){

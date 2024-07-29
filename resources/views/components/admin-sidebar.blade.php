@@ -397,7 +397,10 @@
                             </li>
                         </ul>
                     </li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-circle-o"></i> Level One</a>
+                        </li>
                 </ul>
             </li>
         </ul>
