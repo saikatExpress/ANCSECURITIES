@@ -19,6 +19,7 @@ use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserCOntroller;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -208,6 +209,9 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/'.$hashedAttedanceUrl, 'createAttendance')->name('staff.attendance');
         Route::get('/staff/edit/{id}', 'edit')->name('staff.edit');
         Route::post('/staff/update', 'update')->name('staff.update');
+
+        Route::post('/attendance', 'empattendanceStore')->name('empattendance.store');
+
         Route::post('/staff/store', 'store')->name('staff.store');
         Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
     });
@@ -269,6 +273,10 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/get/form/{id}', 'download')->name('get.form');
         Route::get('/show/test/{id}', 'showTest')->name('show.test');
         Route::get('/form/delete/{id}', 'destroy');
+    });
+
+    Route::controller(SettingController::class)->group(function(){
+        Route::get('/project/setting', 'create')->name('project.setting');
     });
 });
 

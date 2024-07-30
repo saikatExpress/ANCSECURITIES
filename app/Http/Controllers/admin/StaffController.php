@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\Attendance;
@@ -118,6 +119,37 @@ class StaffController extends Controller
                 ->withErrors(['error' => $e->getMessage()]);
         }
     }
+
+    // AttendanceController.php
+    public function empattendanceStore(Request $request)
+    {
+        try {
+            $request->validate([
+                'start_time' => 'required|date_format:H:i',
+            ]);
+
+            $alreadyAttend = Attendance::whereDate('attendance_date', Carbon::now())->where('staff_id', Auth::id())->first();
+            if($alreadyAttend){
+                return response()->json(['error' => false]);
+            }
+
+            $attendance = new Attendance();
+
+            $year = date("Y");
+
+            $attendance->attendance_date = Carbon::now();
+            $attendance->year            = $year;
+            $attendance->staff_id        = Auth::id();
+            $attendance->in_time         = $request->input('start_time');
+
+            $attendance->save();
+
+            return response()->json(['message' => 'Attendance recorded successfully!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to record attendance. Please try again.'], 500);
+        }
+    }
+
 
     public function update(Request $request)
     {

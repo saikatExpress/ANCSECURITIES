@@ -377,23 +377,29 @@
                     </li>
 
                     <li class="treeview">
-                        <a href="#"><i class="fa fa-circle-o"></i> Level One
+                        <a href="#"><i class="fa fa-circle-o"></i> Settings
                             <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
+                            <li>
+                                <a href="{{ route('project.setting') }}">
+                                    <i class="fa fa-circle-o"></i>
+                                    Project Setting
+                                </a>
+                            </li>
+
                             <li class="treeview">
-                            <a href="#"><i class="fa fa-circle-o"></i> Level Two
-                                <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                                </span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                                <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                            </ul>
+                                <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                                    <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                                </ul>
                             </li>
                         </ul>
                     </li>
