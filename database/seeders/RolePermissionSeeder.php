@@ -34,6 +34,10 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'create banner'],
             ['name' => 'edit banner'],
             ['name' => 'delete banner'],
+            ['name' => 'bo create'],
+            ['name' => 'edit bo'],
+            ['name' => 'show bo'],
+            ['name' => 'delete bo'],
             ['name' => 'gallery list'],
             ['name' => 'create gallery'],
             ['name' => 'edit gallery'],
@@ -46,6 +50,10 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'create form'],
             ['name' => 'edit form'],
             ['name' => 'delete form'],
+            ['name' => 'create request'],
+            ['name' => 'edit request'],
+            ['name' => 'cancel request'],
+            ['name' => 'delete request'],
         ];
 
         foreach($permissions as $key => $permission){
