@@ -57,6 +57,10 @@
             <!-- Left side column. contains the logo and sidebar -->
             <x-admin-sidebar/>
 
+            <div id="contentArea">
+                <!-- Content will be loaded here -->
+            </div>
+
             @yield('content')
 
             <x-admin-footer/>
@@ -88,5 +92,30 @@
         <script src="{{ asset('admin/assets/dist/js/pages/dashboard2.js') }}"></script>
         <!-- AdminLTE for demo purposes -->
         <script src="{{ asset('admin/assets/dist/js/demo.js') }}"></script>
+
+        <script>
+            $(document).ready(function() {
+                $('#createPermissionForm').on('submit', function(event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.success,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                        },
+                        error: function(xhr) {
+                            console.error('Error creating permission:', xhr);
+                        }
+                    });
+                });
+            });
+        </script>
+
     </body>
 </html>

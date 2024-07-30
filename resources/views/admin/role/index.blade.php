@@ -52,7 +52,7 @@
                                 </button>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-sm btn-primary">
+                                <a href="#" data-id="{{ $role->id }}" class="btn btn-sm btn-primary editRoleBtn">
                                     Edit
                                 </a>
                                 <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $role->id }}">
@@ -76,6 +76,7 @@
           </div>
         </section>
     </div>
+
     <div class="modal fade" id="permissionModal">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -83,13 +84,33 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Add Gallery</h4>
+                    <h4 class="modal-title">Role with Permissions</h4>
                 </div>
                 <div class="modal-body">
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editPermissionModal" tabindex="-1" role="dialog" aria-labelledby="editPermissionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPermissionModalLabel">Edit Role Permissions</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Content will be dynamically loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary savePermissionsBtn">Save changes</button>
                 </div>
             </div>
         </div>
@@ -110,4 +131,74 @@
             }, 3000);
         });
     </script>
+
+    <script>
+        $(document).ready(function(){
+            $('.permissionBtn').on('click', function(){
+                const roleId = $(this).data('id');
+
+                if(roleId != ''){
+                    $.ajax({
+                        url: '/get/permissions/' + roleId,
+                        type: 'GET',
+                        success: function(response){
+                            $('#permissionModal .modal-body').html(response);
+                        },
+                        error: function(xhr) {
+                            console.error('Error fetching permissions:', xhr);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            $('.editRoleBtn').on('click', function(){
+                const roleId = $(this).data('id');
+
+                if(roleId != ''){
+                    $.ajax({
+                        url: '/edit-permissions/' + roleId, // Update the URL as per your route
+                        type: 'GET',
+                        success: function(response) {
+                            $('#editPermissionModal .modal-body').html(response);
+                            $('#editPermissionModal').modal('show');
+                        },
+                        error: function(xhr) {
+                            // Handle errors here
+                            console.error('Error fetching permissions:', xhr);
+                        }
+                    });
+                }
+            });
+
+            $('.savePermissionsBtn').on('click', function(){
+                const form = $('#editPermissionForm');
+                $.ajax({
+                    url: form.attr('action'),
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Permissions updated successfully.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        // Handle errors here
+                        console.error('Error saving permissions:', xhr);
+                    }
+                });
+            });
+        });
+    </script>
+
 @endsection

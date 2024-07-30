@@ -27,6 +27,13 @@ class RoleController extends Controller
         return view('admin.role.index')->with($data);
     }
 
+    public function permissionIndex()
+    {
+        $permissions = Permission::all();
+
+        return view('admin.role.partials.index', compact('permissions'));
+    }
+
     public function create()
     {
         $pageTitle = 'Create Role';
@@ -35,12 +42,64 @@ class RoleController extends Controller
         return view('admin.role.create', compact('pageTitle', 'permissions'));
     }
 
+    public function permissionCreate()
+    {
+        return view('admin.role.partials.create');
+    }
+
+    public function storePermission(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|unique:permissions,name',
+        ]);
+
+        Permission::create([
+            'name'       => $request->input('name'),
+            'guard_name' => 'web',
+        ]);
+
+        return response()->json(['success' => 'Permission created successfully']);
+    }
+
+    public function permissionUpdate(Request $request)
+    {
+        $id = $request->input('permissionid');
+        $permission             = Permission::find($id);
+        $permission->name       = $request->input('name');
+        $permission->guard_name = 'web';
+        $permission->save();
+
+        return response()->json(['success' => 'Permission updated successfully']);
+    }
+
     public function fetchPermission($id)
     {
-        $role = Role::with('permissions')->where('id', $id)->first();
+        $role = Role::find($id);
+        $permissions = $role->permissions;
 
-        return response()->json(['role' => $role]);
+        return view('admin.role.partials.permission', compact('permissions'));
     }
+
+
+    public function editPermissions($roleId)
+    {
+        $role = Role::findById($roleId);
+        $permissions = Permission::all();
+        $rolePermissions = $role->permissions->pluck('name')->toArray();
+
+        return view('admin.role.partials.edit', compact('role', 'permissions', 'rolePermissions'));
+    }
+
+    public function updatePermissions(Request $request, $roleId)
+    {
+        $role = Role::findById($roleId);
+        $permissions = $request->input('permissions', []);
+
+        $role->syncPermissions($permissions);
+
+        return response()->json(['success' => true]);
+    }
+
 
     public function store(Request $request)
     {
@@ -77,12 +136,35 @@ class RoleController extends Controller
         }
     }
 
+    public function permissionDestroy($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $permission = Permission::find($id);
+
+            if (!$permission) {
+                return response()->json(['message' => 'Permission not found.'], 404);
+            }
+
+            $res = $permission->delete();
+
+            DB::commit();
+            if($res){
+                return response()->json(['message' => 'Permission deleted successfully.']);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+        }
+    }
+
     public function destroy($id)
     {
         try {
             DB::beginTransaction();
 
-            $role = ROle::find($id);
+            $role = Role::find($id);
 
             if (!$role) {
                 return response()->json(['message' => 'Role not found.'], 404);

@@ -236,11 +236,18 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
     Route::controller(RoleController::class)->group(function(){
         $hashedRoleUrl = md5('role/list');
         Route::get('/'.$hashedRoleUrl, 'index')->name('role.list');
+        Route::get('/permission/list', 'permissionIndex')->name('permission.list');
         $hashedCreateRoleUrl = md5('create/role');
         Route::get('/'.$hashedCreateRoleUrl, 'create')->name('create.role');
         Route::post('/role/store', 'store')->name('role.store');
         Route::get('/get/permissions/{id}', 'fetchPermission');
+        Route::post('/edit/permission', 'permissionUpdate')->name('permission.edit');
+        Route::get('/edit-permissions/{role}', 'editPermissions');
+        Route::post('/update-permissions/{role}', 'updatePermissions');
+        Route::post('/store/permission', 'storePermission')->name('permission.store');
+        Route::get('/permissions/create', 'permissionCreate')->name('create.permissions');
         Route::get('/role/delete/{id}','destroy');
+        Route::get('/permission/delete/{id}','permissionDestroy');
     });
 
     Route::controller(DesignationController::class)->group(function(){

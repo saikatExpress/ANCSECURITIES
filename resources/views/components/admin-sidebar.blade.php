@@ -91,7 +91,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="pages/layout/collapsed-sidebar.html">
+                        <a href="{{ route('create.permissions') }}">
                             <i class="fa fa-key"></i>
                             Permission
                         </a>
