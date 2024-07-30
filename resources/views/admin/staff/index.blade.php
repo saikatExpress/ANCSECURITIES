@@ -12,8 +12,8 @@
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
             <p style="text-align: right;">
-                <a class="btn btn-sm btn-primary" href="{{ route('create.form') }}">
-                    Add Form
+                <a class="btn btn-sm btn-primary" href="{{ route('staff.create') }}">
+                    Add Staff
                 </a>
             </p>
         </section>
@@ -37,6 +37,8 @@
                         <th>#</th>
                         <th>IMAGE</th>
                         <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
                         <th>Joining Date</th>
                         <th>Action</th>
                     </tr>
@@ -46,24 +48,30 @@
                         <tr class="list-item">
                             <td>{{ $staff->id }}</td>
                             <td>
-                                <img style="width: :60px;height:60px;border-radius:50%;" src="{{ asset('storage/staffs/'. $staff->staff_image) }}" alt="Image">
+                                <img style="width:60px;height:60px;border-radius:50%;" src="{{ asset('storage/staffs/'. $staff->staff_image) }}" alt="Image">
                             </td>
                             <td>
                                 {{ $staff->name }}
                             </td>
                             <td>
+                                {{ $staff->mobile }}
+                            </td>
+                            <td>
+                                {{ $staff->email }}
+                            </td>
+                            <td>
                                 {{ $staff->created_at->format('d-M-Y') }}
                             </td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-primary">
+                                <a href="{{ route('staff.edit', ['id' => $staff->id]) }}" class="btn btn-sm btn-primary">
                                     Edit
-                                </button>
+                                </a>
+                                <a href="" class="btn btn-sm btn-warning">
+                                    View
+                                </a>
                                 <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $staff->id }}">
                                     Delete
                                 </button>
-                                <a href="{{ route('get.form', ['id' => $staff->id]) }}" class="btn btn-sm btn-warning">
-                                    Download
-                                </a>
                             </td>
                         </tr>
                     @endforeach
@@ -71,11 +79,13 @@
 
                 <tfoot>
                     <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
+                        <th>ID</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Date</th>
+                        <th>Action</th>
                     </tr>
                 </tfoot>
               </table>

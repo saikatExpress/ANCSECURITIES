@@ -206,6 +206,8 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/'.$hashedStaffUrl, 'create')->name('staff.create');
         $hashedAttedanceUrl = md5('staff/attendace');
         Route::get('/'.$hashedAttedanceUrl, 'createAttendance')->name('staff.attendance');
+        Route::get('/staff/edit/{id}', 'edit')->name('staff.edit');
+        Route::post('/staff/update', 'update')->name('staff.update');
         Route::post('/staff/store', 'store')->name('staff.store');
         Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
     });

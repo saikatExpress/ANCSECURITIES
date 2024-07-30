@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\User;
 use App\Models\Staff;
+use App\Models\Attendance;
 use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\StaffService;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class StaffController extends Controller
 {
@@ -31,10 +35,11 @@ class StaffController extends Controller
 
     public function create()
     {
-        $pageTitle = 'Create Staff';
+        $pageTitle    = 'Create Staff';
         $designations = Designation::all();
+        $roles = Role::all();
 
-        return view('admin.staff.create', compact('pageTitle', 'designations'));
+        return view('admin.staff.create', compact('pageTitle', 'designations', 'roles'));
     }
 
     public function store(Request $request)
@@ -95,7 +100,7 @@ class StaffController extends Controller
                 $role       = $request->input('role');
 
                 if($remember == 1){
-                    $result = $staffServiceObj->userCreate((string)$name, $email, $mobile, (string)$role);
+                    $result = $staffServiceObj->userCreate((string)$name, $email, $mobile, (string)$role, $fileNameToStore);
                     if($result == 1){
                         return redirect()->back()->with('message', 'Staff & User create successfully');
                     }
@@ -106,7 +111,104 @@ class StaffController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             info($e);
+            Log::error('Staff creation failed: '.$e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'image'             => 'nullable|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
+                'branch-slug'       => 'nullable',
+                'name'              => 'required',
+                'email'             => 'required|email',
+                'designation_id'    => 'required',
+                'mobile'            => 'required',
+                'permanent_address' => 'required',
+                'present_address'   => 'required',
+                'basic_salary'      => 'required',
+                'nid'               => 'required',
+                'nationality'       => 'required',
+            ]);
+
+            $staffServiceObj = new StaffService;
+
+            $staff = Staff::findOrFail($request->input('staff_id'));
+
+            // Initialize variable for file name
+            $fileNameToStore = $staff->staff_image; // Use the existing image by default
+
+            if ($request->hasFile('image')) {
+                $fileNameWithExt = $request->file('image')->getClientOriginalName();
+                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('image')->getClientOriginalExtension();
+                $fileNameToStore = $fileName.'_'.time().'.'.$extension;
+                $request->file('image')->storeAs('public/staffs', $fileNameToStore);
+
+                // Delete old image if it's not the default image
+                if ($staff->staff_image && $staff->staff_image != 'noimage.jpg') {
+                    Storage::delete('public/staffs/' . $staff->staff_image);
+                }
+            }
+
+            $staff->branch_slug       = $request->input('branch-slug', null);
+            $staff->name              = Str::title($request->input('name'));
+            $staff->slug              = Str::slug($request->input('name'), '-');
+            $staff->email             = $request->input('email');
+            $staff->designation_id    = $request->input('designation_id');
+            $staff->mobile            = $request->input('mobile');
+            $staff->permanent_address = $request->input('permanent_address');
+            $staff->present_address   = $request->input('present_address');
+            $staff->basic_salary      = $request->input('basic_salary');
+            $staff->nid               = $request->input('nid');
+            $staff->birth_certificate = $request->input('birth_certificate');
+            $staff->nationality       = $request->input('nationality');
+            $staff->status            = $request->input('status');
+            $staff->staff_image       = $fileNameToStore;
+
+            $res = $staff->save();
+
+            DB::commit();
+
+            if ($res) {
+                $name       = $request->input('name');
+                $email      = $request->input('email');
+                $mobile     = $request->input('mobile');
+                $role       = $request->input('role');
+
+                $result = $staffServiceObj->userUpdate((string)$name, $email, $mobile, (string)$role, $fileNameToStore);
+                if ($result == 1) {
+                    return redirect()->back()->with('message', 'Staff & User updated successfully');
+                }
+                return redirect()->back()->with('message', 'Staff updated successfully');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            return redirect()->back()->withErrors('An error occurred while updating the staff.');
+        }
+    }
+
+
+    public function edit($id)
+    {
+        $data['pageTitle'] = 'Edit staff';
+        $data['designations'] = Designation::all();
+        $data['roles'] = Role::all();
+
+        $data['staff'] = Staff::with('designation:id,name')->where('id',$id)->first();
+
+        $data['userRole'] = User::where('email', $data['staff']->email)->pluck('role')->first();
+
+        return view('admin.staff.edit')->with($data);
     }
 
     public function createAttendance()

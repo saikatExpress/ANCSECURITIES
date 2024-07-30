@@ -1,12 +1,8 @@
 @extends('admin.layout.app')
-<style>
-    .step-header h3{
-        margin-top: 0;
-    }
-</style>
+
 @section('content')
+
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
                 Dashboard
@@ -17,7 +13,9 @@
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
             <p style="text-align: right;">
-                <a class="btn btn-sm btn-primary" href="{{ route('staff.list') }}">Staff List</a>
+                <a class="btn btn-sm btn-primary" href="{{ route('staff.create') }}">
+                    Add Staff
+                </a>
             </p>
         </section>
 
@@ -42,22 +40,31 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <form id="staffForm" action="{{ route('staff.store') }}" method="POST" enctype="multipart/form-data">
+                    <form id="staffForm" action="{{ route('staff.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-
+                        <input type="hidden" name="staff_id" value="{{ $staff->id }}">
                         <!-- Step 1 -->
                         <div class="form-step form-step-active">
                             <div class="step-header">
                                 <i style="padding: 15px;border-radius: 50%;background-color: cornflowerblue;color: #fff;" class="fa fa-user"></i>
                                 <h3>Basic Information</h3>
                             </div>
+
                             <div class="form-group">
                                 <label for="image">Staff Image</label>
+                                <div class="current-image">
+                                    @if($staff->staff_image && $staff->staff_image != 'noimage.jpg')
+                                        <img src="{{ asset('storage/staffs/' . $staff->staff_image) }}" alt="Staff Image" style="width: 150px; height: auto;">
+                                    @else
+                                        <p>No image available</p>
+                                    @endif
+                                </div>
                                 <input type="file" name="image" class="form-control">
                                 @error('image')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
+
                             <div class="form-group">
                                 <label for="branchSlug">Branch</label>
                                 <select name="branch-slug" id="branchSlug" class="form-control">
@@ -72,14 +79,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="name">Name</label>
-                                <input class="form-control" name="name" type="text" placeholder="Enter name"/>
+                                <input class="form-control" name="name" type="text" value="{{ $staff->name }}" placeholder="Enter name"/>
                                 @error('name')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input class="form-control" type="email" name="email" placeholder="Enter email"/>
+                                <input class="form-control" type="email" name="email" value="{{ $staff->email }}" placeholder="Enter email"/>
                                 @error('email')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
@@ -98,7 +105,10 @@
                                 <select name="designation_id" id="designationId" class="form-control">
                                     <option value="">Nothing selected</option>
                                     @foreach ($designations as $designation)
-                                        <option value="{{ $designation->id }}">{{ $designation->name }}</option>
+                                        <option value="{{ $designation->id }}"
+                                            {{ $designation->id == $staff->designation_id ? 'selected' : '' }}>
+                                            {{ $designation->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('designation_id')
@@ -107,21 +117,21 @@
                             </div>
                             <div class="form-group">
                                 <label for="mobile">Mobile</label>
-                                <input class="form-control" name="mobile" placeholder="Enter Mobile" type="text"/>
+                                <input class="form-control" name="mobile" placeholder="Enter Mobile" value="{{ $staff->mobile }}" type="text"/>
                                 @error('mobile')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="permanent_address">Permanent Address</label>
-                                <input class="form-control" name="permanent_address" placeholder="Enter permanent address" type="text"/>
+                                <input class="form-control" name="permanent_address" value="{{ $staff->permanent_address }}" type="text"/>
                                 @error('permanent_address')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="present_address">Present Address</label>
-                                <input class="form-control" name="present_address" placeholder="Enter present address" type="text"/>
+                                <input class="form-control" name="present_address" value="{{ $staff->present_address }}" type="text"/>
                                 @error('present_address')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
@@ -138,21 +148,21 @@
                             </div>
                             <div class="form-group">
                                 <label for="basic_salary">Basic Salary</label>
-                                <input class="form-control" name="basic_salary" placeholder="Enter basic salary" type="text"/>
+                                <input class="form-control" name="basic_salary" value="{{ $staff->basic_salary }}" type="text"/>
                                 @error('basic_salary')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="nid">NID</label>
-                                <input class="form-control" name="nid" placeholder="Enter NID" type="text"/>
+                                <input class="form-control" name="nid" value="{{ $staff->nid }}" type="text"/>
                                 @error('nid')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="birth_certificate">Birth Certificate</label>
-                                <input class="form-control" name="birth_certificate" placeholder="Enter birth certificate" type="text"/>
+                                <input class="form-control" name="birth_certificate" value="{{ $staff->birth_certificate }}" type="text"/>
                                 @error('birth_certificate')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
@@ -160,9 +170,7 @@
                             <div class="form-group">
                                 <label for="nationality">Nationality</label>
                                 <select name="nationality" id="nationality" class="form-control">
-                                    <option value="">Nothing selected</option>
-                                    <option value="bangladeshi">Bangladeshi</option>
-                                    <option value="others">Others</option>
+                                    <option value="bangladeshi" selected>Bangladeshi</option>
                                 </select>
                                 @error('nationality')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -183,7 +191,7 @@
                                 <select name="role" class="form-control">
                                     <option selected disabled>Select Role</option>
                                     @foreach ($roles as $roll)
-                                        <option style="text-transform: uppercase;" value="{{ $roll->name }}">{{ $roll->name }}</option>
+                                        <option style="text-transform: uppercase;" {{ $roll->name === $userRole ? 'selected' : '' }} value="{{ $roll->name }}">{{ strtoupper($roll->name) }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -191,24 +199,25 @@
                                 <label for="status">Status</label>
                                 <select name="status" class="form-control">
                                     <option>Select Status</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Non Active</option>
+                                    <option value="1" {{ $staff->status == '1' ? 'selected' : '' }}>Active</option>
+                                    <option value="0" {{ $staff->status == '0' ? 'selected' : '' }}>Non Active</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" name="remember" value="1" class="custom-control-input" tabindex="3" id="remember-me">
+                                    <input type="checkbox" name="remember" value="1" class="custom-control-input" tabindex="3" id="remember-me" {{ ($userRole == '') ? '' : 'checked' }}>
                                     <label class="custom-control-label" for="remember-me">Are you sure you want to create a user?</label>
                                 </div>
                             </div>
                             <button type="button" class="btn btn-secondary btn-prev">Previous</button>
-                            <button type="submit" class="btn btn-primary">Save Staff</button>
+                            <button type="submit" class="btn btn-primary">Update Staff</button>
                         </div>
 
                     </form>
                 </div>
             </div>
         </section>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -226,6 +235,7 @@
             }, 3000);
         });
     </script>
+
     <script>
         $(document).ready(function() {
             // Show the alert message
@@ -283,4 +293,5 @@
             showStep(currentStep);
         });
     </script>
+
 @endsection
