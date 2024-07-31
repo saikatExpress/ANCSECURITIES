@@ -13,6 +13,7 @@ use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\PortfolioController;
+use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ReportController;
 use App\Http\Controllers\admin\RequestController;
 use App\Http\Controllers\admin\RoleController;
@@ -274,6 +275,11 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/create/expense', 'create')->name('create.expense');
         Route::post('/expense/store', 'store')->name('expense.store');
         Route::get('/expense/delete/{id}', 'destroy');
+    });
+
+    Route::controller(ProductController::class)->group(function(){
+        Route::get('/create/product', 'create')->name('create.product');
+        Route::post('/product/store', 'store')->name('product.store');
     });
 
     Route::controller(FormController::class)->group(function(){

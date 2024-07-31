@@ -279,7 +279,10 @@
                         </a>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-cube"></i> Add Product</a>
+                        <a href="{{ route('create.product') }}">
+                            <i class="fa fa-cube"></i>
+                            Add Product
+                        </a>
                     </li>
                     <li>
                         <a href=""><i class="fa fa-list-alt"></i> Product List</a>
