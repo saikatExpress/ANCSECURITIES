@@ -258,6 +258,38 @@
                 </ul>
             </li>
 
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-dollar"></i> <span>Account</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="{{ route('create.expense') }}">
+                            <i class="fa fa-money"></i>
+                            Add Expense
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('expense.list') }}">
+                            <i class="fa fa-list"></i>
+                            Expense List
+                        </a>
+                    </li>
+                    <li>
+                        <a href=""><i class="fa fa-cube"></i> Add Product</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="fa fa-list-alt"></i> Product List</a>
+                    </li>
+                    <li>
+                        <a href=""><i class="fa fa-hand-o-right"></i> Assign Product</a>
+                    </li>
+                </ul>
+            </li>
+
             <li>
                 <a href="{{ route('bo.list') }}">
                     <i class="fa fa-th"></i> <span>BO FORM</span>

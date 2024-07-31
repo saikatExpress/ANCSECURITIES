@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\BoController;
 use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\DpController;
+use App\Http\Controllers\admin\ExpenseController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\LeaveController;
@@ -266,6 +267,13 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/designation/store', 'store')->name('designation.store');
         Route::post('/update/designation', 'update')->name('designation.update');
         Route::get('/designation/delete/{id}', 'destroy');
+    });
+
+    Route::controller(ExpenseController::class)->group(function(){
+        Route::get('/expense/list', 'index')->name('expense.list');
+        Route::get('/create/expense', 'create')->name('create.expense');
+        Route::post('/expense/store', 'store')->name('expense.store');
+        Route::get('/expense/delete/{id}', 'destroy');
     });
 
     Route::controller(FormController::class)->group(function(){

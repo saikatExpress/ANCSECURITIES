@@ -51,9 +51,7 @@
                             <td>
                                 {{ ($designation->created_by) ?? 'ANC ADMIN' }}
                             </td>
-                            <td>
-                                {{ $designation->created_at->format('d-M-Y') }}
-                            </td>
+
                             <td>
                                 <button type="button" class="btn btn-sm btn-primary editBtn" data-id="{{ $designation->id }}"
                                 data-name="{{ $designation->name }}" data-description="{{ $designation->description }}"
@@ -71,11 +69,10 @@
 
                 <tfoot>
                     <tr>
-                    <th>Rendering engine</th>
+                    <th>SL</th>
                     <th>Browser</th>
                     <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
+                    <th>Action</th>
                     </tr>
                 </tfoot>
               </table>
