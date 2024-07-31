@@ -287,20 +287,12 @@ class AuthController extends Controller
 
                 DB::commit();
 
+                $roles = $user->getRoleNames();
                 $redirectRoute = '';
-                switch ($user->role) {
-                    case 'user':
-                        $redirectRoute = route('user.dashboard');
-                        break;
-                    case 'admin':
-                        $redirectRoute = route('admin.dashboard');
-                        break;
-                    case 'executive':
-                        $redirectRoute = route('executive.dashboard');
-                        break;
-                    default:
-                        DB::rollBack();
-                        return response()->json(['error' => 'Invalid user role.']);
+                if ($roles->contains('user')) {
+                    $redirectRoute = route('user.dashboard');
+                } else {
+                    $redirectRoute = route('admin.dashboard');
                 }
 
                 return response()->json(['success' => 'Login successful', 'redirect' => $redirectRoute]);
