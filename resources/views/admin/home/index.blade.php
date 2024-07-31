@@ -76,7 +76,7 @@
                                         </div>
                                         <button type="submit" class="btn btn-warning">Punch Out</button>
                                     @else
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="submit" class="btn btn-primary">Punch In</button>
                                     @endif
                                 </form>
                             </div>

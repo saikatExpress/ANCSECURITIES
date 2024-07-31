@@ -17,4 +17,10 @@ class Attendance extends Model
         'out_time',
         'status',
     ];
+
+    // Relation Start
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'staff_id', 'id');
+    }
 }

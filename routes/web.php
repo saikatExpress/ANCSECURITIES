@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\PortfolioController;
+use App\Http\Controllers\admin\ReportController;
 use App\Http\Controllers\admin\RequestController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
@@ -253,6 +254,10 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/permissions/create', 'permissionCreate')->name('create.permissions');
         Route::get('/role/delete/{id}','destroy');
         Route::get('/permission/delete/{id}','permissionDestroy');
+    });
+
+    Route::controller(ReportController::class)->group(function(){
+        Route::get('/attendance/report', 'attendanceReport')->name('attendance.report');
     });
 
     Route::controller(DesignationController::class)->group(function(){
