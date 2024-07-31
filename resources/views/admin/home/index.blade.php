@@ -1,10 +1,44 @@
 
 @extends('admin.layout.app')
+<style>
+    .welcomeText {
+        font-size: 24px;
+        font-weight: bold;
+        color: blue;
+        border-bottom: 2px solid gray;
+        padding: 5px 0px 7px;
+    }
+
+    .clock {
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+</style>
 @section('content')
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
+            @php
+                $currentHour = now()->format('H');
+                $greeting = '';
+
+                if ($currentHour >= 5 && $currentHour < 12) {
+                    $greeting = 'Good Morning';
+                } elseif ($currentHour >= 12 && $currentHour < 17) {
+                    $greeting = 'Good Afternoon';
+                } elseif ($currentHour >= 17 && $currentHour < 21) {
+                    $greeting = 'Good Evening';
+                } else {
+                    $greeting = 'Good Night';
+                }
+            @endphp
+
+            <h2 class="welcomeText">{{ $greeting }}, {{ auth()->user()->name }}</h2>
+            <div class="clock">
+                <span id="time"></span>
+            </div>
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -20,7 +54,9 @@
 
             <!-- Info boxes -->
             <div class="row">
+
                 <div class="col-md-3 col-sm-6 col-xs-12">
+
                     <div class="info-box">
                         <span class="info-box-icon bg-aqua"><i class="ion ion-ios-time-outline"></i></span>
                         <div class="info-box-content">
@@ -30,25 +66,43 @@
                                     @csrf
                                     <div class="form-group">
                                         <label for="start-time">Start Time</label>
-                                        <input type="time" id="start-time" name="start_time" class="form-control" required>
+                                        <input type="time" id="start-time" name="start_time" class="form-control" @if($todayAttendance) disabled @endif required>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                                    @if ($todayAttendance)
+                                        <div class="form-group">
+                                            <label for="end-time">End Time</label>
+                                            <input type="time" id="end-time" name="out_time" class="form-control" @if($todayAttendance->out_time) disabled @endif required>
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">Punch Out</button>
+                                    @else
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    @endif
                                 </form>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box">
-                        <span class="info-box-icon bg-red"><i class="fa fa-google-plus"></i></span>
+                        <span class="info-box-icon bg-red"><i style="margin-top: 20px;" class="fa fa-clock-o"></i></span>
 
                         <div class="info-box-content">
-                        <span class="info-box-text">Likes</span>
-                        <span class="info-box-number">41,410</span>
+                            <span class="info-box-text">Total Working Hours</span>
+                            <span class="info-box-number">
+                                @if(is_numeric($totalHours))
+                                    {{ number_format($totalHours, 2) }} Hours
+                                @else
+                                    {{ $totalHours }}
+                                @endif
+                            </span>
+                            <span>This Month</span>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- fix for small devices only -->
                 <div class="clearfix visible-sm-block"></div>
@@ -118,7 +172,7 @@
             @if (auth()->user()->role === 'hr')
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>Daily Attendance List</h4>
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Daily Attendance List</h4>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -135,10 +189,18 @@
                                         <td>{{ $employee->name }}</td>
                                         <td>{{ $employee->mobile }}</td>
                                         <td>
-                                            <input type="time" class="form-control">
+                                            @if($employee->in_time)
+                                                <input type="time" id="in-time-{{ $employee->id }}" class="form-control" value="{{ $employee->in_time }}">
+                                            @else
+                                                <input type="time" id="in-time-{{ $employee->id }}" class="form-control">
+                                            @endif
                                         </td>
                                         <td>
-                                            <input type="time" class="form-control">
+                                            @if($employee->in_time)
+                                                <input type="time" id="out-time-{{ $employee->id }}" class="form-control" value="{{ $employee->out_time }}">
+                                            @else
+                                                <input type="time" id="out-time-{{ $employee->id }}" class="form-control">
+                                            @endif
                                         </td>
                                         <td>
                                             <button class="btn btn-success btn-sm" onclick="updateStatus({{ $employee->id }}, 'Accepted')">Accept</button>
@@ -777,6 +839,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="{{ asset('admin/assets/js/attendance.js') }}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -874,29 +937,50 @@
         $(document).ready(function() {
             $('#attendanceForm1').on('submit', function(event) {
                 event.preventDefault();
-                console.log('Form submit event prevented'); // Debugging line
 
                 var formData = $(this).serialize();
+                var actionUrl = $(this).attr('action');
 
-                // Send the data to the server via AJAX
                 $.ajax({
-                    url: $(this).attr('action'),
+                    url: actionUrl,
                     method: 'POST',
                     data: formData,
                     success: function(response) {
-                        if(response && response.error === false){
-                            toastr.error('Failed to record attendance. Already you stored.');
-                        }else{
-                            toastr.success('Attendance recorded successfully!');
+                        if (response.error) {
+                            toastr.error(response.error);
+                        } else {
+                            toastr.success(response.message);
+
+                            // Hide or disable fields based on response
+                            if (response.message.includes('In Time')) {
+                                $('#start-time').prop('disabled', true);
+                                $('button[type="submit"]').text('Punch Out').removeClass('btn-primary').addClass('btn-warning');
+                            } else {
+                                $('#attendanceForm1').find('input').prop('disabled', true);
+                                $('button[type="submit"]').hide();
+                            }
                         }
                     },
                     error: function(xhr) {
-                        // Show an error notification
                         toastr.error('Failed to record attendance. Please try again.');
                     }
                 });
             });
         });
+    </script>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateClock, 1000); // Update the clock every second
+        updateClock(); // Initial call to set the clock immediately
     </script>
 @endsection
 

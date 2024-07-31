@@ -24,16 +24,19 @@
         <section class="content">
 
             @if ($errors->any())
-                <div class="alert alert-danger" id="errorAlert">
+                <div class="alert alert-danger errorAlert">
                     @foreach ($errors->all() as $error)
                         <p>{{ $error }}</p>
                     @endforeach
                 </div>
             @endif
 
-
             @if(session('message'))
                 <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
+            @endif
+
+            @if(session('errors'))
+                <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
             @endif
 
             <div class="box box-warning">
@@ -229,11 +232,11 @@
     <script>
         $(document).ready(function() {
             // Show the alert message
-            $('#errorAlert').show();
+            $('.errorAlert').show();
 
             // Hide the alert message after 3 seconds
             setTimeout(function() {
-                $('#errorAlert').fadeOut('slow');
+                $('.errorAlert').fadeOut('slow');
             }, 3000);
         });
     </script>

@@ -15,6 +15,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class StaffController extends Controller
@@ -55,7 +56,7 @@ class StaffController extends Controller
                 'image'             => 'required|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
                 'branch-slug'       => 'nullable',
                 'name'              => 'required',
-                'email'             => 'required|email',
+                'email'             => 'required|email|unique:staff,email',
                 'designation_id'    => 'required',
                 'mobile'            => 'required',
                 'permanent_address' => 'required',
@@ -75,40 +76,56 @@ class StaffController extends Controller
                 $fileNameToStore = 'noimage.jpg';
             }
 
-            $staffObj->branch_slug       = $request->input('branch-slug', null);
-            $staffObj->name              = Str::title($request->input('name'));
-            $staffObj->slug              = Str::slug($request->input('name'), '-');
-            $staffObj->email             = $request->input('email');
-            $staffObj->designation_id    = $request->input('designation_id');
-            $staffObj->mobile            = $request->input('mobile');
-            $staffObj->permanent_address = $request->input('permanent_address');
-            $staffObj->present_address   = $request->input('present_address');
-            $staffObj->basic_salary      = $request->input('basic_salary');
-            $staffObj->nid               = $request->input('nid');
-            $staffObj->birth_certificate = $request->input('birth_certificate');
-            $staffObj->nationality       = $request->input('nationality');
-            $staffObj->status            = $request->input('status');
-            $staffObj->staff_image       = $fileNameToStore;
+            $remember   = $request->input('remember');
+            $name       = $request->input('name');
+            $email      = $request->input('email');
+            $mobile     = $request->input('mobile');
+            $role       = $request->input('role');
 
-            $res = $staffObj->save();
+            $user = User::where('email', $email)->first();
 
-            DB::commit();
-            if($res){
-                $remember   = $request->input('remember');
-                $name       = $request->input('name');
-                $email      = $request->input('email');
-                $mobile     = $request->input('mobile');
-                $role       = $request->input('role');
-
-                if($remember == 1){
-                    $result = $staffServiceObj->userCreate((string)$name, $email, $mobile, (string)$role, $fileNameToStore);
-                    if($result == 1){
-                        return redirect()->back()->with('message', 'Staff & User create successfully');
-                    }
-                }
-                return redirect()->back()->with('message', 'Staff create successfully');
+            if($user){
+                return redirect()->back()->with('errors', 'Sorry this email already assigned in users.Try another one..!');
             }
 
+            if($remember == 1){
+                $userObj = new User();
+
+                $userObj->profile_image = $fileNameToStore;
+                $userObj->name          = $name;
+                $userObj->email         = $email;
+                $userObj->mobile        = $mobile;
+                $userObj->whatsapp      = $mobile;
+                $userObj->role          = $role;
+                $userObj->password      = Hash::make(123456);
+
+                $res = $userObj->save();
+                DB::commit();
+
+                if($res){
+                    $staffObj->id                = $userObj->id;
+                    $staffObj->branch_slug       = $request->input('branch-slug', null);
+                    $staffObj->name              = Str::title($name);
+                    $staffObj->slug              = Str::slug($name, '-');
+                    $staffObj->email             = $email;
+                    $staffObj->designation_id    = $request->input('designation_id');
+                    $staffObj->mobile            = $request->input('mobile');
+                    $staffObj->permanent_address = $request->input('permanent_address');
+                    $staffObj->present_address   = $request->input('present_address');
+                    $staffObj->basic_salary      = $request->input('basic_salary');
+                    $staffObj->nid               = $request->input('nid');
+                    $staffObj->birth_certificate = $request->input('birth_certificate');
+                    $staffObj->nationality       = $request->input('nationality');
+                    $staffObj->status            = $request->input('status');
+                    $staffObj->staff_image       = $fileNameToStore;
+
+                    $res = $staffObj->save();
+                    if($res){
+                        return redirect()->back()->with('message', 'Staff & User create successfully');
+                    }
+                    return redirect()->back()->with('message', 'Staff create successfully');
+                }
+            }
         } catch (\Exception $e) {
             DB::rollback();
             info($e);
@@ -120,31 +137,100 @@ class StaffController extends Controller
         }
     }
 
-    // AttendanceController.php
+    public function updateAttendanceStatus(Request $request, $employeeId)
+    {
+        $request->validate([
+            'in_time' => 'nullable|date_format:H:i',
+            'out_time' => 'nullable|date_format:H:i',
+        ]);
+
+        $emplyoeeAttendance = Attendance::where('staff_id', $employeeId)->whereDate('attendance_date', Carbon::today())->first();
+
+        if($emplyoeeAttendance){
+            $emplyoeeAttendance->attendance_date = Carbon::now();
+            $emplyoeeAttendance->year            = date("Y");
+            $emplyoeeAttendance->staff_id        = $employeeId;
+            $emplyoeeAttendance->in_time         = $request->input('in_time', NULL);
+            $emplyoeeAttendance->out_time        = $request->input('out_time', NULL);
+            $emplyoeeAttendance->status          = 'accepted';
+
+            $res = $emplyoeeAttendance->save();
+
+            if($res){
+                return response()->json(['success' => true]);
+            }
+        }else{
+            $attendanceObj = new Attendance();
+
+            $attendanceObj->attendance_date = Carbon::now();
+            $attendanceObj->year            = date("Y");
+            $attendanceObj->staff_id        = $employeeId;
+            $attendanceObj->in_time         = $request->input('in_time', NULL);
+            $attendanceObj->out_time        = $request->input('out_time', NULL);
+            $attendanceObj->status          = 'accepted';
+
+            $res = $attendanceObj->save();
+            if($res){
+                return response()->json(['success' => true]);
+            }
+        }
+
+        // Find the employee by ID
+        // $employee = Attendance::where('staff_id',$employeeId)->whereDate('attendance_date', Carbon::today())->first();
+        $employee = Staff::find($employeeId);
+
+        // if (!$employee) {
+        //     return response()->json(['success' => false, 'message' => 'Employee not found.'], 404);
+        // }
+
+        // Update the employee's status and times
+        $employee->update([
+            'status'   => 'accepted',
+            'in_time'  => $request->input('in_time', NULL),
+            'out_time' => $request->input('out_time', NULL),
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
     public function empattendanceStore(Request $request)
     {
         try {
             $request->validate([
-                'start_time' => 'required|date_format:H:i',
+                'start_time' => 'nullable|date_format:H:i',
+                'out_time' => 'nullable|date_format:H:i',
             ]);
 
-            $alreadyAttend = Attendance::whereDate('attendance_date', Carbon::now())->where('staff_id', Auth::id())->first();
-            if($alreadyAttend){
-                return response()->json(['error' => false]);
+            $attendance = Attendance::whereDate('attendance_date', Carbon::now())
+                ->where('staff_id', Auth::id())
+                ->first();
+
+            if ($request->has('start_time')) {
+                if ($attendance) {
+                    return response()->json(['error' => 'Already recorded.'], 400);
+                }
+
+                $attendance = new Attendance();
+                $attendance->attendance_date = Carbon::now();
+                $attendance->year = date("Y");
+                $attendance->staff_id = Auth::id();
+                $attendance->in_time = $request->input('start_time');
+                $attendance->save();
+
+                return response()->json(['message' => 'In Time recorded successfully!'], 200);
             }
 
-            $attendance = new Attendance();
+            if ($request->has('out_time')) {
+                if (!$attendance) {
+                    return response()->json(['error' => 'No in time record found.'], 400);
+                }
 
-            $year = date("Y");
+                $attendance->out_time = $request->input('out_time');
+                $attendance->save();
 
-            $attendance->attendance_date = Carbon::now();
-            $attendance->year            = $year;
-            $attendance->staff_id        = Auth::id();
-            $attendance->in_time         = $request->input('start_time');
+                return response()->json(['message' => 'Out Time recorded successfully!'], 200);
+            }
 
-            $attendance->save();
-
-            return response()->json(['message' => 'Attendance recorded successfully!'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to record attendance. Please try again.'], 500);
         }

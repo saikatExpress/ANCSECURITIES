@@ -10,6 +10,7 @@ use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,9 +26,12 @@ class AdminController extends Controller
     public function index()
     {
         $data['employees'] = DB::table('users')
-            ->leftJoin('attendances', 'users.id', '=', 'attendances.staff_id')
+            ->leftJoin('attendances', function ($join) {
+                $join->on('users.id', '=', 'attendances.staff_id')
+                    ->whereDate('attendances.created_at', Carbon::today());
+            })
             ->where('users.role', '!=', 'user')
-            // ->whereDate('attendances.created_at', Carbon::now())
+            ->where('users.role', '!=', 'admin')
             ->select(
                 'users.id',
                 'users.name',
@@ -42,6 +46,33 @@ class AdminController extends Controller
                 'attendances.status'
             )
             ->get();
+
+        $data['todayAttendance'] = Attendance::where('staff_id', Auth::id())->whereDate('attendance_date', Carbon::today())->first();
+        $attendance = Attendance::where('staff_id', Auth::id())
+            ->whereMonth('attendance_date', Carbon::now()->month)
+            ->whereYear('attendance_date', Carbon::now()->year)
+            ->first();
+
+        if ($attendance) {
+            if ($attendance->in_time && $attendance->out_time) {
+                try {
+                    $attendanceDate = Carbon::parse($attendance->attendance_date);
+
+                    $inTime = Carbon::parse($attendanceDate->format('Y-m-d') . ' ' . $attendance->in_time);
+                    $outTime = Carbon::parse($attendanceDate->format('Y-m-d') . ' ' . $attendance->out_time);
+
+                    $totalHours = $outTime->diffInHours($inTime);
+
+                    $data['totalHours'] = $totalHours;
+                } catch (\Exception $e) {
+                    $data['totalHours'] = 'Error: ' . $e->getMessage(); // Handle errors
+                }
+            } else {
+                $data['totalHours'] = 'N/A';
+            }
+        } else {
+            $data['totalHours'] = 'N/A';
+        }
 
         $data['totalUsers'] = User::where('role', 'user')->count();
         $data['latestUsers'] = User::where('role', 'user')->latest()->take(8)->get();

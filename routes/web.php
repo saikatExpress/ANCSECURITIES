@@ -209,11 +209,10 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/'.$hashedAttedanceUrl, 'createAttendance')->name('staff.attendance');
         Route::get('/staff/edit/{id}', 'edit')->name('staff.edit');
         Route::post('/staff/update', 'update')->name('staff.update');
-
         Route::post('/attendance', 'empattendanceStore')->name('empattendance.store');
-
         Route::post('/staff/store', 'store')->name('staff.store');
         Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
+        Route::post('/update/attendance/status/{employeeId}', 'updateAttendanceStatus');
     });
 
     Route::controller(LeaveController::class)->group(function(){

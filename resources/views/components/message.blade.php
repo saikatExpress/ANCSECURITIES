@@ -168,7 +168,7 @@
     <li class="dropdown user user-menu">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             @if (auth()->user()->profile_image)
-                <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" class="user-image" alt="Image">
+                <img src="{{ asset('storage/staffs/' . auth()->user()->profile_image) }}" class="user-image" alt="Image">
             @else
                 <img src="{{ asset('admin/assets/dist/img/user2-160x160.jpg') }}" class="user-image" alt="Image">
             @endif
