@@ -4,6 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use Carbon\Carbon;
 use App\Models\Staff;
+use App\Models\Expense;
+use Barryvdh\DomPDF\PDF;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -45,5 +47,43 @@ class ReportController extends Controller
             });
 
         return view('admin.report.attendancereport')->with($data);
+    }
+
+    public function expenseReport(Request $request)
+    {
+        $data['pageTitle'] = 'Expense Report';
+
+        $query = Expense::with('staff:id,name');
+
+        if ($request->has('from_date') && $request->has('to_date')) {
+            $query->whereBetween('expense_date', [$request->from_date, $request->to_date]);
+        } else {
+            $query->whereDate('expense_date', today());
+        }
+
+        $data['expenses'] = $query->get();
+
+        return view('admin.report.expensereport')->with($data);
+    }
+
+    public function downloadExpenseReport(Request $request, $type)
+    {
+        $query = Expense::with('staff:id,name');
+
+        if ($request->has('from_date') && $request->has('to_date')) {
+            $query->whereBetween('expense_date', [$request->from_date, $request->to_date]);
+        } else {
+            $query->whereDate('expense_date', today());
+        }
+
+        $expenses = $query->get();
+
+        if ($type == 'pdf') {
+            $pdf = app('dompdf.wrapper');
+            $pdf = $pdf->loadView('admin.report.pdf.expensepdf', compact('expenses'));
+            return $pdf->download('expense_report.pdf');
+        } elseif ($type == 'excel') {
+            return Excel::download(new ExpenseExport($expenses), 'expense_report.xlsx');
+        }
     }
 }

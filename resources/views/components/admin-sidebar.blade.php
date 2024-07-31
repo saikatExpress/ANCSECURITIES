@@ -179,8 +179,24 @@
                             Attendance Report
                         </a>
                     </li>
-                    <li><a href="pages/forms/advanced.html"><i class="fa fa-money"></i> Salary Report</a></li>
-                    <li><a href="pages/forms/editors.html"><i class="fa fa-calendar-times-o"></i> Leave Report</a></li>
+                    <li>
+                        <a href="pages/forms/advanced.html">
+                            <i class="fa fa-money"></i>
+                            Salary Report
+                        </a>
+                    </li>
+                    <li>
+                        <a href="pages/forms/editors.html">
+                            <i class="fa fa-calendar-times-o"></i>
+                            Leave Report
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('expense.report') }}">
+                            <i class="fa fa-calendar-times-o"></i>
+                            Expense Report
+                        </a>
+                    </li>
                 </ul>
             </li>
 
