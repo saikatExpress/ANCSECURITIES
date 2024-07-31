@@ -119,10 +119,38 @@
                 <div class="row">
                     <div class="col-md-12">
                         <h4>Daily Attendance List</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Mobile</th>
+                                    <th>In Time</th>
+                                    <th>Out Time</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($employees as $employee)
+                                    <tr>
+                                        <td>{{ $employee->name }}</td>
+                                        <td>{{ $employee->mobile }}</td>
+                                        <td>
+                                            <input type="time" class="form-control">
+                                        </td>
+                                        <td>
+                                            <input type="time" class="form-control">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm" onclick="updateStatus({{ $employee->id }}, 'Accepted')">Accept</button>
+                                            <button class="btn btn-warning btn-sm" onclick="updateStatus({{ $employee->id }}, 'Updated')">Update</button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             @endif
-
 
             @if (auth()->user()->role === 'admin')
                 <div class="row">

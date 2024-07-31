@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use Carbon\Carbon;
 use App\Models\Fund;
 use App\Models\User;
 use App\Models\BOForm;
@@ -23,6 +24,25 @@ class AdminController extends Controller
 
     public function index()
     {
+        $data['employees'] = DB::table('users')
+            ->leftJoin('attendances', 'users.id', '=', 'attendances.staff_id')
+            ->where('users.role', '!=', 'user')
+            // ->whereDate('attendances.created_at', Carbon::now())
+            ->select(
+                'users.id',
+                'users.name',
+                'users.profile_image',
+                'users.email',
+                'users.mobile',
+                'users.whatsapp',
+                'users.address',
+                'users.role',
+                'attendances.in_time',
+                'attendances.out_time',
+                'attendances.status'
+            )
+            ->get();
+
         $data['totalUsers'] = User::where('role', 'user')->count();
         $data['latestUsers'] = User::where('role', 'user')->latest()->take(8)->get();
 
