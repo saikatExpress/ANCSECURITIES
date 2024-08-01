@@ -30,19 +30,55 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Search Expenses</h3>
                 </div>
-                <form action="{{ route('expense.report') }}" method="GET">
-                    <div class="box-body">
-                        <div class="form-group">
-                            <label for="from-date">From Date</label>
-                            <input type="date" class="form-control" id="from-date" name="from_date" value="{{ request()->get('from_date') }}">
+                <form action="{{ route('expense.report') }}" method="GET" id="expenseForm1">
+                    <div class="form-row">
+                        <div class="box-body">
+                            <div class="form-group col-md-2">
+                                <label for="from-date">From Date</label>
+                                <input type="date" class="form-control" id="from-date" name="from_date" value="{{ request()->get('from_date') }}">
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="to-date">To Date</label>
+                                <input type="date" class="form-control" id="to-date" name="to_date" value="{{ request()->get('to_date') }}">
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="employee_id">Employee</label>
+                                <select class="form-control" id="employee_id" name="employee_id">
+                                    <option value="All" {{ request('employee_id') == 'All' ? 'selected' : '' }}>All</option>
+                                    @foreach ($employees as $employee)
+                                        <option value="{{ $employee->id }}" {{ request('employee_id') == $employee->id ? 'selected' : '' }}>
+                                            {{ $employee->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="category">Category</label>
+                                <select class="form-control" id="category" name="category">
+                                    <option value="All" {{ request('category') == 'All' ? 'selected' : '' }}>All</option>
+                                    <option value="Office Supplies" {{ request('category') == 'Office Supplies' ? 'selected' : '' }}>Office Supplies</option>
+                                    <option value="Travel" {{ request('category') == 'Travel' ? 'selected' : '' }}>Travel</option>
+                                    <option value="Utilities" {{ request('category') == 'Utilities' ? 'selected' : '' }}>Utilities</option>
+                                    <option value="Miscellaneous" {{ request('category') == 'Miscellaneous' ? 'selected' : '' }}>Miscellaneous</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="status">Status</label>
+                                <select class="form-control" id="status" name="status">
+                                    <option value="">All</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="accepted" {{ request('status') == 'accepted' ? 'selected' : '' }}>Accepted</option>
+                                    <option value="cancel" {{ request('status') == 'cancel' ? 'selected' : '' }}>Cancel</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2 align-self-end">
+                                <button style="margin-top: 2.5rem;" type="submit" class="btn btn-primary">Filter</button>
+                            </div>
+
                         </div>
-                        <div class="form-group">
-                            <label for="to-date">To Date</label>
-                            <input type="date" class="form-control" id="to-date" name="to_date" value="{{ request()->get('to_date') }}">
-                        </div>
-                    </div>
-                    <div class="box-footer">
-                        <button type="submit" class="btn btn-primary">Search</button>
                     </div>
                 </form>
             </div>
@@ -51,37 +87,49 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Daily Expenses</h3>
                     <div class="box-tools pull-right">
-                        <a href="{{ route('expense.report.download', ['type' => 'pdf', 'from_date' => request()->get('from_date'), 'to_date' => request()->get('to_date')]) }}" class="btn btn-sm btn-danger">Download PDF</a>
-                        {{-- <a href="{{ route('expense.report.download', ['type' => 'excel', 'from_date' => request()->get('from_date'), 'to_date' => request()->get('to_date')]) }}" class="btn btn-sm btn-success">Download Excel</a> --}}
+                        <a id="pdfDownload" href="#" class="btn btn-sm btn-danger">Download PDF</a>
+                        <a id="excelDownload" href="#" class="btn btn-sm btn-success">Download Excel</a>
                     </div>
                 </div>
                 <div class="box-body">
                     <table id="expense-table" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
+                                <th>Staff Name</th>
                                 <th>Date</th>
                                 <th>Amount</th>
                                 <th>Category</th>
-                                <th>Entry By</th>
                                 <th>Description</th>
                                 <th>Receipt</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($expenses as $expense)
-                                <tr>
+                                <tr class="list-item">
                                     <td>{{ $expense->id }}</td>
-                                    <td>{{ $expense->expense_date }}</td>
+                                    <td>{{ $expense->staff->name }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
                                     <td>{{ $expense->amount }}</td>
                                     <td>{{ $expense->expense_category }}</td>
-                                    <td>{{ $expense->staff->name }}</td>
                                     <td>{{ $expense->description }}</td>
                                     <td>
-                                        @if($expense->receipt_image)
+                                        @if ($expense->receipt_image)
                                             <a href="{{ asset('storage/' . $expense->receipt_image) }}" target="_blank">View Receipt</a>
+                                        @else
+                                            No Receipt
                                         @endif
                                     </td>
+                                    @if ($expense->status === 'accepted')
+                                        <td style="text-transform: uppercase;color:#fff;" class="btn btn-sm btn-success">
+                                            {{ $expense->status }}
+                                        </td>
+                                    @else
+                                        <td style="text-transform: uppercase;color:#fff;" class="btn btn-sm btn-danger">
+                                            {{ $expense->status }}
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
@@ -95,6 +143,32 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateDownloadLinks() {
+                var form = document.getElementById('expenseForm1');
+                var formData = new FormData(form);
+                var queryParams = new URLSearchParams(formData).toString();
+
+                var pdfLink = document.getElementById('pdfDownload');
+                var excelLink = document.getElementById('excelDownload');
+
+                pdfLink.href = `{{ route('expense.report.download') }}?${queryParams}&type=pdf`;
+                excelLink.href = `{{ route('expense.report.download') }}?${queryParams}&type=excel`;
+            }
+
+            // Update download links on page load
+            updateDownloadLinks();
+
+            // Update download links when form is submitted
+            document.getElementById('expenseForm1').addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateDownloadLinks();
+                this.submit();
+            });
+        });
+    </script>
+
+    <script>
         $(document).ready(function() {
             // Show the alert message
             $('#successAlert').show();
@@ -103,6 +177,20 @@
             setTimeout(function() {
                 $('#successAlert').fadeOut('slow');
             }, 3000);
+
+            $('#expenseForm1').on('submit', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'GET',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        // Update the table with the filtered data
+                        $('#expense-table tbody').html(response);
+                    }
+                });
+            });
         });
     </script>
 

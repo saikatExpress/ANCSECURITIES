@@ -262,7 +262,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
     Route::controller(ReportController::class)->group(function(){
         Route::get('/attendance/report', 'attendanceReport')->name('attendance.report');
         Route::get('/expense/report', 'expenseReport')->name('expense.report');
-        Route::get('/expense/report/download/{type}', 'downloadExpenseReport')->name('expense.report.download');
+        Route::get('/expense/report/download', 'downloadExpenseReport')->name('expense.report.download');
     });
 
     Route::controller(DesignationController::class)->group(function(){
