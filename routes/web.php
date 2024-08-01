@@ -195,6 +195,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/portfolio/list', 'index')->name('portfolio.list');
         Route::get('/create/portfolio', 'create')->name('create.portfolio');
         Route::post('/upload-pdfs', 'uploadPDFs');
+        Route::post('/get/portfolio', 'getPortfolio')->name('get.portfolio');
         Route::get('/delete/portfolio', 'destroy')->name('delete.portfolio');
     });
 

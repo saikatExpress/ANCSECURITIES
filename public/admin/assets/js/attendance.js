@@ -1,4 +1,4 @@
-function updateStatus(employeeId, status) {
+function updateAttendanceStatus(employeeId, status) {
     // Get the in_time and out_time values
     var inTime = $('#in-time-' + employeeId).val();
     var outTime = $('#out-time-' + employeeId).val();

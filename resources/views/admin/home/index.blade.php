@@ -265,8 +265,8 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <button class="btn btn-success btn-sm" onclick="updateStatus({{ $employee->id }}, 'Accepted')">Accept</button>
-                                            <button class="btn btn-warning btn-sm" onclick="updateStatus({{ $employee->id }}, 'Updated')">Update</button>
+                                            <button class="btn btn-success btn-sm" onclick="updateAttendanceStatus({{ $employee->id }}, 'Accepted')">Accept</button>
+                                            <button class="btn btn-warning btn-sm" onclick="updateAttendanceStatus({{ $employee->id }}, 'Updated')">Update</button>
                                         </td>
                                     </tr>
                                 @endforeach

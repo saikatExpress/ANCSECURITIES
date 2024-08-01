@@ -53,6 +53,11 @@ class PortfolioController extends Controller
 
     }
 
+    public function getPortfolio(Request $request)
+    {
+
+    }
+
     public function destroy()
     {
         $allFiles = Portfolio::all();
