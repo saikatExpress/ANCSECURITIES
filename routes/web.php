@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\AboutController;
+use App\Http\Controllers\admin\AccountController;
 use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\BoController;
@@ -277,6 +278,11 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/create/expense', 'create')->name('create.expense');
         Route::post('/expense/store', 'store')->name('expense.store');
         Route::get('/expense/delete/{id}', 'destroy');
+    });
+
+    Route::controller(AccountController::class)->group(function(){
+        Route::get('/account/balance', 'index')->name('account.balance');
+        Route::post('/account/store', 'store')->name('account.store');
     });
 
     Route::controller(ProductController::class)->group(function(){

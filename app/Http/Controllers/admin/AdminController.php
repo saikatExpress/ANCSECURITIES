@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use App\Models\Fund;
 use App\Models\User;
 use App\Models\BOForm;
+use App\Models\Expense;
+use App\Models\Attendance;
 use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -25,7 +26,8 @@ class AdminController extends Controller
 
     public function index()
     {
-        $data['employees'] = DB::table('users')
+        if(auth()->user()->role === 'hr'){
+            $data['employees'] = DB::table('users')
             ->leftJoin('attendances', function ($join) {
                 $join->on('users.id', '=', 'attendances.staff_id')
                     ->whereDate('attendances.created_at', Carbon::today());
@@ -46,6 +48,7 @@ class AdminController extends Controller
                 'attendances.status'
             )
             ->get();
+        }
 
         $data['todayAttendance'] = Attendance::where('staff_id', Auth::id())->whereDate('attendance_date', Carbon::today())->first();
         $attendance = Attendance::where('staff_id', Auth::id())
@@ -73,6 +76,12 @@ class AdminController extends Controller
         } else {
             $data['totalHours'] = 'N/A';
         }
+
+        if(auth()->user()->role === 'account'){
+            $data['pendingExpenses'] = Expense::with('staff:id,name')->where('status', 'pending')->get();
+        }
+
+        // return $data['pendingExpense'];
 
         $data['totalUsers'] = User::where('role', 'user')->count();
         $data['latestUsers'] = User::where('role', 'user')->latest()->take(8)->get();

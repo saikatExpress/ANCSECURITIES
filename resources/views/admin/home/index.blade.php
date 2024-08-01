@@ -103,21 +103,17 @@
                     </div>
                 </div>
 
-
-                <!-- fix for small devices only -->
                 <div class="clearfix visible-sm-block"></div>
 
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                <div class="info-box">
-                    <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
 
-                    <div class="info-box-content">
-                    <span class="info-box-text">Sales</span>
-                    <span class="info-box-number">760</span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Sales</span>
+                            <span class="info-box-number">760</span>
+                        </div>
                     </div>
-                    <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
                 </div>
                 <!-- /.col -->
                 <div class="col-md-3 col-sm-6 col-xs-12">
@@ -213,6 +209,55 @@
                     </div>
                 </div>
             @endif
+
+            @if (auth()->user()->role === 'account')
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Expense List</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Expense Date</th>
+                                    <th>Amount</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Receipt Image</th>
+                                    <th>Entry By</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $sl = 1;
+                                @endphp
+                                @foreach ($pendingExpenses as $expense)
+                                <tr>
+                                    <td>{{ $sl }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
+                                    <td>{{ $expense->amount }}</td>
+                                    <td>{{ $expense->expense_category }}</td>
+                                    <td>{{ $expense->description }}</td>
+                                    <td>
+                                        <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius:50%;">
+                                    </td>
+                                    <td>{{ $expense->staff->name }}</td>
+                                    <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
+                                </tr>
+                                @php
+                                    $sl++;
+                                @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
 
             @if (auth()->user()->role === 'admin')
                 <div class="row">

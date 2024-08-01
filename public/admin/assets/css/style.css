@@ -121,3 +121,17 @@ input:checked + .slider:before {
     font-weight: bold;
 }
 
+.accountHead{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    background-color: cadetblue;
+    padding: 8px 10px 8px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.accountHead p{
+    margin-bottom: 0;
+}

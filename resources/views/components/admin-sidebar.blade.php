@@ -301,10 +301,22 @@
                         </a>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-list-alt"></i> Product List</a>
+                        <a href="">
+                            <i class="fa fa-list-alt"></i>
+                            Product List
+                        </a>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-hand-o-right"></i> Assign Product</a>
+                        <a href="">
+                            <i class="fa fa-hand-o-right"></i>
+                            Assign Product
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('account.balance') }}">
+                            <i class="fa fa-balance-scale"></i>
+                            Account Balance
+                        </a>
                     </li>
                 </ul>
             </li>

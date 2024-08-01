@@ -53,6 +53,7 @@ class ExpenseController extends Controller
             $expenseObj->amount           = $request->input('amount');
             $expenseObj->expense_category = $request->input('category');
             $expenseObj->description      = $request->input('description', NULL);
+            $expenseObj->status           = 'pending';
 
             if ($request->hasFile('receipt')) {
                 $receiptPath = $request->file('receipt')->store('expenseVoucher', 'public');
