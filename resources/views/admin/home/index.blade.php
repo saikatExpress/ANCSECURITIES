@@ -14,6 +14,47 @@
         font-weight: bold;
         margin-top: 10px;
     }
+
+    .bg-teal {
+        background-color: teal;
+    }
+
+    .text-white {
+        color: #fff;
+    }
+
+    .p-2 {
+        padding: 0.5rem;
+    }
+
+    .rounded {
+        border-radius: 4px;
+    }
+
+    .text-success {
+        color: #28a745;
+    }
+
+    .fa-dollar-sign {
+        color: #28a745;
+    }
+
+    .fa-list-alt {
+        color: #fff;
+    }
+
+    .mr-2 {
+        margin-right: 0.5rem;
+    }
+
+    .bg-light {
+        background-color: #f8f9fa; /* Light gray background */
+    }
+
+    .p-3 {
+        padding: 1rem;
+    }
+
 </style>
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -213,11 +254,93 @@
             @if (auth()->user()->role === 'account')
                 <div class="row">
                     <div class="col-md-12">
-                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Expense List</h4>
+                        <div class="d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                            <h4 class="bg-teal text-white p-2 rounded" style="width: 20%; text-align: center;">
+                                <i class="fa fa-list-alt mr-2"></i> Expense List
+                            </h4>
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-dollar-sign fa-2x mr-2 text-success"></i>
+                                <p class="mb-0">
+                                    <strong>Your Available Balance:</strong>
+                                    <span class="text-success">{{ $balance->balance }}</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Expense Date</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Receipt Image</th>
+                                    <th>Entry By</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <th>Assign</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $sl = 1;
+                                @endphp
+                                @foreach ($pendingExpenses as $expense)
+                                <tr>
+                                    <td>{{ $sl }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
+                                    <td>{{ $expense->amount }}</td>
+                                    <td>{{ $expense->description }}</td>
+                                    <td>
+                                        <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius:50%;">
+                                    </td>
+                                    <td>{{ $expense->staff->name }}</td>
+                                    <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
+                                    <td>
+                                        <!-- Action Dropdown Menu -->
+                                        <div class="dropdown">
+                                            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ $expense->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Action
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ $expense->id }}">
+                                                <p>
+                                                    <a class="dropdown-item" href="#" data-id="{{ $expense->id }}" data-status="pending" onclick="updateStatus(event)">Pending</a>
+                                                </p>
+                                                <p>
+                                                    <a class="dropdown-item" href="#" data-id="{{ $expense->id }}" data-status="accepted" onclick="updateStatus(event)">Accepted</a>
+                                                </p>
+                                                <p>
+                                                    <a class="dropdown-item" href="#" data-id="{{ $expense->id }}" data-status="cancel" onclick="updateStatus(event)">Cancel</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="button"  class="btn btn-sm btn-success expenseAssignBtn" data-id="{{ $expense->id }}">
+                                            Assign
+                                        </button> <br>
+                                        <span style="color:red;" class="text-sm">Left from CEO</span> <br>
+                                        <span style="color:red;" class="text-sm">Left from HR</span>
+                                    </td>
+                                </tr>
+                                @php
+                                    $sl++;
+                                @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
+            @if (count($authUserExpense) > 0)
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Your Expense</h4>
+
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
@@ -235,7 +358,7 @@
                                 @php
                                     $sl = 1;
                                 @endphp
-                                @foreach ($pendingExpenses as $expense)
+                                @foreach ($authUserExpense as $expense)
                                 <tr>
                                     <td>{{ $sl }}</td>
                                     <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
@@ -257,7 +380,6 @@
                     </div>
                 </div>
             @endif
-
 
             @if (auth()->user()->role === 'admin')
                 <div class="row">
@@ -885,6 +1007,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="{{ asset('admin/assets/js/attendance.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/expense.js') }}"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

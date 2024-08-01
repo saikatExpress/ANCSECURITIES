@@ -37,4 +37,22 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('.expenseAssignBtn').on('click', function(){
+        const expenseId = $(this).data('id');
+
+        if(expenseId != ''){
+            $.ajax({
+                url: '/assign/expense/admin/' + expenseId,
+                get: 'GET',
+                success: function(response){
+
+                },
+                error: function(xhr){
+                    console.log(xhr.status);
+
+                }
+            });
+        }
+    });
 });

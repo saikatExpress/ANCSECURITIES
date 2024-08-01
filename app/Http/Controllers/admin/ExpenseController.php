@@ -77,6 +77,11 @@ class ExpenseController extends Controller
         }
     }
 
+    public function assignExpenseAdmin($id)
+    {
+        return $id;
+    }
+
     public function destroy($id)
     {
         try {

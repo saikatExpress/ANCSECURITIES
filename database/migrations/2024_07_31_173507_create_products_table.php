@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('product_type', 250)->nullable();
             $table->string('product_model', 250)->nullable();
             $table->integer('product_quantity')->nullable();
+            $table->integer('initial_stock')->nullable();
+            $table->integer('product_stock')->nullable();
             $table->string('status', 50)->default('active');
             $table->unsignedInteger('added_by')->nullable();
             $table->softDeletes();

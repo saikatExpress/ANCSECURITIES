@@ -13,11 +13,14 @@ class Account extends Model
     protected $fillable = [
         'name',
         'slug',
+        'initial_balance',
         'balance',
+        'costing_balance',
         'account_number',
         'bank_name',
         'branch_name',
         'ifsc_code',
         'account_type',
+        'status',
     ];
 }

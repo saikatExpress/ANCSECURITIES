@@ -15,12 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('name', 250)->nullable();
             $table->string('slug', 250)->nullable();
+            $table->decimal('initial_balance', 15, 2);
             $table->decimal('balance', 15, 2);
+            $table->decimal('costing_balance', 15, 2);
             $table->string('account_number', 50)->unique();
             $table->string('bank_name', 250)->nullable();
             $table->string('branch_name', 250)->nullable();
             $table->string('ifsc_code', 50)->nullable();
             $table->enum('account_type', ['savings', 'current', 'fixed_deposit', 'recurring_deposit', 'loan', 'nre', 'nro'])->nullable();
+            $table->string('status', 50)->default('active');
+            $table->integer('flag')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

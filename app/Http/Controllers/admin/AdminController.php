@@ -12,6 +12,7 @@ use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -78,10 +79,11 @@ class AdminController extends Controller
         }
 
         if(auth()->user()->role === 'account'){
+            $data['balance'] = Account::first();
             $data['pendingExpenses'] = Expense::with('staff:id,name')->where('status', 'pending')->get();
         }
 
-        // return $data['pendingExpense'];
+        $data['authUserExpense'] = Expense::with('staff:id,name')->where('staff_id', Auth::id())->get();
 
         $data['totalUsers'] = User::where('role', 'user')->count();
         $data['latestUsers'] = User::where('role', 'user')->latest()->take(8)->get();

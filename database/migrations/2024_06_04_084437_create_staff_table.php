@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name', 250)->nullable();
             $table->string('slug', 250)->nullable();
             $table->string('email', 250)->nullable();
+            $table->integer('department_id')->nullable();
             $table->foreignId('designation_id')->constrained('designations')
             ->onUpdate('cascade')->onDelete('cascade')->nullable();
             $table->string('mobile', 20)->nullable();
