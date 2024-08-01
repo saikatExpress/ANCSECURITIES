@@ -42,15 +42,17 @@ class AccountController extends Controller
                 'account_type'   => 'nullable|string|in:savings,current,fixed_deposit,recurring_deposit,loan,nre,nro',
             ]);
 
-            $accountObj                 = new Account();
-            $accountObj->name           = Str::title($request->name);
-            $accountObj->slug           = Str::slug($request->name, '-');
-            $accountObj->balance        = $request->balance;
-            $accountObj->account_number = $request->account_number;
-            $accountObj->bank_name      = $request->bank_name;
-            $accountObj->branch_name    = $request->branch_name;
-            $accountObj->ifsc_code      = $request->ifsc_code;
-            $accountObj->account_type   = $request->account_type;
+            $accountObj                  = new Account();
+            $accountObj->name            = Str::title($request->name);
+            $accountObj->slug            = Str::slug($request->name, '-');
+            $accountObj->initial_balance = $request->balance;
+            $accountObj->balance         = $request->balance;
+            $accountObj->costing_balance = $request->balance;
+            $accountObj->account_number  = $request->account_number;
+            $accountObj->bank_name       = $request->bank_name;
+            $accountObj->branch_name     = $request->branch_name;
+            $accountObj->ifsc_code       = $request->ifsc_code;
+            $accountObj->account_type    = $request->account_type;
 
             $res = $accountObj->save();
 

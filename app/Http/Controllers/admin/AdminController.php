@@ -83,6 +83,15 @@ class AdminController extends Controller
             $data['pendingExpenses'] = Expense::with('staff:id,name')->where('status', 'pending')->get();
         }
 
+        if(auth()->user()->role === 'ceo' || auth()->user()->role === 'hr'){
+            if(auth()->user()->role === 'ceo'){
+                $data['waitingExpenses'] = Expense::where('assign_to_ceo', 1)->get();
+            }
+            if(auth()->user()->role === 'hr'){
+                $data['waitingExpenses'] = Expense::where('assign_to_hr', 1)->get();
+            }
+        }
+
         $data['authUserExpense'] = Expense::with('staff:id,name')->where('staff_id', Auth::id())->get();
 
         $data['totalUsers'] = User::where('role', 'user')->count();

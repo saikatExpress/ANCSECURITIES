@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\Models\User;
+use App\Models\Account;
+use App\Models\Expense;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Expense;
+use App\Models\Staff;
 use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
@@ -18,11 +22,34 @@ class ExpenseController extends Controller
         }
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $query = Expense::query();
+
+        if ($request->filled('from_date')) {
+            $query->whereDate('expense_date', '>=', $request->input('from_date'));
+        }
+        if ($request->filled('to_date')) {
+            $query->whereDate('expense_date', '<=', $request->input('to_date'));
+        }
+        if ($request->filled('employee_id') && $request->input('employee_id') != 'All') {
+            $query->where('staff_id', $request->input('employee_id'));
+        }
+        if($request->filled('category') && $request->input('category') != 'All'){
+            $query->where('expense_category', $request->input('category'));
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
         $data['pageTitle'] = 'Expense List';
-        $data['expenses'] = Expense::all();
-        // return $data['expences'];
+        $data['expenses'] = $query->orderBy('id', 'desc')->get();
+        $data['employees'] = Staff::all();
+
+        if ($request->ajax()) {
+            return view('admin.account.expense.partials.index', $data)->render();
+        }
+
         return view('admin.account.expense.index')->with($data);
     }
 
@@ -39,6 +66,7 @@ class ExpenseController extends Controller
             DB::beginTransaction();
 
             $request->validate([
+                'expense_head' => 'required',
                 'expense_date' => 'required',
                 'amount'       => 'required',
                 'category'     => 'required',
@@ -50,6 +78,7 @@ class ExpenseController extends Controller
 
             $expenseObj->staff_id         = Auth::id();
             $expenseObj->expense_date     = $request->input('expense_date');
+            $expenseObj->expense_head     = Str::title($request->input('expense_head'));
             $expenseObj->amount           = $request->input('amount');
             $expenseObj->expense_category = $request->input('category');
             $expenseObj->description      = $request->input('description', NULL);
@@ -79,7 +108,64 @@ class ExpenseController extends Controller
 
     public function assignExpenseAdmin($id)
     {
-        return $id;
+        $expense = Expense::find($id);
+
+        if($expense){
+            $expense->assign_to_ceo = 1;
+            $expense->assign_to_hr = 1;
+
+            $res = $expense->save();
+            if($res){
+                return response()->json(['success' => true]);
+            }
+        }
+    }
+
+    public function updateExpenseStatus(Request $request)
+    {
+        DB::beginTransaction();
+
+        $request->validate([
+            'id'     => 'required|exists:expenses,id',
+            'status' => 'required|string|in:pending,cancel,accepted',
+        ]);
+
+        $role = User::where('id', Auth::id())->pluck('role')->first();
+        try {
+            $status = $request->input('status');
+            DB::commit();
+            if($status === 'accepted'){
+                $expense = Expense::findOrFail($request->input('id'));
+                if($role === 'account'){
+                    $accountBalance = Account::first();
+                    $newBalance = $accountBalance->balance - $expense->amount;
+                    $accountBalance->initial_balance = $newBalance;
+                    $res = $accountBalance->save();
+                    if($res){
+                        $expense->status = $status;
+                        $expense->save();
+                        return response()->json(['success' => true], 200);
+                    }
+
+                }
+                if($role === 'ceo'){
+                    $expense->assign_to_ceo = 2;
+                }
+                if($role === 'hr'){
+                    $expense->assign_to_hr = 2;
+                }
+                $res = $expense->save();
+
+                if($res){
+                    return response()->json(['success' => true], 200);
+                }
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error('Expense status update failed: '.$e->getMessage());
+
+            return response()->json(['success' => false], 500);
+        }
     }
 
     public function destroy($id)

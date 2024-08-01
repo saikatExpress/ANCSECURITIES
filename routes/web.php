@@ -278,6 +278,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/create/expense', 'create')->name('create.expense');
         Route::post('/expense/store', 'store')->name('expense.store');
         Route::get('/assign/expense/admin/{id}', 'assignExpenseAdmin')->name('assign.expense');
+        Route::post('/update-expense-status', 'updateExpenseStatus')->name('update-expense-status');
         Route::get('/expense/delete/{id}', 'destroy');
     });
 

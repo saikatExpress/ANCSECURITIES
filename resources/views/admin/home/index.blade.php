@@ -1,5 +1,30 @@
 
 @extends('admin.layout.app')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+<style>
+     #imageModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #imageModal div {
+        background: #fff;
+        padding: 20px;
+        position: relative;
+    }
+    #modalClose {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+    }
+</style>
 <style>
     .welcomeText {
         font-size: 24px;
@@ -262,7 +287,7 @@
                                 <i class="fa fa-dollar-sign fa-2x mr-2 text-success"></i>
                                 <p class="mb-0">
                                     <strong>Your Available Balance:</strong>
-                                    <span class="text-success">{{ $balance->balance }}</span>
+                                    <span class="text-success">{{ ($balance->initial_balance) ?? 0 }}</span>
                                 </p>
                             </div>
                         </div>
@@ -294,9 +319,13 @@
                                     <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
                                     <td>{{ $expense->amount }}</td>
                                     <td>{{ $expense->description }}</td>
+
                                     <td>
-                                        <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius:50%;">
+                                        <a href="{{ asset('storage/'.$expense->receipt_image) }}" data-lightbox="expense-image" data-title="Receipt Image">
+                                            <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius: 50%;">
+                                        </a>
                                     </td>
+
                                     <td>{{ $expense->staff->name }}</td>
                                     <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
                                     <td>
@@ -319,16 +348,134 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <button type="button"  class="btn btn-sm btn-success expenseAssignBtn" data-id="{{ $expense->id }}">
-                                            Assign
-                                        </button> <br>
-                                        <span style="color:red;" class="text-sm">Left from CEO</span> <br>
-                                        <span style="color:red;" class="text-sm">Left from HR</span>
+                                        @if ($expense->assign_to_ceo == 1 || $expense->assign_to_hr == 1)
+                                            <button type="button"  class="btn btn-sm btn-secondary expenseAssignBtn" data-id="{{ $expense->id }}">
+                                                Assigned
+                                            </button>
+                                        @elseif ($expense->assign_to_ceo  == 2 && $expense->assign_to_hr == 2)
+                                            <button type="button"  class="btn btn-sm btn-success expenseAssignBtn" data-id="{{ $expense->id }}">
+                                                Download
+                                            </button>
+                                        @elseif($expense->assign_to_ceo == null && $expense->assign_to_hr == null)
+                                            <button type="button"  class="btn btn-sm btn-warning expenseAssignBtn" data-id="{{ $expense->id }}">
+                                                Assign
+                                            </button>
+                                        @endif
+                                        <br>
+                                        @if ($expense->assign_to_ceo == null)
+                                            <span class="text-sm text-warning">not assign CEO</span> <br>
+                                        @elseif ($expense->assign_to_ceo == 1)
+                                            <span style="color:red;" class="text-sm">Left from CEO</span> <br>
+                                        @elseif ($expense->assign_to_ceo == 2)
+                                            <span style="color:green;" class="text-sm">Complete from CEO</span> <br>
+                                        @endif
+                                        @if ($expense->assign_to_hr == null)
+                                            <span class="text-sm text-warning">not assign HR</span>
+                                        @elseif ($expense->assign_to_hr == 1)
+                                            <span style="color:red;" class="text-sm">Left from HR</span>
+                                        @elseif ($expense->assign_to_hr == 2)
+                                            <span style="color:green;" class="text-sm">Complete from HR</span> <br>
+                                        @endif
                                     </td>
                                 </tr>
                                 @php
                                     $sl++;
                                 @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
+            @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'hr')
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Waiting Expense Approval</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Expense Date</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Receipt Image</th>
+                                    <th>Entry By</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                    <th>Assign</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @php
+                                        $sl = 1;
+                                    @endphp
+                                @foreach ($waitingExpenses as $expense)
+                                    <tr>
+                                        <td>{{ $sl }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
+                                        <td>{{ $expense->amount }}</td>
+                                        <td>{{ $expense->description }}</td>
+                                        <td>
+                                            <a href="{{ asset('storage/'.$expense->receipt_image) }}" data-lightbox="expense-image" data-title="Receipt Image">
+                                                <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius: 50%;">
+                                            </a>
+                                        </td>
+                                        <td>{{ $expense->staff->name }}</td>
+                                        <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
+                                        <td>
+                                            <!-- Action Dropdown Menu -->
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ $expense->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Action
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ $expense->id }}">
+                                                    <p>
+                                                        <a class="dropdown-item" href="#" data-id="{{ $expense->id }}" data-status="pending" onclick="updateStatus(event)">Pending</a>
+                                                    </p>
+                                                    <p>
+                                                        <a class="dropdown-item" href="#" data-id="{{ $expense->id }}" data-status="accepted" onclick="updateStatus(event)">Accepted</a>
+                                                    </p>
+                                                    <p>
+                                                        <a class="dropdown-item" href="#" data-id="{{ $expense->id }}" data-status="cancel" onclick="updateStatus(event)">Cancel</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if ($expense->assign_to_ceo != null && $expense->assign_to_hr != null)
+                                                <button type="button"  class="btn btn-sm btn-secondary expenseAssignBtn" data-id="{{ $expense->id }}">
+                                                    Assigned
+                                                </button>
+                                            @else
+                                                <button type="button"  class="btn btn-sm btn-success expenseAssignBtn" data-id="{{ $expense->id }}">
+                                                    Assign
+                                                </button>
+                                            @endif
+                                            <br>
+                                            @if ($expense->assign_to_ceo == null)
+                                                <span class="text-sm text-warning">not assign CEO</span> <br>
+                                            @elseif ($expense->assign_to_ceo == 1)
+                                                <span style="color:red;" class="text-sm">Left from CEO</span> <br>
+                                            @elseif ($expense->assign_to_ceo == 2)
+                                                <span style="color:green;" class="text-sm">Complete from CEO</span> <br>
+                                            @endif
+                                            @if ($expense->assign_to_hr == null)
+                                                <span class="text-sm text-warning">not assign HR</span>
+                                            @elseif ($expense->assign_to_hr == 1)
+                                                <span style="color:red;" class="text-sm">Left from HR</span>
+                                            @elseif ($expense->assign_to_hr == 2)
+                                                <span style="color:green;" class="text-sm">Complete from HR</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $sl++;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
@@ -366,10 +513,20 @@
                                     <td>{{ $expense->expense_category }}</td>
                                     <td>{{ $expense->description }}</td>
                                     <td>
-                                        <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius:50%;">
+                                        <a href="{{ asset('storage/'.$expense->receipt_image) }}" data-lightbox="expense-image" data-title="Receipt Image">
+                                            <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius: 50%;">
+                                        </a>
                                     </td>
                                     <td>{{ $expense->staff->name }}</td>
-                                    <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
+                                    @if ($expense->status === 'pending')
+                                        <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
+                                    @elseif ($expense->status === 'accepted')
+                                        <td class="btn btn-sm btn-success" style="color:#fff;">
+                                            {{ ucfirst($expense->status) }}
+                                        </td>
+                                    @else
+
+                                    @endif
                                 </tr>
                                 @php
                                     $sl++;
@@ -1000,94 +1157,30 @@
             @endif
 
         </section>
-        <!-- /.content -->
     </div>
+
+    <a id="downloadLink" href="" download style="display: none;">Download</a>
+
+    <!-- Modal -->
+    <div id="imageModal" style="display: none;">
+        <div>
+            <span id="modalClose" style="cursor: pointer;">&times;</span>
+            <img id="modalImage" src="" style="width: 100%; height: auto;">
+            <a id="downloadLink" href="" download class="btn btn-primary" style="display: block; margin-top: 10px;">Download</a>
+        </div>
+    </div>
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('admin/assets/js/attendance.js') }}"></script>
     <script src="{{ asset('admin/assets/js/expense.js') }}"></script>
+    <!-- Lightbox JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Browser history data from the server-side
-            const browserHistory = @json($browserHistory);
 
-            // Function to count the occurrences of each browser type
-            function countBrowsers(history) {
-                const browserCount = {
-                    Chrome: 0,
-                    IE: 0,
-                    Firefox: 0,
-                    Safari: 0,
-                    Opera: 0,
-                    Navigator: 0
-                };
-
-                history.forEach(entry => {
-                    if (entry) {
-                        if (entry.includes("Chrome")) {
-                            browserCount.Chrome++;
-                        } else if (entry.includes("MSIE") || entry.includes("Trident")) {
-                            browserCount.IE++;
-                        } else if (entry.includes("Firefox")) {
-                            browserCount.Firefox++;
-                        } else if (entry.includes("Safari") && !entry.includes("Chrome")) {
-                            browserCount.Safari++;
-                        } else if (entry.includes("Opera") || entry.includes("OPR")) {
-                            browserCount.Opera++;
-                        } else if (entry.includes("Navigator")) {
-                            browserCount.Navigator++;
-                        }
-                    }
-                });
-
-                return browserCount;
-            }
-
-            const browserData = countBrowsers(browserHistory);
-            const total = Object.values(browserData).reduce((sum, count) => sum + count, 0);
-            const chartContainer = document.getElementById('barChart');
-
-            Object.keys(browserData).forEach(browser => {
-                const percentage = ((browserData[browser] / total) * 100).toFixed(2);
-
-                const barContainer = document.createElement('div');
-                barContainer.classList.add('bar');
-
-                const barLabel = document.createElement('div');
-                barLabel.classList.add('bar-label');
-                barLabel.textContent = `${browser}: ${percentage}%`;
-
-                const barValue = document.createElement('div');
-                barValue.classList.add('bar-value');
-                barValue.style.width = `${percentage}%`;
-                barValue.style.backgroundColor = getColorForBrowser(browser);
-
-                const barPercentage = document.createElement('div');
-                barPercentage.classList.add('bar-percentage');
-                barPercentage.textContent = `${percentage}%`;
-
-                barValue.appendChild(barPercentage);
-                barContainer.appendChild(barLabel);
-                barContainer.appendChild(barValue);
-                chartContainer.appendChild(barContainer);
-            });
-
-            function getColorForBrowser(browser) {
-                const colors = {
-                    Chrome: '#FF6384',
-                    IE: '#36A2EB',
-                    Firefox: '#FFCE56',
-                    Safari: '#4BC0C0',
-                    Opera: '#9966FF',
-                    Navigator: '#C9CBCF'
-                };
-                return colors[browser];
-            }
-        });
-    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1150,6 +1243,44 @@
         setInterval(updateClock, 1000); // Update the clock every second
         updateClock(); // Initial call to set the clock immediately
     </script>
+
+    <script>
+        function updateStatus(event) {
+            event.preventDefault();
+
+            var status = $(event.target).data('status');
+            var expenseId = $(event.target).data('id');
+
+            $.ajax({
+                url: '{{ route('update-expense-status') }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: expenseId,
+                    status: status
+                },
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Status Updated',
+                        text: 'Expense status updated successfully',
+                        showConfirmButton: true
+                    }).then(() => {
+                        location.reload();
+                    });
+                },
+                error: function(xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Update Failed',
+                        text: 'Failed to update the expense status',
+                        showConfirmButton: true
+                    });
+                }
+            });
+        }
+    </script>
+
 @endsection
 
 

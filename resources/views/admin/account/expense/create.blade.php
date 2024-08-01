@@ -40,6 +40,13 @@
                         @csrf
                         <div class="box-body">
                             <div class="form-group">
+                                <label for="">Expense Head <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="expense_head">
+                                @error('expense_head')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
                                 <label for="expense-date">Date</label>
                                 <input type="date" class="form-control" id="expense-date" name="expense_date" required>
                                 @error('expense_date')
