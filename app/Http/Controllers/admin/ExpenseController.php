@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\admin;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Staff;
 use App\Models\Account;
 use App\Models\Expense;
 use Illuminate\Support\Str;
@@ -10,8 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\Staff;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ExpenseController extends Controller
 {
@@ -104,6 +106,67 @@ class ExpenseController extends Controller
                 ->withInput()
                 ->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $request->validate([
+                'expense_head' => 'required|string|max:255',
+                'expense_date' => 'required|date',
+                'amount' => 'required|numeric|min:0',
+                'category' => 'required|string|max:255',
+                'description' => 'required|string',
+                'receipt' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            ]);
+
+            $expense = Expense::findOrFail($request->input('expense_id'));
+
+            if ($request->hasFile('receipt')) {
+                // Delete the old receipt image if it exists
+                if ($expense->receipt_image) {
+                    Storage::delete($expense->receipt_image);
+                }
+
+                // Store the new receipt image
+                $path = $request->file('receipt')->store('expenseVoucher', 'public');
+                $expense->receipt_image = $path;
+            }
+
+            $expense->staff_id         = Auth::id();
+            $expense->expense_date     = $request->input('expense_date');
+            $expense->expense_head     = Str::title($request->input('expense_head'));
+            $expense->amount           = $request->input('amount');
+            $expense->expense_category = $request->input('category');
+            $expense->description      = $request->input('description', NULL);
+            $expense->status           = 'pending';
+            $expense->updated_at       = Carbon::now();
+
+            $res = $expense->save();
+            DB::commit();
+            if($res){
+                return redirect()->route('expense.list')->with('message', 'Expense added successfully.');
+            }
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            Log::error('Expense creation failed: '.$e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function edit($id)
+    {
+        $data['pageTitle'] = 'Edit Expense';
+        $data['expense'] = Expense::with('staff:id,name')->where('id', $id)->first();
+        // return $data['expense'];
+        return view('admin.account.expense.edit')->with($data);
     }
 
     public function assignExpenseAdmin($id)
