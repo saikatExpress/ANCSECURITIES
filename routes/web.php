@@ -8,6 +8,7 @@ use App\Http\Controllers\admin\BoController;
 use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\DpController;
+use App\Http\Controllers\admin\EmployeeController;
 use App\Http\Controllers\admin\ExpenseController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
@@ -242,6 +243,10 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/department/store', 'store')->name('department.store');
         Route::post('/department/update', 'update')->name('department.update');
         Route::get('/department/delete/{id}', 'destroy');
+    });
+
+    Route::controller(EmployeeController::class)->group(function(){
+        Route::post('/employee/work/store', 'workStore')->name('employeework.store');
     });
 
     Route::controller(NewsController::class)->group(function(){

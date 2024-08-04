@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('employee_works', function (Blueprint $table) {
             $table->id();
+            $table->integer('staff_id')->nullable();
+            $table->integer('work_id')->nullable();
+            $table->string('work_title', 250)->nullable();
+            $table->timestamp('assign_work_date')->nullable();
+            $table->string('work_status', 100)->default('pending');
+            $table->string('status', 20)->default('1');
+            $table->integer('flag')->default(0);
             $table->timestamps();
         });
     }

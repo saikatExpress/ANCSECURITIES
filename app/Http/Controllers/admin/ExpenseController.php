@@ -119,6 +119,8 @@ class ExpenseController extends Controller
             $res = $expenseObj->save();
             DB::commit();
             if($res){
+                $category = 'account';
+                EmployeeController::workStore($category);
                 return redirect()->back()->with('message', 'Expense added successfully.');
             }
 
