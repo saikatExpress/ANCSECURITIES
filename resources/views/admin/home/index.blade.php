@@ -24,6 +24,13 @@
         right: 10px;
         font-size: 24px;
     }
+    .table.table-striped.table-bordered th{
+        font-size: 12px;
+    }
+    .table.table-striped.table-bordered td{
+        font-size: 12px;
+        font-weight: 600;
+    }
 </style>
 <style>
     .welcomeText {
@@ -158,10 +165,39 @@
                         <div class="info-box-content">
                             <span class="info-box-text">Total Working Hours</span>
                             <span class="info-box-number">
+                                @php
+                                    use Carbon\Carbon;
+
+                                    // Get current month and year
+                                    $currentMonth = now()->month;
+                                    $currentYear = now()->year;
+
+                                    // Initialize Carbon instance for the first day of the current month
+                                    $startDate = Carbon::createFromDate($currentYear, $currentMonth, 1);
+
+                                    // Calculate total number of days in the current month
+                                    $daysInMonth = $startDate->daysInMonth;
+
+                                    // Initialize counter for weekdays
+                                    $weekdaysCount = 0;
+
+                                    // Loop through each day of the month to count weekdays (excluding Fridays and Saturdays)
+                                    for ($day = 1; $day <= $daysInMonth; $day++) {
+                                        $date = Carbon::createFromDate($currentYear, $currentMonth, $day);
+
+                                        // Check if the day is not Friday (5) and not Saturday (6)
+                                        if ($date->dayOfWeek !== Carbon::FRIDAY && $date->dayOfWeek !== Carbon::SATURDAY) {
+                                            $weekdaysCount++;
+                                        }
+                                    }
+
+                                    // Calculate total working hours (assuming 9 hours per weekday)
+                                    $totalMonthHours = $weekdaysCount * 9;
+                                @endphp
                                 @if(is_numeric($totalHours))
-                                    {{ number_format($totalHours, 2) }} Hours
+                                    {{ number_format($totalHours, 2) .' / ' . $totalMonthHours }} Hours
                                 @else
-                                    {{ $totalHours }}
+                                    {{ $totalHours .'/' . 300 }}
                                 @endif
                             </span>
                             <span>This Month</span>
@@ -287,9 +323,9 @@
                 </div>
             @endif
 
-            @if (auth()->user()->role === 'account')
-                <div class="row">
-                    <div class="col-md-12">
+            <div class="row">
+                @if (auth()->user()->role === 'account')
+                    <div class="col-md-8">
                         <div class="d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
                             <h4 class="bg-teal text-white p-2 rounded" style="width: 20%; text-align: center;">
                                 <i class="fa fa-list-alt mr-2"></i> Expense List
@@ -302,17 +338,13 @@
                                 </p>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
                         <table class="table table-striped table-bordered">
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Expense Head</th>
                                     <th>Expense Date</th>
                                     <th>Amount</th>
-                                    <th>Description</th>
                                     <th>Receipt Image</th>
                                     <th>Entry By</th>
                                     <th>Status</th>
@@ -327,13 +359,13 @@
                                 @foreach ($pendingExpenses as $expense)
                                 <tr>
                                     <td>{{ $sl }}</td>
+                                    <td>{{ $expense->expense_head }}</td>
                                     <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
                                     <td>{{ $expense->amount }}</td>
-                                    <td>{{ $expense->description }}</td>
 
                                     <td>
                                         <a href="{{ asset('storage/'.$expense->receipt_image) }}" data-lightbox="expense-image" data-title="Receipt Image">
-                                            <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius: 50%;">
+                                            <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 30px; height: 30px; border-radius: 50%;">
                                         </a>
                                     </td>
 
@@ -396,8 +428,42 @@
                             </tbody>
                         </table>
                     </div>
+                @endif
+
+                <div class="col-md-4">
+                    @if (count($todayWorks) > 0)
+                        <div class="d-flex align-items-center justify-content-between mb-3 p-3 bg-light rounded">
+                            <h4 class="bg-teal text-white p-2 rounded" style="width: 50%; text-align: center;">
+                                <i class="fa fa-clipboard-list mr-2"></i> Your Work List
+                            </h4>
+                            <div class="d-flex align-items-center">
+                                <p class="mb-0">
+                                    <strong><i class="fa fa-clock mr-1"></i> Time Remaining:</strong>
+                                    <span class="text-success" id="timeRemaining">
+
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                        <div style="background-color: #fff;border-radius: 4px;padding: 5px 8px 5px;">
+                            @foreach($todayWorks as $work)
+                                <div class="work-item mb-3" style="box-shadow: 0 0 10px rgba(0,0,0,0.1);margin:5px;padding: 5px 8px 5px;border-radius: 4px;background-color: #fff;color: #000;">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="work-title mb-0">{{ $work->work_title }}</h5>
+                                        <span class="badge badge-primary" style="background-color: red;">{{ $work->work_status }}</span>
+                                    </div>
+                                    <p class="mb-0 mt-2">
+                                        <strong>Category:</strong> {{ $work->category }}
+                                    </p>
+                                    <p class="mb-0">
+                                        <strong>Assigned Date:</strong> {{ \Carbon\Carbon::parse($work->assign_work_date)->format('M d, y |  h:i A') }}
+                                    </p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
 
             @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'hr')
                 <div class="row">
@@ -503,10 +569,10 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
+                                    <th>Expense Head</th>
                                     <th>Expense Date</th>
                                     <th>Amount</th>
                                     <th>Category</th>
-                                    <th>Description</th>
                                     <th>Receipt Image</th>
                                     <th>Entry By</th>
                                     <th>Status</th>
@@ -519,13 +585,13 @@
                                 @foreach ($authUserExpense as $expense)
                                 <tr>
                                     <td>{{ $sl }}</td>
+                                    <td>{{ $expense->expense_head }}</td>
                                     <td>{{ \Carbon\Carbon::parse($expense->expense_date)->format('Y-m-d') }}</td>
                                     <td>{{ $expense->amount }}</td>
                                     <td>{{ $expense->expense_category }}</td>
-                                    <td>{{ $expense->description }}</td>
                                     <td>
                                         <a href="{{ asset('storage/'.$expense->receipt_image) }}" data-lightbox="expense-image" data-title="Receipt Image">
-                                            <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 50px; height: 50px; border-radius: 50%;">
+                                            <img src="{{ asset('storage/'.$expense->receipt_image) }}" alt="Receipt Image" style="width: 30px; height: 30px; border-radius: 50%;">
                                         </a>
                                     </td>
                                     <td>{{ $expense->staff->name }}</td>
@@ -1200,6 +1266,16 @@
                 </div>
             @endif
 
+            <div id="limitRequestAlert" class="alert alert-info" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <audio id="notificationSound">
+                    <source src="{{ asset('admin/assets/audio/notification.mp3') }}" type="audio/mpeg">
+                </audio>
+                <strong>Data Found!</strong> Click to close.
+            </div>
+
         </section>
     </div>
 
@@ -1224,12 +1300,72 @@
     <!-- Lightbox JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
+    @if (auth()->user()->role === 'it')
+        <script>
+            $(document).ready(function() {
+                function fetchData() {
+                    $.ajax({
+                        url: '{{ route('fetch.limit.requests') }}',
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response) {
+                                // Display alert div
+                                $('#limitRequestAlert').fadeIn();
+
+                                // Play notification sound
+                                var audio = document.getElementById('notificationSound');
+                                audio.play();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching data:', error);
+                        }
+                    });
+                }
+
+                // Call fetchData function every 5 seconds
+                setInterval(fetchData, 5000);
+
+                // Close alert on button click
+                $('#limitRequestAlert button.close').click(function() {
+                    $('#limitRequestAlert').fadeOut();
+                });
+            });
+        </script>
+    @endif
+
 
     <script>
-        // Get current date and time
+        function updateTimeRemaining() {
+            var now = new Date();
+            var targetTime = new Date();
+
+            targetTime.setHours(18, 30, 0, 0);
+
+            var diff = targetTime - now;
+
+            if (diff > 0) {
+                var hours = Math.floor(diff / (1000 * 60 * 60));
+                var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+                var timeRemainingStr = hours + "h " + minutes + "m";
+
+                document.getElementById("timeRemaining").textContent = timeRemainingStr;
+            } else {
+                targetTime.setDate(targetTime.getDate() + 1);
+                updateTimeRemaining();
+            }
+        }
+
+        updateTimeRemaining();
+
+        setInterval(updateTimeRemaining, 60000);
+    </script>
+
+    <script>
         const currentDate = new Date();
 
-        // Format the date and time
         const options = {
             year: 'numeric',
             month: 'long',
@@ -1241,7 +1377,6 @@
 
         const formattedDate = currentDate.toLocaleString('en-US', options);
 
-        // Update the span element with the formatted date and time
         document.getElementById('currentDateTime').textContent = formattedDate;
     </script>
 
@@ -1254,6 +1389,7 @@
 
             // Set the current time as the default value
             document.getElementById('start-time').value = hours + ':' + minutes;
+            document.getElementById('end-time').value = hours + ':' + minutes;
         });
     </script>
 

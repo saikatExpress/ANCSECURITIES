@@ -169,6 +169,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');
         Route::post('/request/deposit/{id}', 'requestDeposit')->name('request.deposit');
         Route::get('/fetch-requests', 'fetchRequests')->name('fetch.requests');
+        Route::get('/fetch-limit-requests', 'fetchLimitRequest')->name('fetch.limit.requests');
         Route::get('/limit/delete/{id}', 'limitDestroy');
     });
 

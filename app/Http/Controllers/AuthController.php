@@ -287,9 +287,8 @@ class AuthController extends Controller
 
                 DB::commit();
 
-                $roles = $user->getRoleNames();
                 $redirectRoute = '';
-                if ($roles->contains('user')) {
+                if (auth()->user()->role === 'user') {
                     $redirectRoute = route('user.dashboard');
                 } else {
                     $redirectRoute = route('admin.dashboard');

@@ -186,6 +186,13 @@ class RequestController extends Controller
         return response()->json(['message' => 'Request status updated successfully']);
     }
 
+    public function fetchLimitRequest()
+    {
+        $requests = LimitRequest::where('status', 'pending')->get();
+
+        return response()->json($requests);
+    }
+
     public function requestDeposit(Request $request, $id)
     {
         $request->validate([

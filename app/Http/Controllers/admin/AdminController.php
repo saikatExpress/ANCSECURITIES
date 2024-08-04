@@ -14,6 +14,7 @@ use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\EmployeeWork;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -71,19 +72,22 @@ class AdminController extends Controller
                     $totalHours = $outTime->diffInHours($inTime);
 
                     $data['totalHours'] = $totalHours;
+
                 } catch (\Exception $e) {
                     $data['totalHours'] = 'Error: ' . $e->getMessage(); // Handle errors
                 }
             } else {
-                $data['totalHours'] = 'N/A';
+                $data['totalHours'] = 0;
             }
         } else {
-            $data['totalHours'] = 'N/A';
+            $data['totalHours'] = 0;
         }
+
+        $data['todayWorks'] = EmployeeWork::whereDate('assign_work_date', Carbon::today())->where('category', auth()->user()->role)->get();
 
         if(auth()->user()->role === 'account'){
             $data['balance'] = Account::first();
-            $data['pendingExpenses'] = Expense::with('staff:id,name')->where('status', 'pending')->get();
+            $data['pendingExpenses'] = Expense::with('staff:id,name')->where('status', 'pending')->whereDate('expense_date', Carbon::today())->get();
         }
 
         if(auth()->user()->role === 'ceo' || auth()->user()->role === 'hr'){
