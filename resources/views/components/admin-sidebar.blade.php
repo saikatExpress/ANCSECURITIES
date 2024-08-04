@@ -320,6 +320,34 @@
                     </li>
                 </ul>
             </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-briefcase"></i> <span>Work Activities</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li>
+                        <a href="{{ route('add.work') }}">
+                            <i class="fa fa-plus-square"></i>
+                            Add Work
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('work.list') }}">
+                            <i class="fa fa-list-ul"></i>
+                            Work List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('create.product') }}">
+                            <i class="fa fa-cogs"></i>
+                            Work Manage
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
             <li>
                 <a href="{{ route('bo.list') }}">

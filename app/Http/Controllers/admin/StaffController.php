@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Staff;
 use App\Models\Attendance;
+use App\Models\Department;
 use App\Models\Designation;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -39,9 +40,10 @@ class StaffController extends Controller
     {
         $pageTitle    = 'Create Staff';
         $designations = Designation::all();
+        $departments = Department::all();
         $roles = Role::all();
 
-        return view('admin.staff.create', compact('pageTitle', 'designations', 'roles'));
+        return view('admin.staff.create', compact('pageTitle', 'designations', 'roles','departments'));
     }
 
     public function store(Request $request)
@@ -50,7 +52,6 @@ class StaffController extends Controller
             DB::beginTransaction();
 
             $staffObj = new Staff;
-            $staffServiceObj = new StaffService;
 
             $request->validate([
                 'image'             => 'required|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
@@ -108,7 +109,8 @@ class StaffController extends Controller
                     $staffObj->name              = Str::title($name);
                     $staffObj->slug              = Str::slug($name, '-');
                     $staffObj->email             = $email;
-                    $staffObj->designation_id    = $request->input('designation_id');
+                    $staffObj->email             = $email;
+                    $staffObj->department_id     = $request->input('department_id');
                     $staffObj->mobile            = $request->input('mobile');
                     $staffObj->permanent_address = $request->input('permanent_address');
                     $staffObj->present_address   = $request->input('present_address');

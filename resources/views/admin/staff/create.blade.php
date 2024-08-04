@@ -97,6 +97,18 @@
                                 <h3>Contact Information</h3>
                             </div>
                             <div class="form-group">
+                                <label for="designationId">Department</label>
+                                <select name="department_id" id="departmentId" class="form-control">
+                                    <option value="">Nothing selected</option>
+                                    @foreach ($departments as $department)
+                                        <option value="{{ $department->id }}">{{ $department->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('designation_id')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
                                 <label for="designationId">Designation</label>
                                 <select name="designation_id" id="designationId" class="form-control">
                                     <option value="">Nothing selected</option>

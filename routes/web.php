@@ -19,12 +19,14 @@ use App\Http\Controllers\admin\ReportController;
 use App\Http\Controllers\admin\RequestController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\admin\StaffController;
+use App\Http\Controllers\admin\WorkController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserCOntroller;
+use Illuminate\Queue\Console\WorkCommand;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
@@ -220,6 +222,12 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/update/attendance/status/{employeeId}', 'updateAttendanceStatus');
     });
 
+    Route::controller(WorkController::class)->group(function(){
+        Route::get('/work/list', 'index')->name('work.list');
+        Route::get('/add/work', 'create')->name('add.work');
+        Route::post('/work/store', 'store')->name('work.store');
+    });
+
     Route::controller(LeaveController::class)->group(function(){
         $hashedLeaveUrl = md5('leave/list');
         Route::get('/'.$hashedLeaveUrl, 'index')->name('leave.list');
@@ -276,6 +284,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
 
     Route::controller(ExpenseController::class)->group(function(){
         Route::get('/expense/list', 'index')->name('expense.list');
+        Route::get('/todays/expense', 'todaysExpense')->name('todays.expense');
         Route::get('/create/expense', 'create')->name('create.expense');
         Route::post('/expense/store', 'store')->name('expense.store');
         Route::get('/assign/expense/admin/{id}', 'assignExpenseAdmin')->name('assign.expense');

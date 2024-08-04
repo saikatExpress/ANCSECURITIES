@@ -55,6 +55,31 @@ class ExpenseController extends Controller
         return view('admin.account.expense.index')->with($data);
     }
 
+    public function todaysExpense(Request $request)
+    {
+        if(auth()->user()->role !== 'admin'){
+            return back()->with('errors', 'You are not permitted for this page..!');
+        }
+        $data['pageTitle'] = 'Today Expense List';
+        $data['employees'] = Staff::all();
+
+        $query = Expense::query()->whereDate('expense_date', Carbon::today());
+
+        if ($request->filled('employee_id') && $request->input('employee_id') != 'All') {
+            $query->where('staff_id', $request->input('employee_id'));
+        }
+        if($request->filled('category') && $request->input('category') != 'All'){
+            $query->where('expense_category', $request->input('category'));
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        $data['expenses'] = $query->orderBy('id', 'desc')->get();
+
+        return view('admin.account.expense.todayexpense')->with($data);
+    }
+
     public function create()
     {
         $data['pageTitle'] = 'Create Expense';

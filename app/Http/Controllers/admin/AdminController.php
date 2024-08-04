@@ -5,14 +5,15 @@ namespace App\Http\Controllers\admin;
 use Carbon\Carbon;
 use App\Models\Fund;
 use App\Models\User;
+use App\Models\Staff;
 use App\Models\BOForm;
+use App\Models\Account;
 use App\Models\Expense;
 use App\Models\Attendance;
 use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Account;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,6 +28,8 @@ class AdminController extends Controller
 
     public function index()
     {
+        $data['todayCost'] = Expense::where('expense_date', Carbon::today())->sum('amount');
+
         if(auth()->user()->role === 'hr'){
             $data['employees'] = DB::table('users')
             ->leftJoin('attendances', function ($join) {
@@ -102,6 +105,10 @@ class AdminController extends Controller
         $limits   = LimitRequest::with('clients:id,name,email,mobile,whatsapp,trading_code')->where('status', 'pending')->get();
         $withdraw = Fund::with('clients:id,name,email,mobile,whatsapp,trading_code')->where('category', 'withdraw')->where('status', 'pending')->get();
         $deposite = Fund::with('clients:id,name,email,mobile,whatsapp,trading_code')->where('category', 'deposit')->where('status', 'pending')->get();
+
+        if(auth()->user()->role === 'admin'){
+            $data['allStaffs'] = Staff::where('status', '1')->get();
+        }
 
         foreach ($limits as $limit) {
             $notifications[] = [

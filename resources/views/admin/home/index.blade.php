@@ -172,15 +172,26 @@
                 <div class="clearfix visible-sm-block"></div>
 
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+                    @if(session('message'))
+                    <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
+                @endif
 
-                        <div class="info-box-content">
-                            <span class="info-box-text">Sales</span>
-                            <span class="info-box-number">760</span>
-                        </div>
+                @if(session('errors'))
+                    <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
+                @endif
+                    <div class="info-box">
+                        <span class="info-box-icon bg-green"><i style="margin-top: 20px;" class="ion ion-ios-cart-outline"></i></span>
+
+                        <a href="{{ route('todays.expense') }}">
+                            <div class="info-box-content">
+                                <span class="info-box-text">Todays Expense</span>
+                                <span class="info-box-number">{{ number_format($todayCost,2) ?? 0 }}</span>
+                                <span id="currentDateTime"></span>
+                            </div>
+                        </a>
                     </div>
                 </div>
+
                 <!-- /.col -->
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box">
@@ -531,6 +542,39 @@
                                 @php
                                     $sl++;
                                 @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+
+            @if (auth()->user()->role === 'admin')
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Daily Activities of Employees</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($allStaffs as $staff)
+                                    <tr>
+                                        <td>{{ $staff->name }}</td>
+                                        <td>{{ $staff->email }}</td>
+                                        <td>
+                                            <a href="{{ url('staff.activities', ['id' => $staff->id]) }}" class="btn btn-primary btn-sm">View Activities</a>
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -1181,6 +1225,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
 
+    <script>
+        // Get current date and time
+        const currentDate = new Date();
+
+        // Format the date and time
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true
+        };
+
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+
+        // Update the span element with the formatted date and time
+        document.getElementById('currentDateTime').textContent = formattedDate;
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1242,6 +1305,29 @@
 
         setInterval(updateClock, 1000); // Update the clock every second
         updateClock(); // Initial call to set the clock immediately
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Show the alert message
+            $('#successAlert').show();
+
+            // Hide the alert message after 3 seconds
+            setTimeout(function() {
+                $('#successAlert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Show the alert message
+            $('.errorAlert').show();
+
+            // Hide the alert message after 3 seconds
+            setTimeout(function() {
+                $('.errorAlert').fadeOut('slow');
+            }, 3000);
+        });
     </script>
 
     <script>
