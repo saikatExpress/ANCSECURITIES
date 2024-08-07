@@ -1,4 +1,5 @@
     @extends('admin.layout.app')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <style>
         .switch {
             position: relative;
@@ -126,19 +127,15 @@
                                             {{ $request->created_at->format('d-M-Y') }}
                                         </td>
 
-                                        @if ($request->status === 'pending')
-                                            <td>
-                                                <label for="" class="btn btn-sm btn-danger">Pending</label>
-                                            </td>
-                                        @elseif ($request->status === 'approved')
-                                            <td>
-                                                <label for="" class="btn btn-sm btn-success">Approved</label>
-                                            </td>
-                                        @else
-                                            <td>
-                                                <label for="" class="btn btn-sm btn-Warning">Declined</label>
-                                            </td>
-                                        @endif
+                                        <td class="status-cell">
+                                            @if ($request->status === 'pending')
+                                                <label class="btn btn-sm btn-danger">Pending</label>
+                                            @elseif ($request->status === 'approved')
+                                                <label class="btn btn-sm btn-success">Approved</label>
+                                            @else
+                                                <label class="btn btn-sm btn-warning">Declined</label>
+                                            @endif
+                                        </td>
 
                                         <td>
                                             <label class="switch">
@@ -178,6 +175,7 @@
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script src="{{ asset('admin/assets/js/limit.js') }}"></script>
 
         <script>
@@ -197,7 +195,8 @@
                 $('.toggle-status').change(function() {
                     var requestId = $(this).data('id');
                     var actionUrl = $(this).data('action');
-                    var status = $(this).prop('checked') ? 'approved' : 'canceled'; // Determine new status based on checkbox state
+                    var statusCell = $(this).closest('.status-cell');
+                    var status = $(this).prop('checked') ? 'approved' : 'canceled';
 
                     $.ajax({
                         url: actionUrl,
@@ -207,12 +206,25 @@
                             status: status
                         },
                         success: function(response) {
-                            console.log('Status updated successfully.');
-                            // Optionally update UI or show notification
+                            toastr.success('Limit request Status updated successfully');
+
+                            var updatedStatus = response.status;
+
+                            var statusLabel;
+                            if (updatedStatus === 'pending') {
+                                statusLabel = '<label class="btn btn-sm btn-danger">Pending</label>';
+                            } else if (updatedStatus === 'approved') {
+                                statusLabel = '<label class="btn btn-sm btn-success">Approved</label>';
+                            } else {
+                                statusLabel = '<label class="btn btn-sm btn-warning">Declined</label>';
+                            }
+                            console.log(statusLabel);
+
+                            // Update the content of statusCell with the new status label
+                            statusCell.html(statusLabel);
                         },
                         error: function(xhr) {
                             console.error('Error updating status:', xhr.responseText);
-                            // Handle error, show error message, etc.
                         }
                     });
                 });

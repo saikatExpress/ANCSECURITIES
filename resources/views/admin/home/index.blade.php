@@ -1266,20 +1266,12 @@
                 </div>
             @endif
 
-            <div id="limitRequestAlert" class="alert alert-info" style="display: none;">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <audio id="notificationSound">
-                    <source src="{{ asset('admin/assets/audio/notification.mp3') }}" type="audio/mpeg">
-                </audio>
-                <strong>Data Found!</strong> Click to close.
+            <div id="limitRequestContainer" style="display: flex; flex-wrap:wrap;">
+
             </div>
 
         </section>
     </div>
-
-    <a id="downloadLink" href="" download style="display: none;">Download</a>
 
     <!-- Modal -->
     <div id="imageModal" style="display: none;">
@@ -1303,19 +1295,49 @@
     @if (auth()->user()->role === 'it')
         <script>
             $(document).ready(function() {
+                var displayedRequests = [];
+
                 function fetchData() {
                     $.ajax({
                         url: '{{ route('fetch.limit.requests') }}',
                         type: 'GET',
                         dataType: 'json',
                         success: function(response) {
-                            if (response) {
-                                // Display alert div
-                                $('#limitRequestAlert').fadeIn();
+                            if (response && response.length > 0) {
+                                var newRequests = []; // Array to store IDs of newly fetched requests
 
-                                // Play notification sound
-                                var audio = document.getElementById('notificationSound');
-                                audio.play();
+                                response.forEach(function(request) {
+                                    var requestId = request.id;
+
+                                    // Check if this request is already displayed
+                                    if (displayedRequests.indexOf(requestId) === -1) {
+                                        // If not displayed, add it to newRequests array and display
+                                        newRequests.push(requestId);
+
+                                        var tradingCode = request.clients.trading_code;
+                                        var amount = request.limit_amount;
+
+                                        var alertDiv = $('<div class="alert alert-info" style="display: block; margin:5px 5px 5px;">');
+                                        alertDiv.data('requestId', requestId); // Store requestId in data attribute
+                                        alertDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
+                                        alertDiv.append('<h4>' + request.clients.name + ' sent you a limit request..!</h4>');
+                                        alertDiv.append('<span>Trading Code : <b style="color: purple;font-size: 17px;">' + tradingCode + '</b></span> <strong style="">Amount : <b style="color: purple;font-size: 17px;">' + amount + '</b></strong> <br>');
+                                        alertDiv.append('<button class="btn btn-sm btn-primary limitAcceptBtn" data-id="' + requestId + '">Accept</button>');
+                                        alertDiv.append('<button class="btn btn-sm btn-danger limitDeclineBtn" data-id="' + requestId + '" style="margin-left:10px;">Deny</button>');
+
+                                        // Append alertDiv to the container div
+                                        $('#limitRequestContainer').append(alertDiv);
+
+                                        // Add requestId to displayedRequests array
+                                        displayedRequests.push(requestId);
+                                    }
+                                });
+
+                                // Play notification sound if there are new requests
+                                if (newRequests.length > 0) {
+                                    var audio = document.getElementById('notificationSound');
+                                    audio.play();
+                                }
                             }
                         },
                         error: function(xhr, status, error) {
@@ -1324,17 +1346,67 @@
                     });
                 }
 
-                // Call fetchData function every 5 seconds
+                fetchData();
                 setInterval(fetchData, 5000);
 
+                $('#limitRequestContainer').on('click', '.limitAcceptBtn', function() {
+                    var requestId = $(this).data('id');
+                    var clickedItem = $(this).closest('.alert');
+
+                    if (requestId) {
+                        $.ajax({
+                            url: '/update/limit/request/' + requestId,
+                            type: 'GET',
+                            success: function(response) {
+                                toastr.success('Limit request updated successfully');
+                                clickedItem.fadeOut(function() {
+                                    $(this).remove();
+                                });
+                            },
+                            error: function(xhr) {
+                                console.log(xhr);
+                                toastr.error('Failed to update limit request');
+                            }
+                        });
+                    }
+                });
+
+                $('#limitRequestContainer').on('click', '.limitDeclineBtn', function() {
+                    var requestId = $(this).data('id');
+                    var clickedItem = $(this).closest('.alert');
+
+                    if (requestId) {
+                        $.ajax({
+                            url: '/decline/limit/request/' + requestId,
+                            type: 'GET',
+                            success: function(response) {
+                                toastr.success('Limit request declined successfully');
+                                clickedItem.fadeOut(function() {
+                                    $(this).remove();
+                                });
+                            },
+                            error: function(xhr) {
+                                console.log(xhr);
+                                toastr.error('Failed to update limit request');
+                            }
+                        });
+                    }
+                });
+
                 // Close alert on button click
-                $('#limitRequestAlert button.close').click(function() {
-                    $('#limitRequestAlert').fadeOut();
+                $(document).on('click', '#limitRequestContainer button.close', function() {
+                    var alertItem = $(this).closest('.alert');
+                    alertItem.fadeOut();
+
+                    // Remove the request ID from displayedRequests array
+                    var requestId = alertItem.data('requestId');
+                    displayedRequests = displayedRequests.filter(function(id) {
+                        return id !== requestId;
+                    });
                 });
             });
         </script>
     @endif
-
 
     <script>
         function updateTimeRemaining() {

@@ -121,7 +121,7 @@ Route::middleware(['user.guard'])->group(function(){
     });
 });
 
-Route::middleware(['auth', 'CheckAdmin'])->group(function(){
+Route::middleware(['auth'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         Route::get('/user/list', 'userIndex')->name('user.list');
         $hashedAdminUrl = md5('admin/dashboard');
@@ -158,8 +158,8 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
 
     Route::controller(RequestController::class)->group(function(){
         Route::get('/all/request', 'index')->name('all.request');
-        Route::get('/manual/request', 'manuelRequest')->name('today.limit_request');
-        Route::get('/today/limit/request', 'limitIndex')->name('manual.request');
+        Route::get('/manual/request', 'manuelRequest')->name('manual.request');
+        Route::get('/today/limit/request', 'limitIndex')->name('today.limit_request');
         Route::get('/declined/request', 'declineIndex')->name('declined.request');
         Route::get('/get/client/code/{code}', 'getClientInfo');
         Route::post('/manual/request/store', 'manualStore')->name('manual.request_store');
@@ -169,6 +169,8 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');
         Route::post('/request/deposit/{id}', 'requestDeposit')->name('request.deposit');
         Route::get('/fetch-requests', 'fetchRequests')->name('fetch.requests');
+        Route::get('/update/limit/request/{id}', 'updateLimitRequest');
+        Route::get('/decline/limit/request/{id}', 'declineLimitRequest');
         Route::get('/fetch-limit-requests', 'fetchLimitRequest')->name('fetch.limit.requests');
         Route::get('/limit/delete/{id}', 'limitDestroy');
     });

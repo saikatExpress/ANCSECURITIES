@@ -188,9 +188,39 @@ class RequestController extends Controller
 
     public function fetchLimitRequest()
     {
-        $requests = LimitRequest::where('status', 'pending')->get();
+        $requests = LimitRequest::with('clients:id,name,email,trading_code')->where('status', 'pending')->get();
 
         return response()->json($requests);
+    }
+
+    public function updateLimitRequest($id)
+    {
+        $limitRequest = LimitRequest::find($id);
+
+        if($limitRequest){
+            $limitRequest->status = 'approved';
+            $limitRequest->approved_by = auth()->user()->name;
+            $limitRequest->updated_at = Carbon::now();
+
+            $limitRequest->save();
+
+            return response()->json(['success' => true]);
+        }
+    }
+
+    public function declineLimitRequest($id)
+    {
+        $limitRequest = LimitRequest::find($id);
+
+        if($limitRequest){
+            $limitRequest->status = 'canceled';
+            $limitRequest->declined_by = auth()->user()->name;
+            $limitRequest->updated_at = Carbon::now();
+
+            $limitRequest->save();
+
+            return response()->json(['success' => true]);
+        }
     }
 
     public function requestDeposit(Request $request, $id)

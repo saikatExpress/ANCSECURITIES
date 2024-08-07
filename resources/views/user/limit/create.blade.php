@@ -24,14 +24,14 @@
                             @csrf
                             <div class="form-group">
                                 <label for="client_id">Client Trade ID <span class="text-danger">*</span></label>
-                                <input type="text" id="client_id" name="client_id" class="form-control" placeholder="Enter your client ID" required>
+                                <input type="text" id="client_id" name="client_id" class="form-control" value="{{ auth()->user()->trading_code }}" required>
                                 @error('client_id')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="form-group">
                                 <label for="client_name">Client Name <span class="text-danger">*</span></label>
-                                <input type="text" id="client_name" name="client_name" class="form-control" placeholder="Enter your name" required>
+                                <input type="text" id="client_name" name="client_name" class="form-control" value="{{ auth()->user()->name }}" required>
                                 @error('client_name')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
