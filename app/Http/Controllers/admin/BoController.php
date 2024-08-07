@@ -671,28 +671,28 @@ class BoController extends Controller
         try {
             DB::beginTransaction();
 
-        $validator = Validator::make($request->all(), [
-            'boId' => ['required'],
-        ]);
+            $validator = Validator::make($request->all(), [
+                'boId' => ['required'],
+            ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
 
-        $boObj = new BoAccount();
+            $boObj = new BoAccount();
 
-        $boObj->bo_id = $request->input('boId');
-        $boObj->name = ($request->input('client_name')) ?? 'N/A';
-        $boObj->ac_type = ($request->input('ac_type')) ?? 'N/A';
+            $boObj->bo_id = $request->input('boId');
+            $boObj->name = ($request->input('client_name')) ?? 'N/A';
+            $boObj->ac_type = ($request->input('ac_type')) ?? 'N/A';
 
-        $res = $boObj->save();
+            $res = $boObj->save();
 
-        DB::commit();
-        if($res){
-            return redirect()->back()->with('message', 'Successfully added');
-        }
+            DB::commit();
+            if($res){
+                return redirect()->back()->with('message', 'Successfully added');
+            }
 
         } catch (\Exception $e) {
             DB::rollback();

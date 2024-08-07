@@ -17,11 +17,12 @@
         </div>
 
         <!-- search form -->
-        <form action="#" method="get" class="sidebar-form">
+        <form action="{{ route('search.clients') }}" method="POST" id="clientSearchForm" class="sidebar-form">
+            @csrf
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Search...">
+                <input type="text" name="search_code" id="search_code" class="form-control" placeholder="Search...">
                 <span class="input-group-btn">
-                    <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                    <button type="submit" name="search" class="btn btn-flat">
                     <i class="fa fa-search"></i>
                     </button>
                 </span>
@@ -404,6 +405,16 @@
                     <li>
                         <a href="{{ route('portfolio.list') }}">
                             <i class="fa fa-list-alt"></i> Portfolio List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('assign.portfolio') }}">
+                            <i class="fa fa-list-alt"></i> Assign Portfolio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('assign.portfolio_list') }}">
+                            <i class="fa fa-list-alt"></i> Assign Portfolio List
                         </a>
                     </li>
                 </ul>

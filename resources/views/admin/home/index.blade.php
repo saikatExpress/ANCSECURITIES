@@ -208,7 +208,7 @@
                 <div class="clearfix visible-sm-block"></div>
 
 
-                @if (auth()->user()->role === 'it')
+                @if (auth()->user()->role === 'it' || auth()->user()->role === 'admin')
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         @if(session('message'))
                             <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>

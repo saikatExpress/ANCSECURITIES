@@ -149,7 +149,7 @@ class AdminController extends Controller
                             ->first();
 
         $totalRequests = $res->totalRequests;
-        $totalAmount = $res->totalAmount;
+        $totalAmount   = $res->totalAmount;
 
         return view('admin.home.index', compact('notifications', 'totalRequests', 'totalAmount'))->with($data);
     }

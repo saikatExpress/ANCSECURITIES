@@ -24,10 +24,49 @@
     <!-- AdminLTE Skins. Choose a skin from the css/skins
         folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="{{ asset('admin/assets/dist/css/skins/_all-skins.min.css') }}">
-    <link rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-        <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
-        <link rel="stylesheet" href="{{ asset('admin/css/ticker.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/ticker.css') }}">
+
+    <style>
+        #clientsArea {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            left: 24%;
+            height: auto;
+            width: 50%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 1;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #clientsArea .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #333;
+            background: #f1f1f1;
+            border: none;
+            border-radius: 50%;
+            padding: 5px 10px;
+            transition: background-color 0.3s;
+        }
+        #clientsArea .close-btn:hover {
+            background-color: #ddd;
+        }
+        #clientsArea iframe {
+            width: 100%;
+            height: 80vh;
+            border: none;
+        }
+    </style>
 </head>
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
@@ -61,6 +100,10 @@
 
             <div id="contentArea">
                 <!-- Content will be loaded here -->
+            </div>
+
+            <div id="clientsArea">
+                <button class="close-btn" onclick="closeClientsArea()">×</button>
             </div>
 
             @yield('content')
@@ -119,5 +162,44 @@
             });
         </script>
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#clientSearchForm').on('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+
+                    var formData = $(this).serialize(); // Serialize form data
+
+                    $.ajax({
+                        url: $(this).attr('action'), // Get action URL from form
+                        type: 'POST',
+                        data: formData,
+                        success: function(response) {
+                            var clientsArea = $('#clientsArea');
+
+                            clientsArea.empty();
+
+                            if (response.pdf_url) {
+                                // Create an iframe or embed element to display the PDF
+                                var pdfHtml = '<iframe src="' + response.pdf_url + '" width="100%" height="600px" style="border: none;"></iframe>';
+
+                                // Append the PDF viewer to the div
+                                clientsArea.html(pdfHtml).show(); // Display results
+                            } else {
+                                clientsArea.html('<p>No PDF found for the provided code</p>').show(); // Show no results message
+                            }
+                        },
+                        error: function(xhr) {
+                            console.error('Error:', xhr.responseText);
+                            $('#clientsArea').html('<p>An error occurred while searching.</p>').show();
+                        }
+                    });
+                });
+            });
+
+            function closeClientsArea() {
+                $('#clientsArea').hide();
+            }
+        </script>
     </body>
 </html>
