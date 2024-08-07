@@ -128,33 +128,30 @@ class RequestController extends Controller
 
     public function toggleStatus(Request $request, $id)
     {
-        // Validate the request
         $request->validate([
             'status' => 'required|in:approved,canceled',
         ]);
 
-        // Find the request by ID
         $limitRequest = LimitRequest::findOrFail($id);
 
-        // Determine the current user or admin who is approving/canceling the request
-        $user = auth()->user(); // Assuming you have authentication and authorization
+        $user = auth()->user();
 
-        // Update the status and corresponding columns based on the received status parameter
         if ($request->status === 'approved') {
             $limitRequest->update([
                 'status' => 'approved',
-                'approved_by' => $user->name, // Update with the user's name or ID who approves
-                'declined_by' => null, // Clear declined_by if previously set
+                'approved_by' => $user->name,
+                'declined_by' => null,
+                'updated_at' => Carbon::now(),
             ]);
         } else {
             $limitRequest->update([
                 'status' => 'canceled',
-                'approved_by' => null, // Clear approved_by if previously set
-                'declined_by' => $user->name, // Update with the user's name or ID who declines
+                'approved_by' => null,
+                'declined_by' => $user->name,
+                'updated_at' => Carbon::now(),
             ]);
         }
 
-        // Optionally, return a response (e.g., JSON response)
         return response()->json(['message' => 'Status updated successfully.', 'status' => $limitRequest->status]);
     }
 
@@ -198,9 +195,10 @@ class RequestController extends Controller
         $limitRequest = LimitRequest::find($id);
 
         if($limitRequest){
-            $limitRequest->status = 'approved';
+            $limitRequest->status      = 'approved';
             $limitRequest->approved_by = auth()->user()->name;
-            $limitRequest->updated_at = Carbon::now();
+            $limitRequest->declined_by = null;
+            $limitRequest->updated_at  = Carbon::now();
 
             $limitRequest->save();
 
@@ -213,9 +211,10 @@ class RequestController extends Controller
         $limitRequest = LimitRequest::find($id);
 
         if($limitRequest){
-            $limitRequest->status = 'canceled';
+            $limitRequest->status      = 'canceled';
+            $limitRequest->approved_by = null;
             $limitRequest->declined_by = auth()->user()->name;
-            $limitRequest->updated_at = Carbon::now();
+            $limitRequest->updated_at  = Carbon::now();
 
             $limitRequest->save();
 

@@ -84,10 +84,21 @@
                                             <td>{{ $request->created_at->format('d-m-Y') }}</td>
                                             <td style="text-transform: uppercase;" class="text-danger">{{ $request->status }}</td>
                                             <td>
-                                                @if ($request->status == 'pending')
+                                                @if ($request->status == 'pending' || $request->status == 'canceled')
                                                     <button type="submit" class="btn btn-sm btn-danger cancelButton" data-id="{{ $request->id }}">
                                                         Cancel
                                                     </button>
+                                                    @if ($request->status === 'canceled')
+                                                        <p style="margin-bottom: 0; font-size:12px;color:darkred;">
+                                                            Something wrong...Please cancel this request and try again new..!
+                                                        </p>
+                                                    @endif
+
+                                                    @if ($request->status == 'pending')
+                                                        <p style="margin-bottom: 0; font-size:12px;color:green;">
+                                                            Please wait some times...Your request has been accepted by an admin..!
+                                                        </p>
+                                                    @endif
                                                 @else
                                                     <button type="button" class="btn btn-sm btn-success" disabled>Completed</button>
                                                 @endif

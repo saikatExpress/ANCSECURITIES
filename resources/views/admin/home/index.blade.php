@@ -207,14 +207,38 @@
 
                 <div class="clearfix visible-sm-block"></div>
 
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    @if(session('message'))
-                    <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
+
+                @if (auth()->user()->role === 'it')
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        @if(session('message'))
+                            <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
+                        @endif
+
+                        @if(session('errors'))
+                            <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
+                        @endif
+                        <div class="info-box">
+                            <span class="info-box-icon bg-green"><i style="margin-top: 20px;" class="ion ion-ios-clock-outline"></i></span>
+
+                            <a href="{{ route('today.limit_request') }}">
+                                <div class="info-box-content">
+                                    <span class="info-box-text">Todays Limits</span>
+                                    <span class="info-box-number">{{ $totalRequests ?? 0 }} / Amount : {{ number_format($totalAmount) }}</span>
+                                    <span id="currentDateTime"></span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
                 @endif
 
-                @if(session('errors'))
-                    <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
-                @endif
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    @if(session('message'))
+                        <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
+                    @endif
+
+                    @if(session('errors'))
+                        <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
+                    @endif
                     <div class="info-box">
                         <span class="info-box-icon bg-green"><i style="margin-top: 20px;" class="ion ion-ios-cart-outline"></i></span>
 

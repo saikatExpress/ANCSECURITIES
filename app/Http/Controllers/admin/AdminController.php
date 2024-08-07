@@ -144,7 +144,14 @@ class AdminController extends Controller
 
         $data['browserHistory'] = User::where('role', 'user')->pluck('user_agent');
 
-        return view('admin.home.index', compact('notifications'))->with($data);
+        $res = LimitRequest::selectRaw('COUNT(*) as totalRequests, SUM(limit_amount) as totalAmount')
+                    ->whereDate('created_at', now()->today())
+                            ->first();
+
+        $totalRequests = $res->totalRequests;
+        $totalAmount = $res->totalAmount;
+
+        return view('admin.home.index', compact('notifications', 'totalRequests', 'totalAmount'))->with($data);
     }
 
     public function userIndex()
