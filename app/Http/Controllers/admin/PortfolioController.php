@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\Staff;
+use App\Models\BoAssign;
+use App\Models\BoAccount;
 use App\Models\Portfolio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\BoAccount;
-use App\Models\BoAssign;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -76,21 +77,25 @@ class PortfolioController extends Controller
 
     public function uploadPDFs(Request $request)
     {
-        if ($request->hasFile('pdfs')) {
-            foreach ($request->file('pdfs') as $file) {
-                // Store the file in the public directory
-                $originalName = $file->getClientOriginalName();
-                $path = $file->storeAs('public/pdfs', $originalName);
+        try {
+            if ($request->hasFile('pdfs')) {
+                foreach ($request->file('pdfs') as $file) {
+                    // Store the file in the 'storage/app/public/pdfs' directory
+                    $originalName = $file->getClientOriginalName();
+                    $path = $file->storeAs('public/pdfs', $originalName);
 
-                // Save the file path to the database
-                Portfolio::create([
-                    'name' => $originalName,
-                    'file_path' => Storage::url($path),
-                ]);
+                    // Save the file path to the database
+                    Portfolio::create([
+                        'name' => $originalName,
+                        'file_path' => Storage::url($path),
+                    ]);
+                }
             }
-        }
 
-        return response()->json(['message' => 'Files uploaded successfully!'], 200);
+            return response()->json(['message' => 'Files uploaded successfully!'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to upload files.'], 500);
+        }
 
     }
 
@@ -120,16 +125,24 @@ class PortfolioController extends Controller
 
     public function destroy()
     {
-        $allFiles = Portfolio::all();
+        try {
+            $allFiles = Portfolio::all();
 
-        // Delete each file from the storage
-        foreach ($allFiles as $file) {
-            Storage::delete($file->file_path);
+            $filePaths = [];
+
+            foreach ($allFiles as $file) {
+                $filePaths[] = str_replace('/storage/', '', $file->file_path);
+            }
+
+            if (!empty($filePaths)) {
+                Storage::disk('public')->delete($filePaths);
+            }
+
+            Portfolio::truncate();
+
+            return redirect()->back()->with('message', 'All portfolio files and records deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete portfolio files and records. Error: ' . $e->getMessage());
         }
-
-        // Truncate the portfolios table
-        DB::table('portfolios')->truncate();
-
-        return redirect()->back()->with('message', 'Previous Portfolio deleted');
     }
 }

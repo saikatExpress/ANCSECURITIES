@@ -10,7 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/js/bootstrap.bundle.min.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -118,15 +118,14 @@
                 Please first delete the previous portfolio statement from the menu bar and then upload a new portfolio statement.
             </div>
 
-            <div id="loader" style="display: none;">
-                <img src="{{ asset('auth/new-loader.gif') }}" alt="Loading..." style="width: 35%;border-radius: 4px;box-shadow: 0 0 10px rgba(0,0,0,0.1);margin: 5px 10px 25px;">
-            </div>
-
             <form id="uploadForm" enctype="multipart/form-data">
                 <label for="pdfs" class="file-label">Choose Folder</label>
                 <input type="file" name="pdfs[]" id="pdfs" class="file-input" multiple webkitdirectory accept="application/pdf">
                 <button type="submit">Upload PDFs</button>
             </form>
+
+            <div id="progress">0 / 0</div>
+            <div id="loader" style="display:none;">Uploading...</div>
         </div>
     </div>
 
@@ -142,9 +141,13 @@
             $('#uploadForm').on('submit', function(e) {
                 e.preventDefault();
                 let files = $('#pdfs')[0].files;
-                let batchSize = 10; // Upload 10 files at a time
+                let batchSize = 10;
                 let totalFiles = files.length;
-                let formData, startIndex, endIndex;
+                let formData, startIndex, endIndex, uploadedFiles = 0;
+
+                function updateProgress() {
+                    $('#progress').text(`${uploadedFiles} / ${totalFiles}`);
+                }
 
                 function uploadBatch(startIndex) {
                     if (startIndex >= totalFiles) {
@@ -181,7 +184,9 @@
                             $('#loader').hide();
                         },
                         success: function(response) {
-                            uploadBatch(endIndex);
+                            uploadedFiles += endIndex - startIndex; // Update count of uploaded files
+                            updateProgress(); // Update progress
+                            uploadBatch(endIndex); // Continue with the next batch
                         },
                         error: function(response) {
                             Swal.fire({
@@ -193,6 +198,8 @@
                     });
                 }
 
+                // Initialize progress display
+                $('#progress').text(`0 / ${totalFiles}`);
                 uploadBatch(0);
             });
 

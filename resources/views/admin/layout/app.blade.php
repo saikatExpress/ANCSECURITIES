@@ -181,7 +181,7 @@
 
                             if (response.pdf_url) {
                                 // Create an iframe or embed element to display the PDF
-                                var pdfHtml = '<iframe src="' + response.pdf_url + '" width="100%" height="600px" style="border: none;"></iframe>';
+                                var pdfHtml = '<iframe src="' + response.pdf_url + '" width="100%" height="800px" style="border: none;"></iframe>';
 
                                 // Append the PDF viewer to the div
                                 clientsArea.html(pdfHtml).show(); // Display results
