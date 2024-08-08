@@ -178,13 +178,13 @@
         <!-- User image -->
         <li class="user-header">
             @if (auth()->user()->profile_image)
-                <img src="{{ asset('storage/' . auth()->user()->profile_image) }}" class="img-circle" alt="Image">
+                <img src="{{ asset('storage/staffs/' . auth()->user()->profile_image) }}" class="img-circle" alt="Image">
             @else
                 <img src="{{ asset('admin/assets/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="Image">
             @endif
             <p>
-            {{ auth()->user()->name }} - {{ auth()->user()->role }}
-            <small>Member since Nov. {{ date('Y', auth()->user()->created_at->timestamp) }}</small>
+                {{ auth()->user()->name }} - {{ strtoupper(auth()->user()->role) }}
+                <small>Member since Nov. {{ date('Y', auth()->user()->created_at->timestamp) }}</small>
             </p>
         </li>
         <!-- Menu Body -->

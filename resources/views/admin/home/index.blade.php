@@ -2,6 +2,48 @@
 @extends('admin.layout.app')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 <style>
+    .defaultMenubar{
+        display: flex;
+        justify-content: space-between;
+        background-color: wheat;
+        align-items: center;
+    }
+    .menu-bar {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .menu {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 20px; /* Space between menu items */
+    }
+
+    .menu li {
+        display: inline;
+    }
+
+    .menu a {
+        text-decoration: none;
+        color: #333;
+        font-size: 16px;
+        padding: 10px 15px;
+        border-radius: 4px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .menu a:hover {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .menu a.active {
+        background-color: #0056b3;
+        color: #fff;
+    }
      #imageModal {
         position: fixed;
         top: 0;
@@ -39,12 +81,6 @@
         color: blue;
         border-bottom: 2px solid gray;
         padding: 5px 0px 7px;
-    }
-
-    .clock {
-        font-size: 24px;
-        font-weight: bold;
-        margin-top: 10px;
     }
 
     .bg-teal {
@@ -109,13 +145,28 @@
             @endphp
 
             <h2 class="welcomeText">{{ $greeting }}, {{ auth()->user()->name }}</h2>
-            <div class="clock">
-                <span id="time"></span>
+            <div class="defaultMenubar" style="display: flex; justify-content: space-between;">
+                <div class="clock">
+                    <span id="time"></span>
+                    <br>
+                    <span id="date"></span>
+                </div>
+
+                <div class="menu-bar">
+                    <ul class="menu">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
             </div>
+
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
             </h1>
+
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">Dashboard</li>
@@ -1631,17 +1682,34 @@
     </script>
 
     <script>
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
+        $(document).ready(function() {
+            function updateClock() {
+                const now = new Date();
 
-            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
-        }
+                // Format time as 12-hour clock with AM/PM
+                const hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const formattedHours = String(hours % 12 || 12).padStart(2, '0');
 
-        setInterval(updateClock, 1000); // Update the clock every second
-        updateClock(); // Initial call to set the clock immediately
+                // Format date
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const dayName = days[now.getDay()];
+                const date = now.getDate();
+                const month = now.getMonth() + 1; // Months are zero-indexed
+                const year = now.getFullYear();
+
+                // Set formatted time and date
+                $('#time').text(`${formattedHours}:${minutes}:${seconds} ${ampm}`);
+                $('#date').text(`${dayName}, ${month}/${date}/${year}`);
+            }
+
+            // Update the clock every second
+            setInterval(updateClock, 1000);
+            updateClock();
+        });
+
     </script>
 
     <script>

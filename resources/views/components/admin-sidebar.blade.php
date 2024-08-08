@@ -210,7 +210,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li>
-                        <a href="{{ route('today.limit_request') }}">
+                        <a href="{{ route('manual.request') }}">
                             <i class="fa fa-clock-o"></i>
                             Manual Request
                         </a>
