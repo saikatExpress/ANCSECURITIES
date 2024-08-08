@@ -82,7 +82,7 @@ Route::controller(CompanyController::class)->group(function(){
 
 Route::controller(AuthController::class)->group(function(){
     $hashedUrl = md5('login');
-    Route::get('/' . $hashedUrl, 'login')->name(md5('login'));
+    Route::get('/' . $hashedUrl, 'login')->name('login');
 
     $forpassUrl = md5('forgot/password');
     Route::get('/' . $forpassUrl, 'forgetPassword')->name(md5('forgot.password'));

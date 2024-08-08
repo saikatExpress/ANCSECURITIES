@@ -80,12 +80,12 @@ class PortfolioController extends Controller
             foreach ($request->file('pdfs') as $file) {
                 // Store the file in the public directory
                 $originalName = $file->getClientOriginalName();
-                $path = $file->storeAs('public/pdfs', $originalName); // Note the 'public/' prefix
+                $path = $file->storeAs('public/pdfs', $originalName);
 
                 // Save the file path to the database
                 Portfolio::create([
                     'name' => $originalName,
-                    'file_path' => Storage::url($path), // Store the URL, not the path
+                    'file_path' => Storage::url($path),
                 ]);
             }
         }

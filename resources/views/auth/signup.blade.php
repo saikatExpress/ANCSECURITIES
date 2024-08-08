@@ -217,7 +217,7 @@
                     </div>
                     <div class="card-footer text-center">
                         @php
-                            $url = md5('login');
+                            $url = 'login';
                         @endphp
                         <p class="mb-0">Already have an account? <a href="{{ route($url) }}" class="text-primary">Login</a></p>
                     </div>

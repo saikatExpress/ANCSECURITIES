@@ -109,10 +109,7 @@
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Others <i class="fa fa-angle-down"></i></a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li>
-                                            @php
-                                                $url = md5('login');
-                                            @endphp
-                                            <a href="{{ route($url) }}">Login</a>
+                                            <a href="{{ route('login') }}">Login</a>
                                         </li>
                                         <li>
                                             <a href="{{ route('sign.up') }}">Registation</a>

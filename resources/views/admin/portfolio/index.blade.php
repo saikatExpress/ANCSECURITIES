@@ -33,7 +33,7 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <form method="" action="{{ route('get.portfolio') }}" class="form-inline" id="portfolioForm">
+                        <form method="" action="" class="form-inline" id="portfolioForm">
                             @csrf
                             <div class="form-group">
                                 <input type="text" id="tradingCode" name="trading_code" class="form-control" placeholder="Enter trading code..."> <br>
