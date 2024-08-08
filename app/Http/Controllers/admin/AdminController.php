@@ -31,7 +31,7 @@ class AdminController extends Controller
     {
         $data['todayCost'] = Expense::where('expense_date', Carbon::today())->sum('amount');
 
-        if(auth()->user()->role === 'hr'){
+        if(auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo'){
             $data['employees'] = DB::table('users')
             ->leftJoin('attendances', function ($join) {
                 $join->on('users.id', '=', 'attendances.staff_id')

@@ -1,129 +1,6 @@
 
 @extends('admin.layout.app')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
-<style>
-    .defaultMenubar{
-        display: flex;
-        justify-content: space-between;
-        background-color: wheat;
-        align-items: center;
-    }
-    .menu-bar {
-        flex: 1;
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .menu {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        gap: 20px; /* Space between menu items */
-    }
-
-    .menu li {
-        display: inline;
-    }
-
-    .menu a {
-        text-decoration: none;
-        color: #333;
-        font-size: 16px;
-        padding: 10px 15px;
-        border-radius: 4px;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .menu a:hover {
-        background-color: #007bff;
-        color: #fff;
-    }
-
-    .menu a.active {
-        background-color: #0056b3;
-        color: #fff;
-    }
-     #imageModal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    #imageModal div {
-        background: #fff;
-        padding: 20px;
-        position: relative;
-    }
-    #modalClose {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
-    }
-    .table.table-striped.table-bordered th{
-        font-size: 12px;
-    }
-    .table.table-striped.table-bordered td{
-        font-size: 12px;
-        font-weight: 600;
-    }
-</style>
-<style>
-    .welcomeText {
-        font-size: 24px;
-        font-weight: bold;
-        color: blue;
-        border-bottom: 2px solid gray;
-        padding: 5px 0px 7px;
-    }
-
-    .bg-teal {
-        background-color: teal;
-    }
-
-    .text-white {
-        color: #fff;
-    }
-
-    .p-2 {
-        padding: 0.5rem;
-    }
-
-    .rounded {
-        border-radius: 4px;
-    }
-
-    .text-success {
-        color: #28a745;
-    }
-
-    .fa-dollar-sign {
-        color: #28a745;
-    }
-
-    .fa-list-alt {
-        color: #fff;
-    }
-
-    .mr-2 {
-        margin-right: 0.5rem;
-    }
-
-    .bg-light {
-        background-color: #f8f9fa; /* Light gray background */
-    }
-
-    .p-3 {
-        padding: 1rem;
-    }
-
-</style>
 @section('content')
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
@@ -145,19 +22,19 @@
             @endphp
 
             <h2 class="welcomeText">{{ $greeting }}, {{ auth()->user()->name }}</h2>
-            <div class="defaultMenubar" style="display: flex; justify-content: space-between;">
+            <div class="defaultMenubar">
                 <div class="clock">
                     <span id="time"></span>
                     <br>
                     <span id="date"></span>
                 </div>
 
-                <div class="menu-bar">
-                    <ul class="menu">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About</a></li>
-                        <li><a href="#services">Services</a></li>
-                        <li><a href="#contact">Contact</a></li>
+                <div class="menu-bar1">
+                    <ul class="menu1">
+                        <li><a href="#despositeRequest">Deposite Request</a></li>
+                        <li><a href="{{ route('manual.request') }}">Limit Request</a></li>
+                        <li><a href="{{ route('create.expense') }}">Add Expense</a></li>
+                        <li><a href="#contact">Withdraw Request</a></li>
                     </ul>
                 </div>
             </div>
@@ -175,7 +52,6 @@
 
         <!-- Main content -->
         <section class="content">
-
             <!-- Info boxes -->
             <div class="row">
 
@@ -1364,6 +1240,57 @@
                     <!-- /.col -->
                 </div>
             @endif
+
+            <div class="row">
+                <div class="col-md-2 offset-md-3">
+
+                </div>
+                <div class="col-md-8 offset-md-3" id="despositeRequest">
+                    <div style="background-color: #DDD; padding: 10px; border-radius:4px; margin-bottom: 10px;">
+                        <h4>Deposite Request</h4>
+                        <form action="" method="post" enctype="multipart/form-data">
+                            <div class="form-group" id="form-group-code">
+                                <label for="">Trading Code : <span class="text-danger">*</span></label>
+                                <input type="text" name="trading_code" id="trading_code" class="form-control">
+                            </div>
+                            <div class="form-group" id="form-group-name">
+                                <label for="">Name : <span class="text-danger">*</span></label>
+                                <input type="text" name="name" id="name" class="form-control">
+                            </div>
+                            <div class="form-group" id="form-group-email">
+                                <label for="">Email : <span class="text-danger">*</span></label>
+                                <input type="text" name="email" id="email" class="form-control">
+                            </div>
+                            <div class="form-group" id="form-group-mobile">
+                                <label for="">Mobile : <span class="text-danger">*</span></label>
+                                <input type="text" name="mobile" id="mobile" class="form-control">
+                            </div>
+
+                            <div class="form-group" id="form-group-amount">
+                                <label for="">Amount : <span class="text-danger">*</span></label>
+                                <input type="text" name="amount" id="amount" class="form-control">
+                            </div>
+                            <div class="form-group" id="form-group-bank">
+                                <label for="">Bank Account No : <span class="text-danger">*</span></label>
+                                <input type="text" name="bank_account" id="bank_account" class="form-control">
+                            </div>
+                            <div class="form-group" id="form-group-slip">
+                                <label for="">Bank Slip : <span class="text-danger">*</span></label>
+                                <input type="file" name="bank_slip" id="bank_slip" class="form-control">
+                            </div>
+                            <div class="form-group" id="form-group-date">
+                                <label for="">Deposite Date : <span class="text-danger">*</span></label>
+                                <input type="date" name="date" id="date" class="form-control">
+                            </div>
+
+                            <button type="submit" id="saveBtn" class="btn btn-sm btn-primary">Commit Info</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-2 offset-md-3">
+
+                </div>
+            </div>
 
             <div id="limitRequestContainer" style="display: flex; flex-wrap:wrap;">
 
