@@ -154,7 +154,11 @@ class StaffController extends Controller
             $emplyoeeAttendance->staff_id        = $employeeId;
             $emplyoeeAttendance->in_time         = $request->input('in_time', NULL);
             $emplyoeeAttendance->out_time        = $request->input('out_time', NULL);
-            $emplyoeeAttendance->status          = 'accepted';
+            if($request->input('in_time') === NULL && $request->input('out_time') === NULL){
+                $emplyoeeAttendance->status          = 'leave';
+            }else{
+                $emplyoeeAttendance->status          = 'accepted';
+            }
 
             $res = $emplyoeeAttendance->save();
 
@@ -169,7 +173,11 @@ class StaffController extends Controller
             $attendanceObj->staff_id        = $employeeId;
             $attendanceObj->in_time         = $request->input('in_time', NULL);
             $attendanceObj->out_time        = $request->input('out_time', NULL);
-            $attendanceObj->status          = 'accepted';
+            if($request->input('in_time') === NULL && $request->input('out_time') === NULL){
+                $attendanceObj->status          = 'leave';
+            }else{
+                $attendanceObj->status          = 'accepted';
+            }
 
             $res = $attendanceObj->save();
             if($res){
@@ -177,15 +185,9 @@ class StaffController extends Controller
             }
         }
 
-        // Find the employee by ID
-        // $employee = Attendance::where('staff_id',$employeeId)->whereDate('attendance_date', Carbon::today())->first();
         $employee = Staff::find($employeeId);
 
-        // if (!$employee) {
-        //     return response()->json(['success' => false, 'message' => 'Employee not found.'], 404);
-        // }
 
-        // Update the employee's status and times
         $employee->update([
             'status'   => 'accepted',
             'in_time'  => $request->input('in_time', NULL),
@@ -193,6 +195,55 @@ class StaffController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function updateAllAttendance(Request $request)
+    {
+        $updates = $request->input('updates');
+
+        try {
+            foreach ($updates as $update) {
+                $employeeId = $update['employeeId'];
+                $inTime = $update['inTime'];
+                $outTime = $update['outTime'];
+
+                $emplyoeeAttendance = Attendance::where('staff_id', $employeeId)->whereDate('attendance_date', Carbon::today())->first();
+
+                if($emplyoeeAttendance){
+                    $emplyoeeAttendance->attendance_date = Carbon::now();
+                    $emplyoeeAttendance->year            = date("Y");
+                    $emplyoeeAttendance->staff_id        = $employeeId;
+                    $emplyoeeAttendance->in_time         = ($inTime) ?? NULL;
+                    $emplyoeeAttendance->out_time        = ($outTime) ?? NULL;
+                    if($inTime === NULL && $outTime === NULL){
+                        $emplyoeeAttendance->status = 'leave';
+                    }else{
+                        $emplyoeeAttendance->status = 'accepted';
+                    }
+
+                    $emplyoeeAttendance->save();
+                }else{
+                    $attendanceObj = new Attendance();
+
+                    $attendanceObj->attendance_date = Carbon::now();
+                    $attendanceObj->year            = date("Y");
+                    $attendanceObj->staff_id        = $employeeId;
+                    $attendanceObj->in_time         = ($inTime) ?? NULL;
+                    $attendanceObj->out_time        = ($outTime) ?? NULL;
+                    if($inTime === NULL && $outTime === NULL){
+                        $attendanceObj->status = 'leave';
+                    }else{
+                        $attendanceObj->status = 'accepted';
+                    }
+
+                    $attendanceObj->save();
+                }
+            }
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to update attendance records.']);
+        }
     }
 
     public function empattendanceStore(Request $request)
@@ -219,7 +270,10 @@ class StaffController extends Controller
                 $attendance->in_time = $request->input('start_time');
                 $attendance->save();
 
-                return response()->json(['message' => 'In Time recorded successfully!'], 200);
+                return response()->json([
+                    'message' => 'In Time recorded successfully!',
+                    'in_time' => $attendance->in_time,
+                ], 200);
             }
 
             if ($request->has('out_time')) {
@@ -229,6 +283,11 @@ class StaffController extends Controller
 
                 $attendance->out_time = $request->input('out_time');
                 $attendance->save();
+
+                return response()->json([
+                    'message' => 'Out Time recorded successfully!',
+                    'out_time' => $attendance->out_time,
+                ], 200);
 
                 return response()->json(['message' => 'Out Time recorded successfully!'], 200);
             }

@@ -10,6 +10,10 @@ function isBangla($text) {
     return $bangla_matches > $english_matches;
 }
 
+function formatTimeWithAmPm($time) {
+    return date('h:i A', strtotime($time));
+}
+
 function truncate_text($text, $limit, $isBangla) {
     if ($isBangla) {
         if (mb_strlen($text, 'UTF-8') <= $limit) {

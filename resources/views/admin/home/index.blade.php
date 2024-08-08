@@ -133,23 +133,36 @@
                     <div class="info-box">
                         <span class="info-box-icon bg-aqua"><i class="ion ion-ios-time-outline"></i></span>
                         <div class="info-box-content">
-                            <span class="info-box-text">Daily Attendance</span>
+                            <span class="info-box-text" style="font-weight: 600;color:#28a745;">Daily Attendance</span>
+                            <span style="color: #f39c12; font-weight: bold;" id="punch-in-time"></span>
+                            <span style="color: blue; font-weight: bold;" id="punch-out-time"></span>
+                            @if ($todayAttendance)
+                                <span style="color: #f39c12; font-weight: bold;">Punch in: {{ formatTimeWithAmPm($todayAttendance->in_time) }}</span><br>
+                                @if ($todayAttendance->out_time != null)
+                                    <span style="color: darkred; font-weight: bold;">Punch Out: {{ formatTimeWithAmPm($todayAttendance->in_time) }}</span>
+                                @endif
+                            @endif
+
                             <div class="attendance-form">
                                 <form id="attendanceForm1" action="{{ route('empattendance.store') }}" method="POST">
                                     @csrf
-                                    <div class="form-group">
-                                        <label for="start-time">Start Time</label>
-                                        <input type="time" id="start-time" name="start_time" class="form-control" @if($todayAttendance) disabled @endif required>
-                                    </div>
-
-                                    @if ($todayAttendance)
-                                        <div class="form-group">
-                                            <label for="end-time">End Time</label>
-                                            <input type="time" id="end-time" name="out_time" class="form-control" @if($todayAttendance->out_time) disabled @endif required>
-                                        </div>
-                                        <button type="submit" class="btn btn-warning">Punch Out</button>
+                                    @if ($todayAttendance && $todayAttendance->in_time != null && $todayAttendance->out_time != null)
+                                        <p style="color: #2e0cec;">Congratulations! Your today's attendance has been recorded successfully.</p>
                                     @else
-                                        <button type="submit" class="btn btn-primary">Punch In</button>
+                                        <div class="form-group">
+                                            <label for="start-time">Start Time</label>
+                                            <input type="time" id="start-time" name="start_time" class="form-control" @if($todayAttendance) disabled @endif required>
+                                        </div>
+
+                                        @if ($todayAttendance)
+                                            <div class="form-group">
+                                                <label for="end-time">End Time</label>
+                                                <input type="time" id="end-time" name="out_time" class="form-control" @if($todayAttendance->out_time) disabled @endif required>
+                                            </div>
+                                            <button type="submit" class="btn btn-warning">Punch Out</button>
+                                        @else
+                                            <button type="submit" class="btn btn-primary">Punch In</button>
+                                        @endif
                                     @endif
                                 </form>
                             </div>
@@ -302,13 +315,17 @@
                 </div>
             @endif
 
-            @if (auth()->user()->role === 'hr')
+            @if (auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo')
                 <div class="row">
                     <div class="col-md-12">
-                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Daily Attendance List</h4>
+                        <div style="display: flex;align-items: center;justify-content: space-between;">
+                            <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Daily Attendance List</h4>
+                            <button id="updateAllButton" class="btn btn-sm btn-primary">Update All</button>
+                        </div>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Mobile</th>
                                     <th>In Time</th>
@@ -319,6 +336,7 @@
                             <tbody>
                                 @foreach($employees as $employee)
                                     <tr>
+                                        <td>{{ $employee->id }}</td>
                                         <td>{{ $employee->name }}</td>
                                         <td>{{ $employee->mobile }}</td>
                                         <td>
@@ -335,8 +353,14 @@
                                                 <input type="time" id="out-time-{{ $employee->id }}" class="form-control">
                                             @endif
                                         </td>
-                                        <td>
-                                            <button class="btn btn-success btn-sm" onclick="updateAttendanceStatus({{ $employee->id }}, 'Accepted')">Accept</button>
+                                        <td id="status-{{ $employee->id }}">
+                                            @if ($employee->status === null)
+                                                <p class="btn btn-danger btn-sm">Pending</p>
+                                            @elseif ($employee->status === 'leave')
+                                                <p class="btn btn-primary btn-sm">Leave</p>
+                                            @else
+                                                <p class="btn btn-success btn-sm">Accepted</p>
+                                            @endif
                                             <button class="btn btn-warning btn-sm" onclick="updateAttendanceStatus({{ $employee->id }}, 'Updated')">Update</button>
                                         </td>
                                     </tr>
@@ -1433,6 +1457,56 @@
     @endif
 
     <script>
+        $(document).ready(function() {
+            $('#updateAllButton').click(function() {
+                var updates = [];
+
+                // Iterate through each table row (employee)
+                $('tbody tr').each(function() {
+                    var employeeId = $(this).find('td').eq(0).text();
+
+                    var inTime = $(this).find('input[id^="in-time-"]').val();
+                    var outTime = $(this).find('input[id^="out-time-"]').val();
+
+                    var updateData = {
+                        employeeId: employeeId,
+                        inTime: inTime,
+                        outTime: outTime
+                    };
+
+                    updates.push(updateData);
+                });
+
+
+                // Send updates to the server via AJAX
+                $.ajax({
+                    url: '/update-all-attendance',
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: JSON.stringify({ updates: updates }),
+                    success: function(response) {
+                        if (response && response.success === true) {
+                            toastr.success('All attendance records updated successfully!');
+                            location.reload();
+                        } else {
+                            toastr.success('All attendance records updated successfully!');
+                            location.reload();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        alert('Failed to update attendance records.');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
         function updateTimeRemaining() {
             var now = new Date();
             var targetTime = new Date();
@@ -1507,6 +1581,21 @@
                         } else {
                             toastr.success(response.message);
 
+                            if (response && response.in_time) {
+                                var time = response.in_time;
+
+                                var formattedTime = formatTimeWithAmPm(time);
+                                $('#punch-in-time').text('Punch in: ' + formattedTime);
+                            }
+
+                            if(response && response.out_time){
+                                var time = response.out_time;
+
+                                var formattedTime = formatTimeWithAmPm(time);
+                                $('#punch-out-time').text('Punch out: ' + formattedTime);
+                                location.reload();
+                            }
+
                             // Hide or disable fields based on response
                             if (response.message.includes('In Time')) {
                                 $('#start-time').prop('disabled', true);
@@ -1523,6 +1612,22 @@
                 });
             });
         });
+
+        function formatTimeWithAmPm(time) {
+            // Parse the input time string (assumes format like "HH:MM")
+            var parts = time.split(':');
+            var hour = parseInt(parts[0]);
+            var minute = parts[1];
+
+            // Determine AM/PM and format hours
+            var period = (hour >= 12) ? 'PM' : 'AM';
+            hour = (hour > 12) ? hour - 12 : hour;
+            hour = (hour == 0) ? 12 : hour; // Handle midnight (00:XX) as 12 AM
+
+            // Construct formatted time string
+            var formattedTime = hour + ':' + minute + ' ' + period;
+            return formattedTime;
+        }
     </script>
 
     <script>

@@ -227,6 +227,7 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/staff/store', 'store')->name('staff.store');
         Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
         Route::post('/update/attendance/status/{employeeId}', 'updateAttendanceStatus');
+        Route::post('/update-all-attendance', 'updateAllAttendance');
     });
 
     Route::controller(WorkController::class)->group(function(){
