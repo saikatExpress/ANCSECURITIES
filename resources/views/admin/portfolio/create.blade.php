@@ -94,6 +94,12 @@
         button:hover {
             background-color: #218838;
         }
+        #progress {
+            display: block !important;
+        }
+        #loader {
+            display: block !important;
+        }
     </style>
 </head>
 <body>
@@ -141,9 +147,10 @@
             $('#uploadForm').on('submit', function(e) {
                 e.preventDefault();
                 let files = $('#pdfs')[0].files;
-                let batchSize = 10;
+                let batchSize = 5; // Adjust batch size based on server capabilities
                 let totalFiles = files.length;
                 let formData, startIndex, endIndex, uploadedFiles = 0;
+                let retryCount = 3; // Number of retries for failed uploads
 
                 function updateProgress() {
                     $('#progress').text(`${uploadedFiles} / ${totalFiles}`);
@@ -171,34 +178,45 @@
                         formData.append('pdfs[]', files[i]);
                     }
 
-                    $.ajax({
-                        url: '/upload-pdfs',
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        beforeSend: function(){
-                            $('#loader').show();
-                        },
-                        complete: function(){
-                            $('#loader').hide();
-                        },
-                        success: function(response) {
-                            uploadedFiles += endIndex - startIndex; // Update count of uploaded files
-                            updateProgress(); // Update progress
-                            uploadBatch(endIndex); // Continue with the next batch
-                        },
-                        error: function(response) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Error uploading files.'
-                            });
-                        }
-                    });
+                    let attempt = 0;
+
+                    function tryUpload() {
+                        $.ajax({
+                            url: '/upload-pdfs',
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function() {
+                                $('#loader').show();
+                            },
+                            complete: function() {
+                                $('#loader').hide();
+                            },
+                            success: function(response) {
+                                uploadedFiles += endIndex - startIndex;
+                                updateProgress();
+                                uploadBatch(endIndex);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error details:', xhr.responseText, status, error);
+                                attempt++;
+                                if (attempt < retryCount) {
+                                    setTimeout(tryUpload, 2000);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Error uploading files. Please try again later.'
+                                    });
+                                }
+                            }
+                        });
+                    }
+
+                    tryUpload();
                 }
 
-                // Initialize progress display
                 $('#progress').text(`0 / ${totalFiles}`);
                 uploadBatch(0);
             });
