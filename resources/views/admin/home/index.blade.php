@@ -1364,7 +1364,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <form id="withDrawPortfolioForm" action="{{ route('upload.portfolio') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('upload.portfolio') }}" method="post" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="reqId" id="reqId">
                         <div class="form-group">

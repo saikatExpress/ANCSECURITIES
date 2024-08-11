@@ -175,6 +175,11 @@ class AdminController extends Controller
         return view('admin.director.create', compact('pageTitle'));
     }
 
+    public function profile()
+    {
+        return view('admin.profile.create');
+    }
+
     public function createUser()
     {
         $pageTitle = 'Create User';

@@ -145,6 +145,7 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/'.$hashedDirectorUrl, 'create')->name('director.create');
         $hashedBoUrl = md5('bo/list');
         Route::get('/'.$hashedBoUrl, 'boIndex')->name('bo.list');
+        Route::get('/profile', 'profile')->name('profile.us');
         Route::get('/create/user', 'createUser')->name('create.user');
         Route::post('/user/store', 'store')->name('user.store');
         Route::post('/user/update', 'update')->name('user.update');

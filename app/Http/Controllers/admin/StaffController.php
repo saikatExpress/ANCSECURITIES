@@ -96,6 +96,7 @@ class StaffController extends Controller
                 $userObj->profile_image = $fileNameToStore;
                 $userObj->name          = $name;
                 $userObj->email         = $email;
+                $userObj->address       = $request->input('permanent_address');
                 $userObj->mobile        = $mobile;
                 $userObj->whatsapp      = $mobile;
                 $userObj->role          = $role;

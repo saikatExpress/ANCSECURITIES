@@ -64,10 +64,9 @@ class HelperController extends Controller
             $fileName = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('withdrawportfolios', $fileName, 'public');
 
-            $reqId = $request->input('req_id');
+            $reqId = $request->input('reqId');
 
             $withdraw = Fund::find($reqId);
-            return $withdraw;
 
             if($withdraw){
                 $withdraw->portfolio_file = $filePath;
@@ -76,6 +75,6 @@ class HelperController extends Controller
             }
         }
 
-        return response()->json(['success' => true, 'message' => 'File uploaded successfully.']);
+        return redirect()->back()->with('message', 'File uploaded successfully.');
     }
 }

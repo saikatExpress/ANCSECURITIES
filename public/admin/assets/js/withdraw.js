@@ -41,27 +41,4 @@ $(document).ready(function(){
             });
         }
     });
-
-    $('#withDrawPortfolioForm').on('submit', function(event) {
-        event.preventDefault();
-
-        var formData = new FormData(this);
-
-        $.ajax({
-            url: $(this).attr('action'),
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                alert('Form submitted successfully!');
-                $('#exampleModal').modal('hide');
-                // Optionally, handle the response data or update the UI
-            },
-            error: function(xhr, status, error) {
-                console.log('Submission failed:', error);
-                alert('An error occurred while submitting the form.');
-            }
-        });
-    });
 });
