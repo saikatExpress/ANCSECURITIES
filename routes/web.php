@@ -168,6 +168,10 @@ Route::middleware(['auth'])->group(function(){
         Route::post('/request/toggle/{id}', 'toggleStatus')->name('request.toggle');
         Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');
         Route::post('/request/deposit/{id}', 'requestDeposit')->name('request.deposit');
+
+        Route::post('/manual/withdraw/request', 'withdrawStore')->name('manual.withdraw_request');
+        Route::post('/manual/deposite/request', 'depositeStore')->name('manual.deposite_request');
+
         Route::get('/fetch-requests', 'fetchRequests')->name('fetch.requests');
         Route::get('/update/limit/request/{id}', 'updateLimitRequest');
         Route::get('/decline/limit/request/{id}', 'declineLimitRequest');

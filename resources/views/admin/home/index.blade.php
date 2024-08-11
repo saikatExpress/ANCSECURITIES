@@ -34,7 +34,7 @@
                         <li><a href="#despositeRequest">Deposite Request</a></li>
                         <li><a href="{{ route('manual.request') }}">Limit Request</a></li>
                         <li><a href="{{ route('create.expense') }}">Add Expense</a></li>
-                        <li><a href="#contact">Withdraw Request</a></li>
+                        <li><a href="#withdrawRequest">Withdraw Request</a></li>
                     </ul>
                 </div>
             </div>
@@ -1242,54 +1242,130 @@
             @endif
 
             <div class="row">
-                <div class="col-md-2 offset-md-3">
-
-                </div>
+                <div class="col-md-2 offset-md-3"></div>
                 <div class="col-md-8 offset-md-3" id="despositeRequest">
                     <div style="background-color: #DDD; padding: 10px; border-radius:4px; margin-bottom: 10px;">
                         <h4>Deposite Request</h4>
-                        <form action="" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('manual.deposite_request') }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="client_id" id="dclient_id">
                             <div class="form-group" id="form-group-code">
                                 <label for="">Trading Code : <span class="text-danger">*</span></label>
-                                <input type="text" name="trading_code" id="trading_code" class="form-control">
+                                <input type="text" name="trading_code" id="dtrading_code" class="form-control">
                             </div>
+                            @error('trading_code')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                             <div class="form-group" id="form-group-name">
                                 <label for="">Name : <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control">
-                            </div>
-                            <div class="form-group" id="form-group-email">
-                                <label for="">Email : <span class="text-danger">*</span></label>
-                                <input type="text" name="email" id="email" class="form-control">
+                                <input type="text" name="name" id="dname" class="form-control">
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group" id="form-group-mobile">
                                 <label for="">Mobile : <span class="text-danger">*</span></label>
-                                <input type="text" name="mobile" id="mobile" class="form-control">
+                                <input type="text" name="mobile" id="dmobile" class="form-control">
+                                @error('mobile')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <div class="form-group" id="form-group-amount">
                                 <label for="">Amount : <span class="text-danger">*</span></label>
                                 <input type="text" name="amount" id="amount" class="form-control">
+                                @error('amount')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group" id="form-group-bank">
                                 <label for="">Bank Account No : <span class="text-danger">*</span></label>
-                                <input type="text" name="bank_account" id="bank_account" class="form-control">
+                                <input type="text" name="bank_account" id="dbank_account" class="form-control">
+                                @error('bank_account')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group" id="form-group-slip">
                                 <label for="">Bank Slip : <span class="text-danger">*</span></label>
                                 <input type="file" name="bank_slip" id="bank_slip" class="form-control">
+                                @error('bank_slip')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group" id="form-group-date">
                                 <label for="">Deposite Date : <span class="text-danger">*</span></label>
-                                <input type="date" name="date" id="date" class="form-control">
+                                <input type="date" name="deposite_date" id="date" class="form-control">
+                                @error('deposite_date')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <button type="submit" class="btn btn-sm btn-primary">Commit Info</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-2 offset-md-3"></div>
+            </div>
+
+            {{-- Withdraw Request Form --}}
+            <div class="row">
+                <div class="col-md-2 offset-md-3"></div>
+                <div class="col-md-8 offset-md-3" id="withdrawRequest">
+                    <div style="background-color: #ddd; padding: 10px; border-radius:4px; margin-bottom: 10px;">
+                        <h4>Withdraw Request</h4>
+                        <form action="{{ route('manual.withdraw_request') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="client_id" id="wclient_id">
+                            <div class="form-group" id="form-group-code">
+                                <label for="">Trading Code : <span class="text-danger">*</span></label>
+                                <input type="text" name="trading_code" id="wtrading_code" class="form-control">
+                                @error('trading_code')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group" id="form-group-name">
+                                <label for="">Name : <span class="text-danger">*</span></label>
+                                <input type="text" name="name" id="wname" class="form-control">
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group" id="form-group-mobile">
+                                <label for="">Mobile : <span class="text-danger">*</span></label>
+                                <input type="text" name="mobile" id="wmobile" class="form-control">
+                                @error('mobile')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group" id="form-group-amount">
+                                <label for="">Amount : <span class="text-danger">*</span></label>
+                                <input type="text" name="amount" id="amount" class="form-control">
+                                @error('amount')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group" id="form-group-bank">
+                                <label for="">Bank Account No : <span class="text-danger">*</span></label>
+                                <input type="text" name="bank_account" id="wbank_account" class="form-control">
+                                @error('bank_account')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group" id="form-group-date">
+                                <label for="">Withdraw Date : <span class="text-danger">*</span></label>
+                                <input type="date" name="withdraw_date" id="date" class="form-control">
+                                @error('withdraw_date')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
 
                             <button type="submit" id="saveBtn" class="btn btn-sm btn-primary">Commit Info</button>
                         </form>
                     </div>
                 </div>
-                <div class="col-md-2 offset-md-3">
-
-                </div>
+                <div class="col-md-2 offset-md-3"></div>
             </div>
 
             <div id="limitRequestContainer" style="display: flex; flex-wrap:wrap;">
@@ -1315,6 +1391,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('admin/assets/js/attendance.js') }}"></script>
     <script src="{{ asset('admin/assets/js/expense.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/index.js') }}"></script>
     <!-- Lightbox JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
@@ -1436,113 +1513,6 @@
 
     <script>
         $(document).ready(function() {
-            $('#updateAllButton').click(function() {
-                var updates = [];
-
-                // Iterate through each table row (employee)
-                $('tbody tr').each(function() {
-                    var employeeId = $(this).find('td').eq(0).text();
-
-                    var inTime = $(this).find('input[id^="in-time-"]').val();
-                    var outTime = $(this).find('input[id^="out-time-"]').val();
-
-                    var updateData = {
-                        employeeId: employeeId,
-                        inTime: inTime,
-                        outTime: outTime
-                    };
-
-                    updates.push(updateData);
-                });
-
-
-                // Send updates to the server via AJAX
-                $.ajax({
-                    url: '/update-all-attendance',
-                    type: 'POST',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: JSON.stringify({ updates: updates }),
-                    success: function(response) {
-                        if (response && response.success === true) {
-                            toastr.success('All attendance records updated successfully!');
-                            location.reload();
-                        } else {
-                            toastr.success('All attendance records updated successfully!');
-                            location.reload();
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        alert('Failed to update attendance records.');
-                    }
-                });
-            });
-        });
-    </script>
-
-    <script>
-        function updateTimeRemaining() {
-            var now = new Date();
-            var targetTime = new Date();
-
-            targetTime.setHours(18, 30, 0, 0);
-
-            var diff = targetTime - now;
-
-            if (diff > 0) {
-                var hours = Math.floor(diff / (1000 * 60 * 60));
-                var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-                var timeRemainingStr = hours + "h " + minutes + "m";
-
-                document.getElementById("timeRemaining").textContent = timeRemainingStr;
-            } else {
-                targetTime.setDate(targetTime.getDate() + 1);
-                updateTimeRemaining();
-            }
-        }
-
-        updateTimeRemaining();
-
-        setInterval(updateTimeRemaining, 60000);
-    </script>
-
-    <script>
-        const currentDate = new Date();
-
-        const options = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true
-        };
-
-        const formattedDate = currentDate.toLocaleString('en-US', options);
-
-        document.getElementById('currentDateTime').textContent = formattedDate;
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get the current time
-            var now = new Date();
-            var hours = now.getHours().toString().padStart(2, '0');
-            var minutes = now.getMinutes().toString().padStart(2, '0');
-
-            // Set the current time as the default value
-            document.getElementById('start-time').value = hours + ':' + minutes;
-            document.getElementById('end-time').value = hours + ':' + minutes;
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
             $('#attendanceForm1').on('submit', function(event) {
                 event.preventDefault();
 
@@ -1610,37 +1580,6 @@
 
     <script>
         $(document).ready(function() {
-            function updateClock() {
-                const now = new Date();
-
-                // Format time as 12-hour clock with AM/PM
-                const hours = now.getHours();
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                const seconds = String(now.getSeconds()).padStart(2, '0');
-                const ampm = hours >= 12 ? 'PM' : 'AM';
-                const formattedHours = String(hours % 12 || 12).padStart(2, '0');
-
-                // Format date
-                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                const dayName = days[now.getDay()];
-                const date = now.getDate();
-                const month = now.getMonth() + 1; // Months are zero-indexed
-                const year = now.getFullYear();
-
-                // Set formatted time and date
-                $('#time').text(`${formattedHours}:${minutes}:${seconds} ${ampm}`);
-                $('#date').text(`${dayName}, ${month}/${date}/${year}`);
-            }
-
-            // Update the clock every second
-            setInterval(updateClock, 1000);
-            updateClock();
-        });
-
-    </script>
-
-    <script>
-        $(document).ready(function() {
             // Show the alert message
             $('#successAlert').show();
 
@@ -1650,6 +1589,7 @@
             }, 3000);
         });
     </script>
+
     <script>
         $(document).ready(function() {
             // Show the alert message
