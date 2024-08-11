@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\EmployeeController;
 use App\Http\Controllers\admin\ExpenseController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
+use App\Http\Controllers\admin\HelperController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\PortfolioController;
@@ -129,6 +130,8 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/withdraw/request', 'wCreate')->name('admin.withdrawrequest');
             Route::post('/limit/store', 'store')->name('admin.limitstore');
             Route::post('/limit/update', 'update')->name('admin.limitupdate');
+
+            Route::get('/view/withdraw/request/{id}', 'show')->name('admin.viewwithdrawrequest');
         });
     });
 });
@@ -228,6 +231,11 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/dp/list', 'index')->name('dp.list');
         Route::get('/create/dp', 'create')->name('create.dp');
         Route::post('/dp/store', 'store')->name('dp.store');
+    });
+
+    Route::controller(HelperController::class)->group(function(){
+        Route::get('/update/withdraw/status/{id}', 'updateReqStatus');
+        Route::get('/accept/withdraw/status/{id}', 'acceptReqStatus');
     });
 
     Route::controller(StaffController::class)->group(function(){

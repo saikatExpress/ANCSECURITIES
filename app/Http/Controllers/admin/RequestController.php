@@ -140,6 +140,14 @@ class RequestController extends Controller
         }
     }
 
+    public function show($id)
+    {
+        $data['pageTitle'] = 'Show Withdraw Form';
+        $data['withdraw'] = Fund::with('clients:id,name,mobile,trading_code,status')->where('id',$id)->where('category', 'withdraw')->first();
+
+        return view('admin.Request.show')->with($data);
+    }
+
     public function update(Request $request)
     {
         try {

@@ -174,40 +174,42 @@
                 </div>
             </div>
 
-            @if (count($notifications) > 0)
-                <div class="row">
-                    <div class="ticker-container">
-                        <div class="ticker">
-                            @foreach ($notifications as $notification)
-                                @if ($notification['type'] == 'limit')
-                                    <div class="ticker-item">
-                                        <a style="color: #fff;" href="{{ route('today.limit_request') }}">
-                                            <i class="fa fa-exclamation-circle text-aqua"></i> New Limit Request from {{ $notification['data']->clients->name }}<br>
-                                            <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
-                                            <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->limit_amount }}</span>
-                                        </a>
-                                    </div>
-                                @elseif($notification['type'] == 'withdraw')
-                                    <div class="ticker-item">
-                                        <a style="color: #fff;" href="{{ route('withdraw.request') }}">
-                                            <i class="fa fa-money text-yellow"></i> New Withdraw Request from {{ $notification['data']->clients->name }}<br>
-                                            <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
-                                            <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span>
-                                        </a>
-                                    </div>
-                                @elseif($notification['type'] == 'deposit')
-                                    <div class="ticker-item">
-                                        <a style="color: #fff;" href="{{ route('deposit.request') }}">
-                                            <i class="fa fa-bank text-green"></i> New Deposit from {{ $notification['data']->clients->name }}<br>
-                                            <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
-                                            <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span>
-                                        </a>
-                                    </div>
-                                @endif
-                            @endforeach
+            @if (auth()->user()->role !== 'md')
+                @if (count($notifications) > 0)
+                    <div class="row">
+                        <div class="ticker-container">
+                            <div class="ticker">
+                                @foreach ($notifications as $notification)
+                                    @if ($notification['type'] == 'limit')
+                                        <div class="ticker-item">
+                                            <a style="color: #fff;" href="{{ route('today.limit_request') }}">
+                                                <i class="fa fa-exclamation-circle text-aqua"></i> New Limit Request from {{ $notification['data']->clients->name }}<br>
+                                                <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                                <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->limit_amount }}</span>
+                                            </a>
+                                        </div>
+                                    @elseif($notification['type'] == 'withdraw')
+                                        <div class="ticker-item">
+                                            <a style="color: #fff;" href="{{ route('withdraw.request') }}">
+                                                <i class="fa fa-money text-yellow"></i> New Withdraw Request from {{ $notification['data']->clients->name }}<br>
+                                                <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                                <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span>
+                                            </a>
+                                        </div>
+                                    @elseif($notification['type'] == 'deposit')
+                                        <div class="ticker-item">
+                                            <a style="color: #fff;" href="{{ route('deposit.request') }}">
+                                                <i class="fa fa-bank text-green"></i> New Deposit from {{ $notification['data']->clients->name }}<br>
+                                                <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
+                                                <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span>
+                                            </a>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endif
 
             @if (auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo')
@@ -407,6 +409,53 @@
                     @endif
                 </div>
             </div>
+
+            @if (auth()->user()->role === 'md')
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Withdraw Request List</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>AC NO</th>
+                                    <th>Requisition Date</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    @php
+                                        $sl = 1;
+                                    @endphp
+                                @foreach ($withdraws as $withdraw)
+                                    <tr>
+                                        <td>{{ $sl }}</td>
+                                        <td>{{ $withdraw->client_name }}</td>
+                                        <td>{{ $withdraw->ac_no }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($withdraw->withdraw_date)->format('Y-m-d') }}</td>
+                                        <td>{{ $withdraw->amount }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.viewwithdrawrequest', ['id' => $withdraw->id]) }}" class="btn btn-sm btn-primary">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $sl++;
+                                    @endphp
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
 
             @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'hr')
                 <div class="row">

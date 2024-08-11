@@ -144,6 +144,10 @@ class AdminController extends Controller
 
         $data['browserHistory'] = User::where('role', 'user')->pluck('user_agent');
 
+        if(auth()->user()->role === 'md'){
+            $data['withdraws'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->get();
+        }
+
         $res = LimitRequest::selectRaw('COUNT(*) as totalRequests, SUM(limit_amount) as totalAmount')
                     ->whereDate('created_at', now()->today())
                             ->first();
