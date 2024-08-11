@@ -10,6 +10,16 @@ function isBangla($text) {
     return $bangla_matches > $english_matches;
 }
 
+
+function formatDateTime($datetime) {
+    // Convert the string to a DateTime object
+    $date = new DateTime($datetime);
+
+    // Format the date and time
+    return $date->format('m/d/y h:i A');
+}
+
+
 function formatTimeWithAmPm($time) {
     return date('h:i A', strtotime($time));
 }

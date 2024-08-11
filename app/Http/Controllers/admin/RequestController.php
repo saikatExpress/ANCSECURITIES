@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use App\Models\Fund;
 use App\Models\User;
 use App\Models\BoAccount;
+use Illuminate\Support\Str;
 use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use App\Services\FundService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -67,6 +69,125 @@ class RequestController extends Controller
         $limitRequests = LimitRequest::with('clients:id,name,email,trading_code,mobile,whatsapp')->where('status', 'canceled')->get();
 
         return view('admin.Request.declined', compact('pageTitle','limitRequests'));
+    }
+
+    public function create()
+    {
+        $data['pageTitle'] = 'Create Limit';
+        $data['limitRequest'] = LimitRequest::with('clients:id,name')->latest()->take(20)->get();
+
+        return view('admin.Request.create')->with($data);
+    }
+
+    public function dCreate()
+    {
+        $data['pageTitle'] = 'Create Deposite';
+
+        return view('admin.Request.dcreate')->with($data);
+    }
+
+    public function wCreate()
+    {
+        $data['pageTitle'] = 'Create Withdraw';
+
+        return view('admin.Request.wcreate')->with($data);
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'trading_code' => ['required'],
+                'name'         => ['required'],
+                'mobile'       => ['required'],
+                'amount'       => ['required'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+            $limitObj = new LimitRequest();
+
+            $limitObj->client_id    = $request->input('client_id');
+            $limitObj->trade_id     = $request->input('trading_code');
+            $limitObj->client_name  = $request->input('name');
+            $limitObj->limit_amount = $request->input('amount');
+            $limitObj->reason       = Str::title('Trade for Limit');
+            $limitObj->approved_by  = Str::title(auth()->user()->name);
+            $limitObj->status       = 'approved';
+            $limitObj->created_at   = Carbon::now();
+
+            $res = $limitObj->save();
+
+            DB::commit();
+            if($res){
+                return redirect()->back()->with('message', 'Limit created successfully');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            Log::error('Staff creation failed: '.$e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'trading_code' => ['required'],
+                'name'         => ['required'],
+                'amount'       => ['required'],
+                'status'       => ['required'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+            $requestId = $request->input('req_id');
+            $clientId = $request->input('client_id');
+
+            $limit = LimitRequest::where('id', $requestId)->first();
+
+            if($limit){
+                $limit->client_id    = $clientId;
+                $limit->trade_id     = $request->input('trading_code');
+                $limit->client_name  = $request->input('name');
+                $limit->limit_amount = $request->input('amount');
+                $limit->reason       = Str::title('Trade for Limit');
+                $limit->approved_by  = Str::title(auth()->user()->name);
+                $limit->status       = $request->input('status');
+                $limit->updated_at   = Carbon::now();
+
+                $res = $limit->save();
+
+                DB::commit();
+                if($res){
+                    return redirect()->back()->with('message', 'Limit updated successfully');
+                }
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            Log::error('Staff creation failed: '.$e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => $e->getMessage()]);
+        }
     }
 
     public function manualStore(Request $request)

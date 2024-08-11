@@ -65,6 +65,7 @@
     @section('content')
         <div class="content-wrapper">
             <section class="content-header">
+                <x-sub-header/>
                 <h1>
                     Dashboard
                     <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -177,6 +178,7 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
         <script src="{{ asset('admin/assets/js/limit.js') }}"></script>
+        <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
         <script>
             $(document).ready(function() {

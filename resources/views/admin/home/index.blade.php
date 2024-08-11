@@ -6,39 +6,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            @php
-                $currentHour = now()->format('H');
-                $greeting = '';
-
-                if ($currentHour >= 5 && $currentHour < 12) {
-                    $greeting = 'Good Morning';
-                } elseif ($currentHour >= 12 && $currentHour < 17) {
-                    $greeting = 'Good Afternoon';
-                } elseif ($currentHour >= 17 && $currentHour < 21) {
-                    $greeting = 'Good Evening';
-                } else {
-                    $greeting = 'Good Night';
-                }
-            @endphp
-
-            <h2 class="welcomeText">{{ $greeting }}, {{ auth()->user()->name }}</h2>
-            <div class="defaultMenubar">
-                <div class="clock">
-                    <span id="time"></span>
-                    <br>
-                    <span id="date"></span>
-                </div>
-
-                <div class="menu-bar1">
-                    <ul class="menu1">
-                        <li><a href="#despositeRequest">Deposite Request</a></li>
-                        <li><a href="{{ route('manual.request') }}">Limit Request</a></li>
-                        <li><a href="{{ route('create.expense') }}">Add Expense</a></li>
-                        <li><a href="#withdrawRequest">Withdraw Request</a></li>
-                    </ul>
-                </div>
-            </div>
-
+            <x-sub-header/>
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -1241,133 +1209,6 @@
                 </div>
             @endif
 
-            <div class="row">
-                <div class="col-md-2 offset-md-3"></div>
-                <div class="col-md-8 offset-md-3" id="despositeRequest">
-                    <div style="background-color: #DDD; padding: 10px; border-radius:4px; margin-bottom: 10px;">
-                        <h4>Deposite Request</h4>
-                        <form action="{{ route('manual.deposite_request') }}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="client_id" id="dclient_id">
-                            <div class="form-group" id="form-group-code">
-                                <label for="">Trading Code : <span class="text-danger">*</span></label>
-                                <input type="text" name="trading_code" id="dtrading_code" class="form-control">
-                            </div>
-                            @error('trading_code')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                            <div class="form-group" id="form-group-name">
-                                <label for="">Name : <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="dname" class="form-control">
-                                @error('name')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group" id="form-group-mobile">
-                                <label for="">Mobile : <span class="text-danger">*</span></label>
-                                <input type="text" name="mobile" id="dmobile" class="form-control">
-                                @error('mobile')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group" id="form-group-amount">
-                                <label for="">Amount : <span class="text-danger">*</span></label>
-                                <input type="text" name="amount" id="amount" class="form-control">
-                                @error('amount')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group" id="form-group-bank">
-                                <label for="">Bank Account No : <span class="text-danger">*</span></label>
-                                <input type="text" name="bank_account" id="dbank_account" class="form-control">
-                                @error('bank_account')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group" id="form-group-slip">
-                                <label for="">Bank Slip : <span class="text-danger">*</span></label>
-                                <input type="file" name="bank_slip" id="bank_slip" class="form-control">
-                                @error('bank_slip')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group" id="form-group-date">
-                                <label for="">Deposite Date : <span class="text-danger">*</span></label>
-                                <input type="date" name="deposite_date" id="date" class="form-control">
-                                @error('deposite_date')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <button type="submit" class="btn btn-sm btn-primary">Commit Info</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-md-2 offset-md-3"></div>
-            </div>
-
-            {{-- Withdraw Request Form --}}
-            <div class="row">
-                <div class="col-md-2 offset-md-3"></div>
-                <div class="col-md-8 offset-md-3" id="withdrawRequest">
-                    <div style="background-color: #ddd; padding: 10px; border-radius:4px; margin-bottom: 10px;">
-                        <h4>Withdraw Request</h4>
-                        <form action="{{ route('manual.withdraw_request') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="client_id" id="wclient_id">
-                            <div class="form-group" id="form-group-code">
-                                <label for="">Trading Code : <span class="text-danger">*</span></label>
-                                <input type="text" name="trading_code" id="wtrading_code" class="form-control">
-                                @error('trading_code')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group" id="form-group-name">
-                                <label for="">Name : <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="wname" class="form-control">
-                                @error('name')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group" id="form-group-mobile">
-                                <label for="">Mobile : <span class="text-danger">*</span></label>
-                                <input type="text" name="mobile" id="wmobile" class="form-control">
-                                @error('mobile')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group" id="form-group-amount">
-                                <label for="">Amount : <span class="text-danger">*</span></label>
-                                <input type="text" name="amount" id="amount" class="form-control">
-                                @error('amount')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group" id="form-group-bank">
-                                <label for="">Bank Account No : <span class="text-danger">*</span></label>
-                                <input type="text" name="bank_account" id="wbank_account" class="form-control">
-                                @error('bank_account')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="form-group" id="form-group-date">
-                                <label for="">Withdraw Date : <span class="text-danger">*</span></label>
-                                <input type="date" name="withdraw_date" id="date" class="form-control">
-                                @error('withdraw_date')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                            <button type="submit" id="saveBtn" class="btn btn-sm btn-primary">Commit Info</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-md-2 offset-md-3"></div>
-            </div>
-
             <div id="limitRequestContainer" style="display: flex; flex-wrap:wrap;">
 
             </div>
@@ -1392,6 +1233,7 @@
     <script src="{{ asset('admin/assets/js/attendance.js') }}"></script>
     <script src="{{ asset('admin/assets/js/expense.js') }}"></script>
     <script src="{{ asset('admin/assets/js/index.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
     <!-- Lightbox JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 

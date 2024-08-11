@@ -122,6 +122,18 @@ Route::middleware(['user.guard'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function(){
+    Route::prefix('admin')->group(function(){
+        Route::controller(RequestController::class)->group(function(){
+            Route::get('/limit/request', 'create')->name('admin.limitrequest');
+            Route::get('/desposite/request', 'dCreate')->name('admin.despositerequest');
+            Route::get('/withdraw/request', 'wCreate')->name('admin.withdrawrequest');
+            Route::post('/limit/store', 'store')->name('admin.limitstore');
+            Route::post('/limit/update', 'update')->name('admin.limitupdate');
+        });
+    });
+});
+
+Route::middleware(['auth'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         Route::get('/user/list', 'userIndex')->name('user.list');
         $hashedAdminUrl = md5('admin/dashboard');

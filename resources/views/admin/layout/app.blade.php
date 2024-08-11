@@ -21,52 +21,12 @@
 
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('admin/assets/dist/css/AdminLTE.min.css') }}">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins
-        folder instead of downloading all of them to reduce the load. -->
+
     <link rel="stylesheet" href="{{ asset('admin/assets/dist/css/skins/_all-skins.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/ticker.css') }}">
-
-    <style>
-        #clientsArea {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            left: 24%;
-            height: auto;
-            width: 50%;
-            max-height: 80vh;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            z-index: 1;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        #clientsArea .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 18px;
-            color: #333;
-            background: #f1f1f1;
-            border: none;
-            border-radius: 50%;
-            padding: 5px 10px;
-            transition: background-color 0.3s;
-        }
-        #clientsArea .close-btn:hover {
-            background-color: #ddd;
-        }
-        #clientsArea iframe {
-            width: 100%;
-            height: 80vh;
-            border: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('admin/css/admin.css') }}">
 </head>
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
