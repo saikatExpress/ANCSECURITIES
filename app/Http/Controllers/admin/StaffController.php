@@ -59,6 +59,7 @@ class StaffController extends Controller
                 'name'              => 'required',
                 'email'             => 'required|email|unique:staff,email',
                 'designation_id'    => 'required',
+                'department_id'     => 'required',
                 'mobile'            => 'required',
                 'permanent_address' => 'required',
                 'present_address'   => 'required',
@@ -110,6 +111,7 @@ class StaffController extends Controller
                     $staffObj->slug              = Str::slug($name, '-');
                     $staffObj->email             = $email;
                     $staffObj->email             = $email;
+                    $staffObj->designation_id    = $request->input('designation_id');
                     $staffObj->department_id     = $request->input('department_id');
                     $staffObj->mobile            = $request->input('mobile');
                     $staffObj->permanent_address = $request->input('permanent_address');

@@ -9,7 +9,7 @@
             <x-sub-header/>
             <h1>
                 Dashboard
-                <strong class="text-sm text-success fw-bold">Admin</strong>
+                <strong class="text-sm text-success fw-bold" style="text-transform: uppercase;">{{ auth()->user()->role }}</strong>
             </h1>
 
             <ol class="breadcrumb">

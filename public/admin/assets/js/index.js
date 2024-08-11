@@ -10,7 +10,7 @@ $(document).ready(function() {
                     $('#wclient_id').val(response.user.id);
                     $('#wname').val(response.tradeInfo.name);
                     $('#wmobile').val(response.tradeInfo.cell_no);
-                    $('#dbank_account').val(response.tradeInfo.bank_account_no);
+                    $('#wbank_account').val(response.tradeInfo.bank_account_no);
                 },
                 error: function(error){
                     console.log(error);

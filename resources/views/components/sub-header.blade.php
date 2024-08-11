@@ -23,9 +23,17 @@
     <div class="menu-bar1">
         <ul class="menu1">
             <li><a href="{{ route('admin.despositerequest') }}">Deposite Request</a></li>
-            <li><a href="{{ route('admin.limitrequest') }}">Limit Request</a></li>
+            <li>
+                <a href="{{ route('admin.limitrequest') }}">
+                    Limit Request <span class="badge badge-danger" style="background-color: darkred;">{{ ($totalLimit) ?? 0 }}</span>
+                </a>
+            </li>
             <li><a href="{{ route('create.expense') }}">Add Expense</a></li>
-            <li><a href="{{ route('admin.withdrawrequest') }}">Withdraw Request</a></li>
+            <li>
+                <a href="{{ route('admin.withdrawrequest') }}">
+                    Withdraw Request <span class="badge badge-danger" style="background-color: darkred;">{{ ($totalWithdraw) ?? 0 }}</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

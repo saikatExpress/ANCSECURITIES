@@ -74,7 +74,7 @@ class RequestController extends Controller
     public function create()
     {
         $data['pageTitle'] = 'Create Limit';
-        $data['limitRequest'] = LimitRequest::with('clients:id,name')->latest()->take(20)->get();
+        $data['limitRequest'] = LimitRequest::with('clients:id,name')->whereDate('created_at', Carbon::today())->latest()->take(20)->get();
 
         return view('admin.Request.create')->with($data);
     }
@@ -89,6 +89,7 @@ class RequestController extends Controller
     public function wCreate()
     {
         $data['pageTitle'] = 'Create Withdraw';
+        $data['withdraws'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->latest()->take(20)->get();
 
         return view('admin.Request.wcreate')->with($data);
     }
