@@ -43,4 +43,39 @@ class HelperController extends Controller
             return response()->json(['success' => true]);
         }
     }
+
+    public function getWithdrawInfo($id)
+    {
+        $withDraw = Fund::with('clients:id,name,email,mobile,trading_code')->where('id', $id)->where('category', 'withdraw')->get();
+
+        return response()->json($withDraw);
+    }
+
+    public function uploadPortfolio(Request $request)
+    {
+        // Validate the request
+        $request->validate([
+            'reqId' => 'required|integer',
+            'portfolio_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:2048',
+        ]);
+
+        if ($request->hasFile('portfolio_file')) {
+            $file = $request->file('portfolio_file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('withdrawportfolios', $fileName, 'public');
+
+            $reqId = $request->input('req_id');
+
+            $withdraw = Fund::find($reqId);
+            return $withdraw;
+
+            if($withdraw){
+                $withdraw->portfolio_file = $filePath;
+
+                $withdraw->save();
+            }
+        }
+
+        return response()->json(['success' => true, 'message' => 'File uploaded successfully.']);
+    }
 }

@@ -457,6 +457,66 @@
                 </div>
             @endif
 
+            @if (auth()->user()->role === 'account')
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">
+                            Withdraw Request
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Client Name</th>
+                                            <th>Amount</th>
+                                            <th>Account Number</th>
+                                            <th>Description</th>
+                                            <th>Withdraw Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($wrequests as $withdrawal)
+                                            <tr>
+                                                <td>{{ $withdrawal->id }}</td>
+                                                <td>{{ $withdrawal->clients->name }}</td>
+                                                <td>{{ number_format($withdrawal->amount, 2) }} Taka</td>
+                                                <td>{{ $withdrawal->ac_no }}</td>
+                                                <td>{{ $withdrawal->description }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y h:i A') }}</td>
+                                                <td>
+                                                    <span class="badge badge-{{ $withdrawal->status == 'pending' ? 'warning' : ($withdrawal->status == 'approved' ? 'success' : 'danger') }}">
+                                                        {{ ucfirst($withdrawal->status) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-primary">
+                                                        <i class="fa-solid fa-file"></i>
+                                                    </button>
+                                                    <a href="" class="btn btn-sm btn-warning withdrawBtn"
+                                                    data-id="{{ $withdrawal->id }}"
+                                                    data-toggle="modal" data-target="#exampleModal">
+                                                        <i class="fa-solid fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'hr')
                 <div class="row">
                     <div class="col-md-12">
@@ -1274,6 +1334,52 @@
         </div>
     </div>
 
+    <!-- Modal Structure -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Withdraw Request Form</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Client Name:</strong> <span id="clientName"></span></p>
+                            <p><strong>Amount:</strong> <span id="amount"></span></p>
+                            <p><strong>Account Number:</strong> <span id="acNo"></span></p>
+                            <p><strong>Description:</strong> <span id="description"></span></p>
+                            <p><strong>Withdraw Date:</strong> <span id="withdrawDate"></span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Mobile:</strong> <span id="mobile"></span></p>
+                            <p><strong>Email:</strong> <span id="email"></span></p>
+                            <p><strong>Code:</strong> <span id="tradeCode"></span></p>
+                            <p><strong>Status:</strong> <span id="status"></span></p>
+                            <p><strong>Feedback:</strong> <span id="feedback"></span></p>
+                            <p><strong>Remark:</strong> <span id="remark"></span></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form id="withDrawPortfolioForm" action="{{ route('upload.portfolio') }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="reqId" id="reqId">
+                        <div class="form-group">
+                            <label for="">Assign Portfolio</label>
+                            <input type="file" class="form-control" name="portfolio_file" id="portfolio_file">
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -1283,6 +1389,7 @@
     <script src="{{ asset('admin/assets/js/expense.js') }}"></script>
     <script src="{{ asset('admin/assets/js/index.js') }}"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/withdraw.js') }}"></script>
     <!-- Lightbox JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 

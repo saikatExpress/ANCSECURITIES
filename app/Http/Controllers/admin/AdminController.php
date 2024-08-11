@@ -87,6 +87,8 @@ class AdminController extends Controller
 
         if(auth()->user()->role === 'account'){
             $data['balance'] = Account::first();
+            $data['wrequests'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->get();
+
             $data['pendingExpenses'] = Expense::with('staff:id,name')->where('status', 'pending')->whereDate('expense_date', Carbon::today())->get();
         }
 

@@ -236,6 +236,8 @@ Route::middleware(['auth'])->group(function(){
     Route::controller(HelperController::class)->group(function(){
         Route::get('/update/withdraw/status/{id}', 'updateReqStatus');
         Route::get('/accept/withdraw/status/{id}', 'acceptReqStatus');
+        Route::get('//get/withdraw/info/{id}', 'getWithdrawInfo');
+        Route::post('/upload/portfolio', 'uploadPortfolio')->name('upload.portfolio');
     });
 
     Route::controller(StaffController::class)->group(function(){
