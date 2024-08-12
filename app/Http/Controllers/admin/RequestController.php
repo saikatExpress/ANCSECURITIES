@@ -89,9 +89,27 @@ class RequestController extends Controller
     public function wCreate()
     {
         $data['pageTitle'] = 'Create Withdraw';
-        $data['withdraws'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->latest()->take(20)->get();
+
+        $query = Fund::with('clients:id,name')
+            ->where('category', 'withdraw')
+            ->where('status', 'pending')
+            ->latest()
+            ->take(20);
+
+        if (auth()->user()->role === 'ceo') {
+            $query->whereNotNull('ceo');
+        } elseif (auth()->user()->role === 'md') {
+            $query->whereNotNull('md');
+        }
+
+        $data['withdraws'] = $query->get();
+
+        if (auth()->user()->role === 'ceo' || auth()->user()->role === 'md') {
+            return view('admin.Request.auth.index')->with($data);
+        }
 
         return view('admin.Request.wcreate')->with($data);
+
     }
 
     public function store(Request $request)
@@ -133,6 +151,55 @@ class RequestController extends Controller
             DB::rollback();
             info($e);
             Log::error('Staff creation failed: '.$e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => $e->getMessage()]);
+        }
+    }
+
+    public function updateReqStatus(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'status' => ['required'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+            $reqId = $request->input('req_id');
+
+            $withdraw = Fund::find($reqId);
+            $md = User::where('role', 'md')->where('status', 'active')->first();
+
+            if(!$md){
+                return redirect()->back()->with('errorMsg', 'Manager Director account not found');
+            }
+
+            if(!$withdraw){
+                return redirect()->back()->with('errors', 'Request not found');
+            }
+
+            $withdraw->ceostatus = $request->input('status');
+            $withdraw->mdstatus = $request->input('status');
+            $withdraw->md = $md->name;
+
+            $res = $withdraw->save();
+
+            DB::commit();
+            if($res){
+                return redirect()->back()->with('message', 'Update successfully and sending done to Managing Director approval..!');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            Log::error('Request creation failed: '.$e->getMessage());
 
             return redirect()->back()
                 ->withInput()

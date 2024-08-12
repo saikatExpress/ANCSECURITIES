@@ -2,9 +2,7 @@
 @extends('admin.layout.app')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 @section('content')
-    <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
             <x-sub-header/>
             <h1>
@@ -212,7 +210,7 @@
                 @endif
             @endif
 
-            @if (auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo')
+            @if (auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo' || auth()->user()->role === 'Business Head')
                 <div class="row">
                     <div class="col-md-12">
                         <div style="display: flex;align-items: center;justify-content: space-between;">
@@ -457,7 +455,7 @@
                 </div>
             @endif
 
-            @if (auth()->user()->role === 'account')
+            @if (auth()->user()->role === 'account' || auth()->user()->role === 'Business Head')
                 <div class="row">
                     <div class="col-md-12">
                         <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">
@@ -493,19 +491,40 @@
                                                 <td>{{ $withdrawal->description }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y h:i A') }}</td>
                                                 <td>
-                                                    <span class="badge badge-{{ $withdrawal->status == 'pending' ? 'warning' : ($withdrawal->status == 'approved' ? 'success' : 'danger') }}">
-                                                        {{ ucfirst($withdrawal->status) }}
-                                                    </span>
+                                                    @if (auth()->user()->role === 'Business Head')
+                                                        @if ($withdrawal->approved_by != null)
+                                                            <span style="background-color: tomato;" class="badge">
+                                                                {{ ucfirst('proccesing') }}
+                                                            </span>
+                                                        @elseif ($withdrawal->declined_by != null)
+                                                            <span style="background-color: darkred;" class="badge">
+                                                                {{ ucfirst('declined') }}
+                                                            </span>
+                                                        @else
+                                                            <span style="background-color: darkred;" class="badge">
+                                                                {{ ucfirst($withdrawal->status) }}
+                                                            </span>
+                                                        @endif
+                                                    @else
+                                                        <span style="background-color: darkred;" class="badge">
+                                                            {{ ucfirst($withdrawal->status) }}
+                                                        </span>
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-sm btn-primary">
-                                                        <i class="fa-solid fa-file"></i>
-                                                    </button>
-                                                    <a href="" class="btn btn-sm btn-warning withdrawBtn"
-                                                    data-id="{{ $withdrawal->id }}"
-                                                    data-toggle="modal" data-target="#exampleModal">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </a>
+                                                    @if (auth()->user()->role === 'account')
+                                                        <button type="button" class="btn btn-sm btn-warning withdrawBtn"
+                                                            data-id="{{ $withdrawal->id }}"
+                                                            data-toggle="modal" data-target="#exampleModal">
+                                                            <i class="fa-solid fa-eye"></i>
+                                                        </button>
+                                                    @else
+                                                        <button type="button" class="btn btn-sm btn-primary withdrawStatusBtn"
+                                                            data-id="{{ $withdrawal->id }}"
+                                                            data-toggle="modal" data-target="#statusModal">
+                                                            <i class="fa-regular fa-chart-bar"></i>
+                                                        </button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -517,7 +536,7 @@
                 </div>
             @endif
 
-            @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'hr')
+            @if (auth()->user()->role === 'Business Head' || auth()->user()->role === 'hr')
                 <div class="row">
                     <div class="col-md-12">
                         <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Waiting Expense Approval</h4>
@@ -1346,12 +1365,23 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <h4>MD Status : <span id="mdStatus" class="btn btn-sm">Complete</span></h4>
+                                <h4>CEO Status : <span id="ceoStatus" class="btn btn-sm btn-success">Complete</span></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
                         <div class="col-md-6">
                             <p><strong>Client Name:</strong> <span id="clientName"></span></p>
                             <p><strong>Amount:</strong> <span id="amount"></span></p>
                             <p><strong>Account Number:</strong> <span id="acNo"></span></p>
                             <p><strong>Description:</strong> <span id="description"></span></p>
                             <p><strong>Withdraw Date:</strong> <span id="withdrawDate"></span></p>
+
+                            <h4>Portfolio : <b id="portfolioText"></b></h4>
                         </div>
                         <div class="col-md-6">
                             <p><strong>Mobile:</strong> <span id="mobile"></span></p>
@@ -1374,6 +1404,26 @@
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="statusModalLabel">Withdraw Request Status</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="itemBody" class="item_body">
+
+                    </div>
+                </div>
+                <div class="modal-footer" id="modalfooter">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
             </div>
         </div>

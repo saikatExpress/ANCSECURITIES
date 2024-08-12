@@ -31,7 +31,7 @@ class AdminController extends Controller
     {
         $data['todayCost'] = Expense::where('expense_date', Carbon::today())->sum('amount');
 
-        if(auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo'){
+        if(auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo' || auth()->user()->role === 'Business Head'){
             $data['employees'] = DB::table('users')
             ->leftJoin('attendances', function ($join) {
                 $join->on('users.id', '=', 'attendances.staff_id')
@@ -85,15 +85,15 @@ class AdminController extends Controller
 
         $data['todayWorks'] = EmployeeWork::whereDate('assign_work_date', Carbon::today())->where('category', auth()->user()->role)->get();
 
+        $data['wrequests'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->get();
         if(auth()->user()->role === 'account'){
             $data['balance'] = Account::first();
-            $data['wrequests'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->get();
 
             $data['pendingExpenses'] = Expense::with('staff:id,name')->where('status', 'pending')->whereDate('expense_date', Carbon::today())->get();
         }
 
-        if(auth()->user()->role === 'ceo' || auth()->user()->role === 'hr'){
-            if(auth()->user()->role === 'ceo'){
+        if(auth()->user()->role === 'Business Head' || auth()->user()->role === 'hr'){
+            if(auth()->user()->role === 'Business Head'){
                 $data['waitingExpenses'] = Expense::where('assign_to_ceo', 1)->get();
             }
             if(auth()->user()->role === 'hr'){

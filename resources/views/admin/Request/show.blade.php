@@ -96,7 +96,12 @@
                                 </div>
 
                                 <div class="info_body">
-                                    <h5>Withdrawal Details</h5>
+                                    <div style="display: flex; justify-content:space-between; align-items: center;">
+                                        <h5>Withdrawal Details</h5>
+                                        <a href="{{ asset('storage/' . $withdraw->portfolio_file) }}" class="btn btn-sm btn-primary" target="_blank">
+                                            <i class="fa-solid fa-eye"></i> View Portfolio
+                                        </a>
+                                    </div>
                                     <table class="table table-bordered">
                                         <tbody>
                                             <tr>
@@ -154,7 +159,7 @@
                                             <tr>
                                                 <th scope="row">Action</th>
                                                 <td>
-                                                    <button class="btn btn-sm btn-success acceptBtn" data-id="{{ $withdraw->id }}">Accept</button>
+                                                    <button class="btn btn-sm btn-success acceptBtn" data-id="{{ $withdraw->id }}" data-status="approved">Accept</button>
                                                     <button type="button" class="btn btn-sm btn-danger declineBtn" data-id="{{ $withdraw->id }}">Declined</button>
                                                 </td>
                                             </tr>
@@ -229,17 +234,21 @@
 
             $('.acceptBtn').on('click', function(){
                 var reqId = $(this).data('id');
+                var status = $(this).data('status');
 
                 if(reqId != ''){
                     $.ajax({
                         url: '/accept/withdraw/status/' + reqId,
                         type: 'GET',
+                        data: {
+                            status: status
+                        },
                         success: function(response){
                             if(response && response.success === true){
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Success!',
-                                    text: 'The withdrawal request has been accepted.',
+                                    text: response.message,
                                     confirmButtonText: 'OK'
                                 }).then(() => {
                                     window.location.reload();

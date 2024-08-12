@@ -130,6 +130,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/withdraw/request', 'wCreate')->name('admin.withdrawrequest');
             Route::post('/limit/store', 'store')->name('admin.limitstore');
             Route::post('/limit/update', 'update')->name('admin.limitupdate');
+            Route::post('/update/req/status', 'updateReqStatus')->name('admin.updateReqStatus');
 
             Route::get('/view/withdraw/request/{id}', 'show')->name('admin.viewwithdrawrequest');
         });
@@ -239,6 +240,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/accept/withdraw/status/{id}', 'acceptReqStatus');
         Route::get('//get/withdraw/info/{id}', 'getWithdrawInfo');
         Route::post('/upload/portfolio', 'uploadPortfolio')->name('upload.portfolio');
+        Route::post('/upgrade/withdraw/status', 'upgradeWithdrawStatus');
+        Route::get('/get/withdraw/status/{id}', 'withdrawStatus');
     });
 
     Route::controller(StaffController::class)->group(function(){
