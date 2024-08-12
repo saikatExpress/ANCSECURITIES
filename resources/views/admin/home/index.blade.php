@@ -21,6 +21,14 @@
             <!-- Info boxes -->
             <div class="row">
 
+                @if(session('message'))
+                    <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
+                @endif
+
+                @if(session('errors'))
+                    <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
+                @endif
+
                 <div class="col-md-3 col-sm-6 col-xs-12">
 
                     <div class="info-box">
@@ -116,13 +124,6 @@
 
                 @if (auth()->user()->role === 'it' || auth()->user()->role === 'admin')
                     <div class="col-md-3 col-sm-6 col-xs-12">
-                        @if(session('message'))
-                            <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
-                        @endif
-
-                        @if(session('errors'))
-                            <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
-                        @endif
                         <div class="info-box">
                             <span class="info-box-icon bg-green"><i style="margin-top: 20px;" class="ion ion-ios-clock-outline"></i></span>
 
@@ -138,13 +139,6 @@
                 @endif
 
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                    @if(session('message'))
-                        <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
-                    @endif
-
-                    @if(session('errors'))
-                        <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
-                    @endif
                     <div class="info-box">
                         <span class="info-box-icon bg-green"><i style="margin-top: 20px;" class="ion ion-ios-cart-outline"></i></span>
 
@@ -508,7 +502,8 @@
                                                     @else
                                                         <span style="background-color: darkred;" class="badge">
                                                             {{ ucfirst($withdrawal->status) }}
-                                                        </span>
+                                                        </span> <br>
+                                                        <span>Assign Ok</span>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -1400,6 +1395,9 @@
                         <div class="form-group">
                             <label for="">Assign Portfolio</label>
                             <input type="file" class="form-control" name="portfolio_file" id="portfolio_file">
+                            @error('portfolio_file')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Save changes</button>

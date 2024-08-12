@@ -88,12 +88,12 @@ class HelperController extends Controller
     {
         // Validate the request
         $request->validate([
-            'reqId' => 'required|integer',
+            'reqId'          => 'required|integer',
             'portfolio_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:2048',
         ]);
 
         if ($request->hasFile('portfolio_file')) {
-            $file = $request->file('portfolio_file');
+            $file     = $request->file('portfolio_file');
             $fileName = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('withdrawportfolios', $fileName, 'public');
 
