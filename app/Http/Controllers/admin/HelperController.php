@@ -17,7 +17,7 @@ class HelperController extends Controller
         }
     }
 
-    public function updateReqStatus($id)
+    public function updateReqStatus(Request $request, $id)
     {
         $role = auth()->user()->role;
         $withdraw = Fund::findOrFail($id);
@@ -26,6 +26,7 @@ class HelperController extends Controller
             if($role === 'ceo'){
                 $withdraw->ceo = auth()->user()->name;
                 $withdraw->ceostatus = 'decline';
+                $withdraw->remark = $request->input('remark');
                 $withdraw->md = NULL;
                 $withdraw->mdstatus = NULL;
 
@@ -35,6 +36,7 @@ class HelperController extends Controller
             }
 
             $withdraw->md = auth()->user()->name;
+            $withdraw->remark = 'Review Again';
             $withdraw->mdstatus = 'decline';
 
             $withdraw->save();

@@ -488,8 +488,18 @@
                                                     @if (auth()->user()->role === 'Business Head')
                                                         @if ($withdrawal->approved_by != null)
                                                             <span style="background-color: tomato;" class="badge">
-                                                                {{ ucfirst('proccesing') }}
+                                                                {{ ucfirst('proccesing...') }}
                                                             </span>
+                                                            @if ($withdrawal->ceostatus != null)
+                                                                @if ($withdrawal->ceostatus === 'approved')
+                                                                    <p style="margin-bottom: 0; font-size: 12px; color:green;">CEO approval done</p>
+                                                                @elseif ($withdrawal->ceostatus === 'decline')
+                                                                    <p style="margin-bottom: 0; font-size: 12px; color:tomato;">CEO approval declined</p>
+                                                                    <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                @endif
+                                                            @else
+                                                                <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for CEO approval</p>
+                                                            @endif
                                                         @elseif ($withdrawal->declined_by != null)
                                                             <span style="background-color: darkred;" class="badge">
                                                                 {{ ucfirst('declined') }}
@@ -503,7 +513,16 @@
                                                         <span style="background-color: darkred;" class="badge">
                                                             {{ ucfirst($withdrawal->status) }}
                                                         </span> <br>
-                                                        <span>Assign Ok</span>
+                                                        @if ($withdrawal->ceostatus != null)
+                                                            @if ($withdrawal->ceostatus === 'approved')
+                                                                <p style="margin-bottom: 0; font-size: 12px; color:green;">CEO approval done</p>
+                                                            @elseif ($withdrawal->ceostatus === 'decline')
+                                                                <p style="margin-bottom: 0; font-size: 12px; color:tomato;">CEO approval declined</p>
+                                                                <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                            @endif
+                                                        @else
+                                                            <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for CEO approval</p>
+                                                        @endif
                                                     @endif
                                                 </td>
                                                 <td>

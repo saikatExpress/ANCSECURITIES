@@ -117,7 +117,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">Account Number</th>
+                                                <th scope="row">Trading Code</th>
                                                 <td>
                                                     {{ $withdraw->clients->trading_code }}
                                                 </td>
@@ -165,6 +165,16 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div id="remarkForm" style="display: none; margin-top: 20px;">
+                                        <h5>Provide Remark</h5>
+                                        <input type="hidden" id="withdrawId">
+                                        <div class="form-group">
+                                            <label for="remark">Remark:</label>
+                                            <textarea id="remark" class="form-control" rows="4"></textarea>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" id="submitRemark">Submit</button>
+                                        <button type="button" class="btn btn-secondary" id="cancelRemark">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -173,7 +183,6 @@
             </div>
         </section>
     </div>
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -208,11 +217,22 @@
         $(document).ready(function(){
             $('.declineBtn').on('click', function(){
                 var reqId = $(this).data('id');
+                $('#withdrawId').val(reqId);
+                $('#remarkForm').show(); // Show the form
+            });
 
-                if(reqId != ''){
+            $('#submitRemark').on('click', function(){
+                var reqId = $('#withdrawId').val();
+                var remark = $('#remark').val();
+
+                if (reqId && remark) {
                     $.ajax({
                         url: '/update/withdraw/status/' + reqId,
                         type: 'GET',
+                        data: {
+                            remark: remark
+                        },
+
                         success: function(response){
                             if(response && response.success === true){
                                 Swal.fire({
@@ -228,6 +248,13 @@
                         error: function(error){
                             console.log(error);
                         }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops!',
+                        text: 'Please provide a remark before submitting.',
+                        confirmButtonText: 'OK'
                     });
                 }
             });
