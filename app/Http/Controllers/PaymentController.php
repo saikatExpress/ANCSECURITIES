@@ -34,7 +34,6 @@ class PaymentController extends Controller
     {
         $data = $request->validate([
             'amount'        => 'required|numeric',
-            'bank_account'  => 'required|string',
             'withdraw_date' => 'required|date',
             'description'   => 'nullable|string',
         ]);
@@ -43,19 +42,11 @@ class PaymentController extends Controller
             'client_id'     => Auth::id(),
             'client_name'   => auth()->user()->name,
             'amount'        => $data['amount'],
-            'ac_no'         => $data['bank_account'],
+            'ac_no'         => auth()->user()->bank_account_no,
             'withdraw_date' => $data['withdraw_date'],
             'description'   => $data['description'],
             'category'      => 'withdraw',
         ];
-
-        $clientInfo = User::find(Auth::id());
-
-        $accountInfo = BoAccount::where('bo_id', $clientInfo->trading_code)->first();
-
-        if($accountInfo->bank_account_no !== $request->input('bank_account')){
-            return redirect()->back()->with('error', 'Your account number is invalid.Please enter valid account number');
-        }
 
         $this->fundRepository->create($fundData);
 

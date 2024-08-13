@@ -101,13 +101,7 @@
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="form-group">
-                                <label for="bank_account">Bank Account <span class="text-danger">*</span></label>
-                                <input type="text" id="bank_account" name="bank_account" class="form-control" placeholder="Enter your bank account number">
-                                @error('bank_account')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+
                             <div class="form-group">
                                 <label for="withdraw_date">Withdrawn Date <span class="text-danger">*</span></label>
                                 <input type="date" id="withdraw_date" name="withdraw_date" class="form-control" placeholder="Enter your bank account number">

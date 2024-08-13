@@ -71,18 +71,22 @@ class AuthController extends Controller
 
                 $userObj = new User();
 
-                $name        = Str::title($request->input('name'));
-                $inputEmail = $request->input('email');
+                $name        = $request->input('name');
+                $inputEmail  = $request->input('email');
                 $inputMobile = $request->input('mobile');
                 $password    = $request->input('password');
 
-                $userObj->name         = $name;
-                $userObj->email        = $inputEmail;
-                $userObj->mobile       = $inputMobile;
-                $userObj->whatsapp     = $inputMobile;
-                $userObj->otp          = $otp;
-                $userObj->trading_code = $tradingCode;
-                $userObj->password     = Hash::make($password);
+                $userObj->name            = $name;
+                $userObj->email           = $inputEmail;
+                $userObj->mobile          = $inputMobile;
+                $userObj->whatsapp        = $inputMobile;
+                $userObj->address         = $tradingExit->address;
+                $userObj->otp             = $otp;
+                $userObj->trading_code    = $tradingCode;
+                $userObj->bank_name       = $tradingExit->bank_name;
+                $userObj->branch_name     = $tradingExit->branch_name;
+                $userObj->bank_account_no = $tradingExit->bank_account_no;
+                $userObj->password        = Hash::make($password);
                 $userObj->status       = 'deactive';
 
                 $res = $userObj->save();
