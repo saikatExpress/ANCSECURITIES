@@ -28,6 +28,51 @@
         font-weight: 600;
         font-size: 1.5rem;
     }
+
+    .signature_div p{
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    .signature_div h4{
+        margin-bottom: 0;
+        text-align: center;
+    }
+
+    .signature_div img{
+        width: 100px;
+        height: 50px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .approval-notification {
+        background-color: #28a745;
+        color: #fff;
+        padding: 15px;
+        border-radius: 4px;
+        text-align: center;
+        position: relative;
+        animation: fadeIn 2s ease-out;
+    }
+
+    .approval-notification i {
+        font-size: 24px;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 @section('content')
 
@@ -63,6 +108,19 @@
             @if(session('errors'))
                 <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
             @endif
+
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    @if ($withdraw->ceostatus === 'approved')
+                        <div class="col-md-12">
+                            <div class="approval-notification">
+                                <i class="fas fa-check-circle"></i>
+                                <h4>Already approved this request</h4>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
 
             <div class="row">
                 <div class="col-md-12">
@@ -151,29 +209,77 @@
                                             <tr>
                                                 <th scope="row">Status</th>
                                                 <td>
-                                                    <span class="badge badge-danger" style="background-color: darkred;">
-                                                        {{ ucfirst($withdraw->status) }}
-                                                    </span>
+                                                    @if (auth()->user()->role === 'ceo')
+                                                        @if ($withdraw->ceostatus === 'approved')
+                                                            <span class="btn btn-sm btn-success">
+                                                                {{ ucfirst($withdraw->ceostatus) }}
+                                                            </span>
+                                                        @else
+                                                            <span class="badge badge-danger" style="background-color: darkred;">
+                                                                {{ ucfirst($withdraw->status) }}
+                                                            </span>
+                                                        @endif
+                                                    @endif
+
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Action</th>
                                                 <td>
-                                                    <button class="btn btn-sm btn-success acceptBtn" data-id="{{ $withdraw->id }}" data-status="approved">Accept</button>
-                                                    <button type="button" class="btn btn-sm btn-danger declineBtn" data-id="{{ $withdraw->id }}">Declined</button>
+                                                    <div id="remarkForm" style="display: none; margin-top: 20px;">
+                                                        <h5>Provide Remark</h5>
+                                                        <input type="hidden" id="withdrawId">
+                                                        <div class="form-group">
+                                                            <label for="remark">Remark:</label>
+                                                            <textarea id="remark" class="form-control" rows="4"></textarea>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary" id="submitRemark">Submit</button>
+                                                        <button type="button" class="btn btn-secondary" id="cancelRemark">Cancel</button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                    <div id="remarkForm" style="display: none; margin-top: 20px;">
-                                        <h5>Provide Remark</h5>
-                                        <input type="hidden" id="withdrawId">
-                                        <div class="form-group">
-                                            <label for="remark">Remark:</label>
-                                            <textarea id="remark" class="form-control" rows="4"></textarea>
+
+                                    <div id="actionDiv" style="position: fixed; top: 10%; border-radius: 4px; width: 80%;box-shadow: 0 0 10px rgba(0,0,0,0.1)">
+                                        <p style="text-align: center; margin-bottom: 0;">
+                                            <button class="btn btn-sm btn-success acceptBtn" data-id="{{ $withdraw->id }}" data-status="approved">Accept</button>
+                                            <button type="button" class="btn btn-sm btn-danger declineBtn" data-id="{{ $withdraw->id }}">Declined</button>
+                                            <a class="btn btn-sm btn-primary" href="{{ route('makerequest.pdf', ['id' => $withdraw->id]) }}">Make PDF</a>
+                                        </p>
+                                    </div>
+
+                                    <div style="display: flex; justify-content:space-between; align-items:center;">
+                                        <div class="signature_div">
+                                            @if ($withdraw->mdstatus === 'approved')
+                                                <img src="https://www.signwell.com/assets/vip-signatures/muhammad-ali-signature-3f9237f6fc48c3a04ba083117948e16ee7968aae521ae4ccebdfb8f22596ad22.svg" alt="">
+                                            @endif
+                                            <h4>Md. Mahmud Alam</h4>
+                                            <p>Managing Director</p>
+                                            <p>Anc Securities Limited</p>
                                         </div>
-                                        <button type="button" class="btn btn-primary" id="submitRemark">Submit</button>
-                                        <button type="button" class="btn btn-secondary" id="cancelRemark">Cancel</button>
+                                        <div class="signature_div">
+                                            @if ($staff->signature != NULL)
+                                                <img src="{{ asset('storage/staffSignature/' . $staff->signature) }}" alt="">
+                                            @endif
+                                            <h4>{{ $staff->name }}</h4>
+                                            <p>Head of Business</p>
+                                            <p>Anc Securities Limited</p>
+                                        </div>
+                                        <div class="signature_div">
+                                            <img src="https://www.signwell.com/assets/vip-signatures/muhammad-ali-signature-3f9237f6fc48c3a04ba083117948e16ee7968aae521ae4ccebdfb8f22596ad22.svg" alt="">
+                                            <h4>Rana Quraishi</h4>
+                                            <p>Audit</p>
+                                            <p>Anc Securities Limited</p>
+                                        </div>
+                                        <div class="signature_div">
+                                            @if ($withdraw->ceostatus === 'approved')
+                                                <img src="https://www.signwell.com/assets/vip-signatures/muhammad-ali-signature-3f9237f6fc48c3a04ba083117948e16ee7968aae521ae4ccebdfb8f22596ad22.svg" alt="">
+                                            @endif
+                                            <h4>Mohammed Monirul Islam</h4>
+                                            <p>Chief Executive Officer</p>
+                                            <p>Anc Securities Limited</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -290,4 +396,28 @@
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            var $actionDiv = $('#actionDiv');
+            var initialOffset = $actionDiv.offset().top;
+
+            $(window).scroll(function() {
+                var scrollTop = $(window).scrollTop();
+
+                if (scrollTop > initialOffset) {
+                    $actionDiv.css({
+                        'background-color': 'aqua',
+                        'top': '0'
+                    });
+                } else {
+                    $actionDiv.css({
+                        'background-color': 'transparent',
+                        'top': '10%'
+                    });
+                }
+            });
+        });
+    </script>
+
 @endsection

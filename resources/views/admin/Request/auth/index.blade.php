@@ -45,6 +45,7 @@
                                     <tr>
                                         <th>SL</th>
                                         <th>Name</th>
+                                        <th>Trade Code</th>
                                         <th>AC NO</th>
                                         <th>Amount</th>
                                         <th>Requisition Date</th>
@@ -58,13 +59,33 @@
                                         <tr>
                                             <td>{{ $sl }}</td>
                                             <td>{{ $limit->clients->name }}</td>
+                                            <td>{{ $limit->clients->trading_code }}</td>
                                             <td>{{ $limit->ac_no }}</td>
                                             <td>{{ number_format($limit->amount, 2) }}</td>
                                             <td>{{ formatDateTime($limit->withdraw_date) }}</td>
                                             <td style="text-transform: uppercase;">
-                                                <label for="" class="btn btn-sm btn-danger">
-                                                    {{ $limit->status }}
-                                                </label>
+                                                @if (auth()->user()->role === 'ceo')
+                                                    @if ($limit->ceostatus === 'approved')
+                                                        <label for="" class="btn btn-sm btn-success">
+                                                            {{ $limit->ceostatus }}
+                                                        </label>
+                                                        @if ($limit->md != NULL)
+                                                            <p style="margin-bottom: 0;color:red; font-size:8px; font-weight:600;">
+                                                                Waiting for MD approval
+                                                            </p>
+                                                        @endif
+                                                    @else
+                                                        <label for="" class="btn btn-sm btn-danger">
+                                                            {{ $limit->status }}
+                                                        </label>
+                                                        @if ($limit->md === NULL)
+                                                            <p style="margin-bottom: 0;color:red; font-size:8px; font-weight:600;">
+                                                                Not assign to MD
+                                                            </p>
+                                                        @endif
+                                                    @endif
+                                                @endif
+
                                             </td>
                                             <td>
                                                 @if ($limit->portfolio_file)

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\admin;
 
 use App\Models\Fund;
 use App\Models\User;
+use App\Models\Staff;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\BoAccount;
 use Illuminate\Support\Facades\Auth;
 
 class HelperController extends Controller
@@ -69,7 +71,6 @@ class HelperController extends Controller
                 }
 
                 $withdraw->ceostatus = $request->input('status');
-                $withdraw->mdstatus  = $request->input('status');
                 $withdraw->md        = $md->name;
 
                 $withdraw->save();
@@ -152,5 +153,14 @@ class HelperController extends Controller
         $withdrawRequest->save();
 
         return response()->json(['message' => 'Withdraw request status updated successfully.']);
+    }
+
+    public function createPdf($id)
+    {
+        $data['withdraw'] = Fund::with('clients:id,name,trading_code,status')->where('id', $id)->first();
+        $data['staff'] = Staff::find($data['withdraw']->approved_by);
+        $data['bankInfo'] = BoAccount::where('bo_id', $data['withdraw']->clients->trading_code)->first();
+
+        return view('admin.Request.auth.create')->with($data);
     }
 }

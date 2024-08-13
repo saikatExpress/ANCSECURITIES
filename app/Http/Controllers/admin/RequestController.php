@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use Carbon\Carbon;
 use App\Models\Fund;
 use App\Models\User;
+use App\Models\Staff;
 use App\Models\BoAccount;
 use Illuminate\Support\Str;
 use App\Models\LimitRequest;
@@ -90,7 +91,7 @@ class RequestController extends Controller
     {
         $data['pageTitle'] = 'Create Withdraw';
 
-        $query = Fund::with('clients:id,name')
+        $query = Fund::with('clients:id,name,trading_code')
             ->where('category', 'withdraw')
             ->where('status', 'pending')
             ->latest()
@@ -211,6 +212,8 @@ class RequestController extends Controller
     {
         $data['pageTitle'] = 'Show Withdraw Form';
         $data['withdraw'] = Fund::with('clients:id,name,mobile,trading_code,status')->where('id',$id)->where('category', 'withdraw')->first();
+
+        $data['staff'] = Staff::find($data['withdraw']->approved_by);
 
         return view('admin.Request.show')->with($data);
     }

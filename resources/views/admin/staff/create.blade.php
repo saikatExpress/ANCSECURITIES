@@ -8,6 +8,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
+            <x-sub-header/>
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -58,6 +59,13 @@
                                 <label for="image">Staff Image</label>
                                 <input type="file" name="image" class="form-control">
                                 @error('image')
+                                    <div class="alert alert-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="">Signature</label>
+                                <input type="file" name="signature" class="form-control">
+                                @error('signature')
                                     <div class="alert alert-danger">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -229,6 +237,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
     <script>
         $(document).ready(function() {

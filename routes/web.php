@@ -239,6 +239,9 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/update/withdraw/status/{id}', 'updateReqStatus');
         Route::get('/accept/withdraw/status/{id}', 'acceptReqStatus');
         Route::get('//get/withdraw/info/{id}', 'getWithdrawInfo');
+
+        Route::get('/make/request/pdf/{id}', 'createPdf')->name('makerequest.pdf');
+
         Route::post('/upload/portfolio', 'uploadPortfolio')->name('upload.portfolio');
         Route::post('/upgrade/withdraw/status', 'upgradeWithdrawStatus');
         Route::get('/get/withdraw/status/{id}', 'withdrawStatus');
