@@ -4,6 +4,7 @@
 
 <div class="content-wrapper">
     <section class="content-header">
+        <x-sub-header/>
         <h1>
             Project Settings
             <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -30,7 +31,7 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Project Settings</h3>
             </div>
-            <form id="projectSettingsForm" action="" method="POST">
+            <form id="projectSettingsForm" action="{{ route('setting.update') }}" method="POST">
                 @csrf
                 <div class="box-body">
                     <div class="form-wizard">
@@ -38,7 +39,7 @@
                             <h3>Step 1: Basic Information</h3>
                             <div class="form-group">
                                 <label for="project-name">Project Name</label>
-                                <input type="text" id="project-name" name="project_name" class="form-control" required>
+                                <input type="text" id="project-name" name="project_name" class="form-control" value="{{ $setting->project_name }}">
                             </div>
                             <div class="form-group">
                                 <label for="project-description">Project Description</label>
@@ -83,6 +84,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
 <script>
     $(document).ready(function() {

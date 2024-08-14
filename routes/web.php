@@ -368,6 +368,9 @@ Route::middleware(['auth'])->group(function(){
 
     Route::controller(SettingController::class)->group(function(){
         Route::get('/project/setting', 'create')->name('project.setting');
+        Route::post('/setting/update', 'update')->name('setting.update');
+        Route::get('/modification', 'modificationCreate')->name('modification');
+        Route::post('/update/information', 'updateInformation')->name('update.information');
     });
 });
 

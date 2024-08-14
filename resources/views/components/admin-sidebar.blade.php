@@ -498,14 +498,18 @@
                             </li>
 
                             <li class="treeview">
-                                <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                                <a href="#"><i class="fa fa-circle-o"></i> Custom Setting
                                     <span class="pull-right-container">
-                                    <i class="fa fa-angle-left pull-right"></i>
+                                        <i class="fa fa-angle-left pull-right"></i>
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                                    <li>
+                                        <a href="{{ route('modification') }}">
+                                            <i class="fa fa-circle-o"></i>
+                                            Modification
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
