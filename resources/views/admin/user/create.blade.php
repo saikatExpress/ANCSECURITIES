@@ -88,6 +88,14 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label for="">Signature</label>
+                                    <input type="file" name="signature" id="signature" class="form-control">
+                                    @error('signature')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Create User</button>
                                 </div>
                             </form>

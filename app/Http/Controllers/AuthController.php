@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Mail\OTPMail;
+use App\Models\Setting;
 use App\Models\BoAccount;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Mail\RegistrationSuccess;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +27,11 @@ class AuthController extends Controller
 
     public function signUp()
     {
-        return view('auth.signup');
+        $setting = Setting::first();
+        if($setting->registration_status === 1){
+            return view('auth.signup');
+        }
+        return view('error.reg');
     }
 
     public function store(Request $request)
@@ -87,12 +93,21 @@ class AuthController extends Controller
                 $userObj->branch_name     = $tradingExit->branch_name;
                 $userObj->bank_account_no = $tradingExit->bank_account_no;
                 $userObj->password        = Hash::make($password);
-                $userObj->status       = 'deactive';
+                $userObj->status          = 'deactive';
 
                 $res = $userObj->save();
 
                 DB::commit();
                 if($res){
+                    $setting = Setting::first();
+                    if($setting->registation_male === 1){
+                        $user = [
+                            'name'   => $name,
+                            'mobile' => $inputMobile,
+                        ];
+                        Mail::to($inputEmail)->send(new RegistrationSuccess($user));
+                    }
+
                     session()->flash('message', 'Registration successful! Please log in.');
 
                     return response()->json(['success' => true]);

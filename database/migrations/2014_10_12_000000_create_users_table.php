@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name', 250);
             $table->string('profile_image', 250)->nullable();
-            $table->string('signature', 250)->nullable();
             $table->string('email', 250)->unique();
             $table->string('mobile', 25)->nullable();
             $table->string('whatsapp', 25)->nullable();

@@ -122,7 +122,7 @@ Route::middleware(['user.guard'])->group(function(){
     });
 });
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth', 'auth.Admin'])->group(function(){
     Route::prefix('admin')->group(function(){
         Route::controller(RequestController::class)->group(function(){
             Route::get('/limit/request', 'create')->name('admin.limitrequest');
@@ -143,7 +143,7 @@ Route::middleware(['auth'])->group(function(){
     });
 });
 
-Route::middleware(['auth'])->group(function(){
+Route::middleware(['auth', 'auth.Admin'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         Route::get('/user/list', 'userIndex')->name('user.list');
         $hashedAdminUrl = md5('admin/dashboard');

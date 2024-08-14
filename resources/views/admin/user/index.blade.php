@@ -3,6 +3,7 @@
 @section('content')
     <div class="content-wrapper">
         <section class="content-header">
+            <x-sub-header/>
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -28,7 +29,7 @@
 
             <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Form List</h3>
+              <h3 class="box-title">User List</h3>
             </div>
             <div class="box-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -76,15 +77,12 @@
                             @endif
                             <td>
                                 <button type="button" class="btn btn-sm btn-primary userBtn"
-                                data-id="{{ $user->id }}" data-name="{{ $user->name }}"
-                                data-email="{{ $user->email }}" data-mobile="{{ $user->mobile }}"
-                                data-whatsapp="{{ $user->whatsapp }}" data-status="{{ $user->status }}"
-                                data-trading_code="{{ $user->trading_code }}"
-                                data-toggle="modal" data-target="#userModal">
+                                    data-id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                    data-email="{{ $user->email }}" data-mobile="{{ $user->mobile }}"
+                                    data-whatsapp="{{ $user->whatsapp }}" data-status="{{ $user->status }}"
+                                    data-trading_code="{{ $user->trading_code }}"
+                                    data-toggle="modal" data-target="#userModal">
                                     Edit
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $user->id }}">
-                                    Delete
                                 </button>
                             </td>
                         </tr>
@@ -190,6 +188,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
     <script>
         $(document).ready(function() {

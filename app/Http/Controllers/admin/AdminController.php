@@ -10,14 +10,18 @@ use App\Models\BOForm;
 use App\Models\Account;
 use App\Models\Expense;
 use App\Models\Product;
+use App\Models\Setting;
+use App\Models\BoAccount;
 use App\Models\Attendance;
 use App\Models\EmployeeWork;
 use App\Models\LimitRequest;
 use Illuminate\Http\Request;
+use App\Mail\RegistrationSuccess;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -187,7 +191,7 @@ class AdminController extends Controller
     public function userIndex()
     {
         $data['pageTitle'] = 'User List';
-        $data['users'] = User::where('role', 'user')->get();
+        $data['users']     = User::where('role', 'user')->get();
 
         return view('admin.user.index')->with($data);
     }
@@ -224,37 +228,58 @@ class AdminController extends Controller
                 'mobile'        => 'nullable|string|max:255',
                 'password'      => 'nullable|string|max:255',
                 'profile_image' => 'nullable|image|max:2048',
+                'signature'     => 'nullable|image|max:2048',
             ]);
 
             if ($request->hasFile('profile_image')) {
-                // Get filename with extension
                 $filenameWithExt = $request->file('profile_image')->getClientOriginalName();
-
-                // Get just filename
                 $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-
-                // Get just extension
                 $extension = $request->file('profile_image')->getClientOriginalExtension();
-
-                // Filename to store
                 $fileNameToStore = $filename.'_'.time().'.'.$extension;
-
-                // Upload Image
-                $path = $request->file('profile_image')->storeAs('public/user_photo', $fileNameToStore);
+                $request->file('profile_image')->storeAs('public/user_photo', $fileNameToStore);
             } else {
                 $fileNameToStore = 'noimage.jpg';
             }
 
+            if ($request->hasFile('signature')) {
+                $filenameWithExt = $request->file('signature')->getClientOriginalName();
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('signature')->getClientOriginalExtension();
+                $signature = $filename.'_'.time().'.'.$extension;
+                $request->file('signature')->storeAs('public/user_photo', $fileNameToStore);
+            } else {
+                $signature = 'noimage.jpg';
+            }
+
+            $boInfo = BoAccount::where('bo_id', $validatedData['trading_code'])->first();
+
             DB::commit();
-            $user = User::create([
-                'trading_code'  => $validatedData['trading_code'],
-                'name'          => $validatedData['name'],
-                'email'         => $validatedData['email'],
-                'mobile'        => $validatedData['mobile'],
-                'whatsapp'      => $validatedData['mobile'],
-                'password'      => Hash::make($validatedData['password']),
-                'profile_image' => $fileNameToStore,
+            User::create([
+                'profile_image'   => $fileNameToStore,
+                'signature'       => $signature,
+                'father_name'     => $boInfo->father_name,
+                'spouse_name'     => $boInfo->spouse_name,
+                'mother_name'     => $boInfo->mother_name,
+                'trading_code'    => $validatedData['trading_code'],
+                'name'            => $validatedData['name'],
+                'email'           => $validatedData['email'],
+                'mobile'          => $validatedData['mobile'],
+                'whatsapp'        => $validatedData['mobile'],
+                'address'         => $boInfo->address,
+                'bank_name'       => $boInfo->bank_name,
+                'bank_account_no' => $boInfo->bank_account_no,
+                'branch_name'     => $boInfo->branch_name,
+                'password'        => Hash::make($validatedData['password']),
             ]);
+
+            $setting = Setting::first();
+            if($setting->registation_male === 1){
+                $user = [
+                    'name'   => $validatedData['name'],
+                    'mobile' => $validatedData['mobile'],
+                ];
+                Mail::to($validatedData['email'])->send(new RegistrationSuccess($user));
+            }
 
             return redirect()->back()->with('message', 'User created successfully.');
 
