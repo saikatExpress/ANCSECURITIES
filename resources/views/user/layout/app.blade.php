@@ -1,3 +1,8 @@
+@php
+    use App\Models\Setting;
+
+    $setting = Setting::first();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -32,13 +37,13 @@
         <div class="body-inner">
 
             <x-main-top-bar/>
-            <!--/ Topbar end -->
-            <!-- Header start -->
+
             <header id="header" class="header-one">
-                <x-top-bar/>
+                @if ($setting->sub_header === 0)
+                    <x-top-bar/>
+                @endif
                 <x-side-bar/>
             </header>
-            <!--/ Header end -->
             @yield('content')
 
 

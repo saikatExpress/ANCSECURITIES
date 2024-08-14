@@ -1,3 +1,8 @@
+@php
+    use App\Models\Setting;
+
+    $setting = Setting::first();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,16 +14,32 @@
     <!-- SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    @if ($setting->login_background_image != NULL)
+        <style>
+            body {
+                background-image: url('{{ asset('storage/' . $setting->login_background_image) }}');
+                background-size: cover;
+                background-position: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+        </style>
+    @else
+        <style>
+            body {
+                background: #f5f7fa;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+        </style>
+    @endif
     <style>
-        body {
-            background: #f5f7fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
         .login-container {
             width: 100%;
             max-width: 400px;

@@ -1,3 +1,8 @@
+@php
+    use App\Models\Setting;
+
+    $setting = Setting::first();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +15,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    @if ($setting->signup_background_image != NULL)
+        <style>
+            body {
+                background-image: url('{{ asset('storage/' . $setting->signup_background_image) }}');
+                background-size: cover;
+                background-position: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+        </style>
+    @else
+        <style>
+            body {
+                background: #f5f7fa;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+        </style>
+    @endif
     <style>
-        body {
-            background: url(https://as1.ftcdn.net/v2/jpg/08/65/07/42/1000_F_865074249_9YQovnbaHiIJ7Sbj2EpKR1As2YDpsX4B.jpg) no-repeat center center fixed;
-            background-size: cover;
-        }
         .card {
             border: none;
             border-radius: 10px;
@@ -219,7 +244,12 @@
                         @php
                             $url = 'login';
                         @endphp
-                        <p class="mb-0">Already have an account? <a href="{{ route($url) }}" class="text-primary">Login</a></p>
+                        <p class="mb-0" style="background-color: #0056b3; color:#fff;padding: 5px 8px 5px;">
+                            Already have an account?
+                            <a href="{{ route($url) }}" class="text-primary" style="color: #fff; font-weight: 600;">
+                                Login
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>

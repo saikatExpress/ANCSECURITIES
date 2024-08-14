@@ -20,8 +20,8 @@ class SettingController extends Controller
 
     public function create()
     {
-        if(!in_array(auth()->user()->role, ['admin','Business Head'])){
-            return redirect()->back()->with('error', 'You are not permitted for this..!');
+        if(!in_array(auth()->user()->role, ['admin'])){
+            return redirect()->back()->with('errorMsg', 'You are not permitted for this..!');
         }
 
         $data['pageTitle'] = 'Update Project Setting';
@@ -99,6 +99,9 @@ class SettingController extends Controller
             $validator = Validator::make($request->all(), [
                 'project_name' => ['required', 'string', 'max:250', 'min:10'],
                 'project_email' => ['required', 'email'],
+                'project_phone' => ['required'],
+                'project_url' => ['required', 'url'],
+                'body_background_color' => ['nullable', 'string', 'max:7'],
             ]);
 
             if ($validator->fails()) {
@@ -109,13 +112,48 @@ class SettingController extends Controller
 
             $setting = Setting::first();
 
+            DB::commit();
+
             if($setting){
-                $setting->project_name = Str::title($request->input('project_name'));
-                $setting->update_at = Carbon::now();
+                if ($request->hasFile('project_logo')) {
+                    $projectLogoPath = $request->file('project_logo')->store('project_images', 'public');
+                    $setting->project_logo = $projectLogoPath;
+                }
+
+                if ($request->hasFile('login_background_image')) {
+                    $loginBackgroundImagePath = $request->file('login_background_image')->store('project_images', 'public');
+                    $setting->login_background_image = $loginBackgroundImagePath;
+                }
+
+                if ($request->hasFile('signup_background_image')) {
+                    $signupBackgroundImagePath = $request->file('signup_background_image')->store('project_images', 'public');
+                    $setting->signup_background_image = $signupBackgroundImagePath;
+                }
+
+
+                $setting->project_name          = Str::title($request->input('project_name'));
+                $setting->project_description   = $request->input('project_description');
+                $setting->project_url           = $request->input('project_url');
+                $setting->project_email         = $request->input('project_email');
+                $setting->project_phone         = $request->input('project_phone');
+                $setting->project_phone1        = $request->input('project_phone1');
+                $setting->project_phone2        = $request->input('project_phone2');
+                $setting->project_phone3        = $request->input('project_phone3');
+                $setting->project_address       = $request->input('project_address');
+                $setting->facebook_url          = $request->input('facebook_url');
+                $setting->body_background_color = $request->input('body_background_color');
+                $setting->twiter_url            = $request->input('twiter_url');
+                $setting->instagram_url         = $request->input('instagram_url');
+                $setting->whatsapp              = $request->input('whatsapp');
+                $setting->sub_header            = $request->has('sub_header') ? 1 : 0;
+                $setting->registration_status   = $request->has('registration_status') ? 1 : 0;
+                $setting->otp_status            = $request->has('otp_status') ? 1 : 0;
+                $setting->registation_male      = $request->has('registation_male') ? 1 : 0;
+                $setting->deposite_male         = $request->has('deposite_male') ? 1 : 0;
+                $setting->updated_at            = Carbon::now();
 
                 $res = $setting->save();
 
-                DB::commit();
                 if($res){
                     return redirect()->back()->with('message', 'Setting update successfully');
                 }
