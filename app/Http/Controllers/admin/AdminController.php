@@ -84,6 +84,11 @@ class AdminController extends Controller
         }
 
         $data['todayWorks'] = EmployeeWork::whereDate('assign_work_date', Carbon::today())->where('category', auth()->user()->role)->get();
+        $data['totalDeposit'] = Fund::where('category', 'deposit')->where('status', 'approved')->sum('amount');
+        $data['thisMonthDepositCount'] = $this->getMonthlyDepositCount();
+        $data['totalDepositCount'] = Fund::where('category', 'deposit')
+                      ->where('status', 'approved')
+                      ->count();
 
         $data['wrequests'] = Fund::with('clients:id,name,trading_code')->where('category', 'withdraw')->where('status', 'pending')->get();
         if(auth()->user()->role === 'account'){
@@ -158,6 +163,20 @@ class AdminController extends Controller
         $totalAmount   = $res->totalAmount;
 
         return view('admin.home.index', compact('notifications', 'totalRequests', 'totalAmount'))->with($data);
+    }
+
+    public function getMonthlyDepositCount()
+    {
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        $monthlyDepositCount = Fund::where('category', 'deposit')
+                                ->where('status', 'approved')
+                                ->whereMonth('withdraw_date', $currentMonth)
+                                ->whereYear('withdraw_date', $currentYear)
+                                ->count();
+
+        return $monthlyDepositCount;
     }
 
     public function userIndex()

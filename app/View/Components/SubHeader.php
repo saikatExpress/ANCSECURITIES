@@ -19,7 +19,7 @@ class SubHeader extends Component
     {
         $this->totalWithdraw = Fund::where('category', 'withdraw')->where('status', 'pending')->count();
         $this->totalDeposit = Fund::where('category', 'deposit')->where('status', 'pending')->count();
-        $this->totalLimit = LimitRequest::whereDate('created_at', Carbon::today())->count();
+        $this->totalLimit = LimitRequest::whereDate('created_at', Carbon::today())->where('status', 'pending')->count();
     }
 
     /**

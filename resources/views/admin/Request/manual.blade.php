@@ -2,6 +2,7 @@
 @section('content')
     <div class="content-wrapper">
         <section class="content-header">
+            <x-sub-header/>
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -10,11 +11,6 @@
                 <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
-            {{-- <p style="text-align: right;">
-                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-default">
-                    Add Department
-                </button>
-            </p> --}}
         </section>
 
         <section class="content">
@@ -83,6 +79,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
     <script>
         $(document).ready(function() {

@@ -28,6 +28,9 @@
                 @if(session('errors'))
                     <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
                 @endif
+                @if(session('errorMsg'))
+                    <div class="alert alert-danger errorAlert">{{ session('errorMsg') }}</div>
+                @endif
 
                 <div class="col-md-3 col-sm-6 col-xs-12">
 
@@ -122,10 +125,12 @@
                 <div class="clearfix visible-sm-block"></div>
 
 
-                @if (auth()->user()->role === 'it' || auth()->user()->role === 'admin')
+                @if (auth()->user()->role === 'it' || auth()->user()->role === 'admin' || auth()->user()->role === 'account')
                     <div class="col-md-3 col-sm-6 col-xs-12">
                         <div class="info-box">
-                            <span class="info-box-icon bg-green"><i style="margin-top: 20px;" class="ion ion-ios-clock-outline"></i></span>
+                            <span class="info-box-icon bg-green">
+                                <i style="margin-top: 20px;" class="fa-solid fa-code-pull-request"></i>
+                            </span>
 
                             <a href="{{ route('today.limit_request') }}">
                                 <div class="info-box-content">
@@ -156,11 +161,24 @@
                 <div class="col-md-3 col-sm-6 col-xs-12">
                     <div class="info-box">
                         <span class="info-box-icon bg-yellow">
-                            <i class="ion ion-ios-people-outline"></i>
+                            <i style="margin-top: 20px;" class="fa-solid fa-money-bill"></i>
+                        </span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Deposit</span>
+                            <span class="info-box-number">{{ number_format($totalDeposit) }}</span>
+                            <span >This Month : {{ $thisMonthDepositCount }} | Total : {{ $totalDepositCount }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-yellow">
+                            <i style="margin-top: 20px;" class="ion ion-ios-people-outline"></i>
                         </span>
                         <div class="info-box-content">
                             <span class="info-box-text">Total Clients</span>
                             <span class="info-box-number">{{ number_format($totalUsers) }}</span>
+                            <span style="color: green;">Active : {{ $totalUsers }}</span>
                         </div>
                     </div>
                 </div>
@@ -1380,12 +1398,13 @@
                 </div>
             @endif
 
-            <div id="limitRequestContainer" style="display: flex; flex-wrap:wrap;">
-
+            <div id="notificationContainer" style="position: fixed; top: 10px; right: 10px; z-index: 9999; width: 300px;">
+                <!-- Notifications will be appended here -->
             </div>
 
         </section>
     </div>
+    <audio id="notificationSound" src="{{ asset('admin/assets/audio/notification.mp3') }}" preload="auto"></audio>
 
     <!-- Modal -->
     <div id="imageModal" style="display: none;">
@@ -1488,7 +1507,7 @@
     <!-- Lightbox JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
-    @if (auth()->user()->role === 'it')
+    @if (auth()->user()->role === 'it' || auth()->user()->role === 'account' || auth()->user()->role === 'hr')
         <script>
             $(document).ready(function() {
                 var displayedRequests = [];
@@ -1521,15 +1540,14 @@
                                         alertDiv.append('<button class="btn btn-sm btn-primary limitAcceptBtn" data-id="' + requestId + '">Accept</button>');
                                         alertDiv.append('<button class="btn btn-sm btn-danger limitDeclineBtn" data-id="' + requestId + '" style="margin-left:10px;">Deny</button>');
 
-                                        // Append alertDiv to the container div
-                                        $('#limitRequestContainer').append(alertDiv);
+                                        // Append alertDiv to the notification container
+                                        $('#notificationContainer').append(alertDiv);
 
                                         // Add requestId to displayedRequests array
                                         displayedRequests.push(requestId);
                                     }
                                 });
 
-                                // Play notification sound if there are new requests
                                 if (newRequests.length > 0) {
                                     var audio = document.getElementById('notificationSound');
                                     audio.play();
@@ -1545,7 +1563,7 @@
                 fetchData();
                 setInterval(fetchData, 5000);
 
-                $('#limitRequestContainer').on('click', '.limitAcceptBtn', function() {
+                $('#notificationContainer').on('click', '.limitAcceptBtn', function() {
                     var requestId = $(this).data('id');
                     var clickedItem = $(this).closest('.alert');
 
@@ -1567,7 +1585,7 @@
                     }
                 });
 
-                $('#limitRequestContainer').on('click', '.limitDeclineBtn', function() {
+                $('#notificationContainer').on('click', '.limitDeclineBtn', function() {
                     var requestId = $(this).data('id');
                     var clickedItem = $(this).closest('.alert');
 
@@ -1589,8 +1607,7 @@
                     }
                 });
 
-                // Close alert on button click
-                $(document).on('click', '#limitRequestContainer button.close', function() {
+                $(document).on('click', '#notificationContainer button.close', function() {
                     var alertItem = $(this).closest('.alert');
                     alertItem.fadeOut();
 

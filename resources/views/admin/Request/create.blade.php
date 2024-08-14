@@ -85,7 +85,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="card-header">
-                                <h4 class="card-title">Limit Request List</h4>
+                                <h4 class="card-title">Today Limit Request List</h4>
                             </div>
 
                             <table class="styled-table">
@@ -98,8 +98,8 @@
                                         <th>Name</th>
                                         <th>Code</th>
                                         <th>Amount</th>
-                                        <th>Entry By</th>
-                                        <th>Date</th>
+                                        <th>Action By</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -110,8 +110,18 @@
                                             <td>{{ $limit->clients->name }}</td>
                                             <td>{{ $limit->trade_id }}</td>
                                             <td>{{ number_format($limit->limit_amount, 2) }}</td>
-                                            <td>{{ $limit->approved_by }}</td>
-                                            <td>{{ formatDateTime($limit->created_at) }}</td>
+                                            <td>{!! $limit->approved_by ?? '<span style="color:red;font-size: 8px;margin-bottom:0%;">Not action</span>' !!}</td>
+                                            <td>
+                                                @if ($limit->status === 'approved')
+                                                    <label style="font-size: 10px;margin-bottom:0;" for="" class="btn btn-sm btn-success">
+                                                        {{ ucfirst($limit->status) }}
+                                                    </label>
+                                                @else
+                                                    <label style="font-size: 10px;margin-bottom:0;" for="" class="btn btn-sm btn-danger">
+                                                        {{ ucfirst($limit->status) }}
+                                                    </label>
+                                                @endif
+                                            </td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-primary editBtn" data-toggle="modal" data-target="#exampleModal"
                                                  data-id="{{ $limit->id }}" data-name="{{ $limit->clients->name }}" data-amount="{{ $limit->limit_amount }}"

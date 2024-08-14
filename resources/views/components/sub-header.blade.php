@@ -14,7 +14,7 @@
 @endphp
 <h2 class="welcomeText" style="margin-top: 50px">{{ $greeting }}, {{ auth()->user()->name }}</h2>
 
-<div id="actionDiv" style="position: fixed; top: 10%; border-radius: 4px; width: 80%;box-shadow: 0 0 10px rgba(0,0,0,0.1);z-index:1;">
+<div id="actionDiv" style="position: fixed; top: 9%; border-radius: 4px; width: 80%;box-shadow: 0 0 10px rgba(0,0,0,0.1);z-index:1;">
     <div class="defaultMenubar">
         <div class="clock">
             <span id="time"></span>

@@ -139,6 +139,7 @@ Route::middleware(['auth'])->group(function(){
     Route::controller(HelperController::class)->group(function(){
         Route::get('/make/withdraw/file', 'createFile')->name('create.withdrawfile');
         Route::get('/make/withdraw/pdf', 'withdrawPdf')->name('make.withdrawpdf');
+        Route::post('/update/dp/status/edit', 'updateStatus')->name('updatedpstatus.edit');
     });
 });
 

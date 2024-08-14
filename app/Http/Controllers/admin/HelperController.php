@@ -5,12 +5,14 @@ namespace App\Http\Controllers\admin;
 use App\Models\Fund;
 use App\Models\User;
 use App\Models\Staff;
+use Barryvdh\DomPDF\PDF;
 use App\Models\BoAccount;
 use App\Models\RequestFile;
-use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class HelperController extends Controller
 {
@@ -82,6 +84,47 @@ class HelperController extends Controller
 
 
         return view('admin.pdf.create')->with($data);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'red_id' => ['required'],
+                'status' => ['required'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+            $reqId = $request->input('red_id');
+            $status = $request->input('status');
+
+            $fund = Fund::findOrFail($reqId);
+
+            if($fund){
+                if($status === 'approved'){
+                    $fund->approved_by = auth()->user()->id;
+                }elseif($status === 'rejected'){
+                    $fund->declined_by = auth()->user()->id;
+                }
+                $fund->status = $status;
+
+                $res = $fund->save();
+                DB::commit();
+                if($res){
+                    return back()->with('message', 'Request updated successfully..!');
+                }
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+        }
     }
 
     public function updateReqStatus(Request $request, $id)

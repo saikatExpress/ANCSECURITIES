@@ -75,6 +75,10 @@ class RequestController extends Controller
 
     public function create()
     {
+        if (!in_array(auth()->user()->role, ['it', 'admin', 'account', 'hr'])) {
+            return redirect()->back()->with('errorMsg', 'You are not permitted for this..!');
+        }
+
         $data['pageTitle'] = 'Create Limit';
         $data['limitRequest'] = LimitRequest::with('clients:id,name')->whereDate('created_at', Carbon::today())->latest()->take(20)->get();
 
@@ -84,6 +88,8 @@ class RequestController extends Controller
     public function dCreate()
     {
         $data['pageTitle'] = 'Create Deposite';
+
+        $data['deposits'] = Fund::with('clients')->where('category', 'deposit')->latest()->get();
 
         return view('admin.Request.dcreate')->with($data);
     }
@@ -532,9 +538,6 @@ class RequestController extends Controller
     {
         $type = $request->query('type');
 
-        // Validate the type if needed
-
-        // Fetch data based on type
         if ($type === 'withdraw') {
             $requests = Fund::with('clients')
                 ->where('category', 'withdraw')
@@ -548,11 +551,9 @@ class RequestController extends Controller
                 ->orderByDesc('id')
                 ->get();
         } else {
-            // Handle invalid type if needed
             $requests = [];
         }
 
-        // Return JSON response
         return response()->json($requests);
     }
 
