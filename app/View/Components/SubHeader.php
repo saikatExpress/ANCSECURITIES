@@ -11,13 +11,14 @@ use Illuminate\Contracts\View\View;
 
 class SubHeader extends Component
 {
-    public $totalWithdraw,$totalLimit;
+    public $totalWithdraw,$totalLimit,$totalDeposit;
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
         $this->totalWithdraw = Fund::where('category', 'withdraw')->where('status', 'pending')->count();
+        $this->totalDeposit = Fund::where('category', 'deposit')->where('status', 'pending')->count();
         $this->totalLimit = LimitRequest::whereDate('created_at', Carbon::today())->count();
     }
 
