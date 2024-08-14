@@ -25,6 +25,9 @@ class PaymentController extends Controller
 
     public function fundWithdrawCreate()
     {
+        if(auth()->user()->role !== 'user'){
+            return redirect()->back()->with('error', 'This page is not permitted for you..!');
+        }
         $data['funds'] = Fund::where('client_id', Auth::id())->where('category', 'withdraw')->latest()->get();
 
         return view('user.fund.withdraw')->with($data);
@@ -60,19 +63,10 @@ class PaymentController extends Controller
 
             $validatedData = $request->validate([
                 'amount'        => 'required|numeric',
-                'bank_account'  => 'required|string|max:100',
                 'bank_slip'     => 'required|file|mimes:jpg,png,jpeg,pdf|max:2048',
                 'deposit_date'  => 'required|date',
                 'description'   => 'nullable|string|max:500',
             ]);
-
-            $clientInfo = User::find(Auth::id());
-
-            $accountInfo = BoAccount::where('bo_id', $clientInfo->trading_code)->first();
-
-            if($accountInfo->bank_account_no !== $request->input('bank_account')){
-                return redirect()->back()->with('error', 'Your account number is invalid.Please enter valid account number');
-            }
 
             $fundObj = new Fund();
 
@@ -87,7 +81,7 @@ class PaymentController extends Controller
             $fundObj->client_id     = Auth::id();
             $fundObj->client_name   = auth()->user()->name;
             $fundObj->amount        = $validatedData['amount'];
-            $fundObj->ac_no         = $validatedData['bank_account'];
+            $fundObj->ac_no         = auth()->user()->bank_account_no;
             $fundObj->category      = 'deposit';
             $fundObj->bank_slip     = $validatedData['bank_slip'];
             $fundObj->withdraw_date = $validatedData['deposit_date'];

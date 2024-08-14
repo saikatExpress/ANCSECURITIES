@@ -46,20 +46,49 @@
         .history-table {
             margin-top: 20px;
         }
+        .content {
+            display: inline;
+        }
+        .more {
+            display: none;
+        }
+        .show-more, .show-less {
+            display: none;
+            color: blue;
+            cursor: pointer;
+            font-size: 8px;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        .footer img {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        .footer p {
+            margin: 0;
+            color: #6c757d;
+        }
     </style>
 </head>
 <body>
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-custom">
-        <a class="navbar-brand" href="{{ url('/') }}">ANC SECURITIES</a>
+        <a class="navbar-brand" href="{{ url('/') }}">
+            <img src="{{ asset('auth/logo.png') }}" style="width: 60px; height:60px;margin-left:1rem;background: #fff;border-radius: 50%;padding: 2px;" alt="Anc Securities Ltd">
+        </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <i style="color: aliceblue;" class="fa-solid fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url('/') }}">Home</a>
+                    <a class="nav-link active" href="{{ route('user.dashboard') }}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('user.dashboard') }}">Dashboard</a>
@@ -96,7 +125,8 @@
                             @csrf
                             <div class="form-group">
                                 <label for="amount">Amount <span class="text-danger">*</span></label>
-                                <input type="number" id="amount" name="amount" class="form-control" placeholder="Enter amount to withdraw">
+                                <input type="number" id="amount" name="amount" class="form-control" placeholder="Enter amount to deposit">
+                                <div id="amount-info" class="text-success mt-2"></div>
                                 @error('amount')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -127,13 +157,13 @@
                             <table class="table table-bordered table-striped history-table">
                                 <thead>
                                     <tr>
-                                        <th>SL</th>
-                                        <th>Amount</th>
-                                        <th>Bank Account</th>
-                                        <th>Description</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                        <th>Action</th>
+                                        <th style="font-size: 12px;padding:4px;">SL</th>
+                                        <th style="font-size: 12px;padding:4px;">Amount</th>
+                                        <th style="font-size: 12px;padding:4px;">Bank Account</th>
+                                        <th style="font-size: 12px;padding:4px;">Description</th>
+                                        <th style="font-size: 12px;padding:4px;">Status</th>
+                                        <th style="font-size: 12px;padding:4px;">Date</th>
+                                        <th style="font-size: 12px;padding:4px;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -142,17 +172,35 @@
                                     @endphp
                                     @foreach ($funds as $request)
                                         <tr>
-                                            <td>{{ $sl }}</td>
-                                            <td>{{ $request->amount }}</td>
-                                            <td>{{ $request->ac_no }}</td>
-                                            <td>{{ $request->description }}</td>
-                                            <td class="text-danger">{{ $request->status }}</td>
-                                            <td>{{ $request->withdraw_date->format('d-m-Y') }}</td>
-                                            <td>
-                                                @if ($request->status == 'pending')
-                                                    <button type="button" class="btn btn-sm btn-danger cancelBtn" data-id="{{ $request->id }}" data-user_id="{{ $request->client_id }}">Cancel</button>
+                                            <td style="font-size: 12px;padding:4px;">{{ $sl }}</td>
+                                            <td style="font-size: 12px;padding:4px;">{{ $request->amount }}</td>
+                                            <td style="font-size: 12px;padding:4px;">{{ $request->ac_no }}</td>
+                                            <td style="font-size: 12px;padding:4px;">{{ $request->description }}</td>
+                                            <td style="font-size: 12px;padding:4px;">
+                                                @if ($request->status === 'approved')
+                                                    <div id="status-container">
+                                                        <label class="btn btn-sm btn-success" id="status-label1" style="font-size:10px;margin-bottom:0;"></label>
+                                                        <p id="status-message1" style="font-size: 9px; color:green;margin-bottom:0;margin-top:0;"></p>
+                                                        <span id="show-more1" class="show-more">Read More</span>
+                                                        <span id="show-less1" class="show-less">Read Less</span>
+                                                    </div>
                                                 @else
-                                                    <button type="button" class="btn btn-sm btn-success">View</button>
+                                                    <div id="status-container">
+                                                        <label class="btn btn-sm btn-danger" id="status-label" style="font-size:10px;margin-bottom:0;"></label>
+                                                        <p id="status-message" style="font-size: 9px; color:green;margin-bottom:0;margin-top:0;"></p>
+                                                        <span id="show-more" class="show-more">Read More</span>
+                                                        <span id="show-less" class="show-less">Read Less</span>
+                                                    </div>
+                                                @endif
+                                            </td>
+                                            <td style="font-size: 12px;padding:4px;">{{ $request->withdraw_date->format('d-m-Y') }}</td>
+                                            <td style="font-size: 12px;padding:4px;">
+                                                @if ($request->status === 'pending')
+                                                    <button type="button" style="font-size:10px;" class="btn btn-sm btn-danger cancelBtn" data-id="{{ $request->id }}" data-user_id="{{ $request->client_id }}">
+                                                        Cancel
+                                                    </button>
+                                                @else
+                                                    <button style="font-size:10px;" type="button" class="btn btn-sm btn-success">View</button>
                                                 @endif
                                             </td>
                                         </tr>
@@ -172,57 +220,30 @@
         </div>
     </div>
 
+    <footer class="footer">
+        <div class="container">
+            <img src="{{ asset('auth/logo.png') }}" style="width: 3rem; height:3rem;margin-left:1rem;" alt="Anc Securities Ltd">
+            <p>&copy; {{ date('Y') }} TS WEB BUILD. All rights reserved.</p>
+            <p>
+                Al Haj Tower,4th floor(Level-03),82 Mothijheel C/A, Dhaka -1100, Bangladesh.
+            </p>
+            <p>Email: ancsecuritieslimited@gmail.com| Phone: (+88) 01844-547916</p>
+        </div>
+    </footer>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('user/assets/js/numbertowords.js') }}"></script>
+    <script src="{{ asset('user/assets/js/withdraw.js') }}"></script>
+    <script src="{{ asset('user/assets/js/read.js') }}"></script>
 
     <script>
         setTimeout(function() {
             document.getElementById('success-message').style.display = 'none';
         }, 3000);
-    </script>
-    <script>
         setTimeout(function() {
             document.getElementById('error-message').style.display = 'none';
         }, 5000);
     </script>
-
-    <script>
-        $(document).ready(function(){
-            // Click event handler for cancelBtn buttons
-            $('.cancelBtn').on('click', function(){
-                // Get data attributes from the button
-                const fundId = $(this).data('id');
-                const clientId = $(this).data('user_id');
-                const $row = $(this).closest('tr');
-
-                // Validate fundId and clientId
-                if (!fundId || !clientId) {
-                    console.error('Missing fundId or clientId.');
-                    return false;
-                }
-
-                // AJAX request to cancel fund request
-                $.ajax({
-                    url: '/cancel/fund/request',
-                    method: 'GET',
-                    data: {
-                        fundId: fundId,
-                        clientId: clientId
-                    },
-                    success: function(response){
-                        $row.fadeOut('slow', function(){
-                            $(this).remove();
-                        });
-                    },
-                    error: function(error){
-                        // Handle error response here
-                        console.error('Error cancelling fund request.', error);
-                        // Optionally display error message or handle UI updates
-                    }
-                });
-            });
-        });
-    </script>
-
 </body>
 </html>

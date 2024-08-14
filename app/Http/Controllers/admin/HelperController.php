@@ -74,9 +74,9 @@ class HelperController extends Controller
         $pdf->save($pdfPath);
 
 
-        // Fund::whereIn('id', $requestIds)->update(['status' => 'approved']);
+        Fund::whereIn('id', $requestIds)->update(['status' => 'approved']);
 
-        // RequestFile::whereIn('request_id', $requestIds)->delete();
+        RequestFile::whereIn('request_id', $requestIds)->delete();
 
         return $pdf->download('withdraws_report.pdf');
 

@@ -18,18 +18,14 @@ class UserController extends Controller
     {
         $clientInfo = User::find(Auth::id());
 
-        // Retrieve all PDFs from the Portfolio model
         $pdfs = Portfolio::all();
 
         $filePath = '';
 
-        // Filter PDFs based on trading_code matching with the logged-in user's trading_code
         $matchedPDFs = $pdfs->filter(function ($pdf) use ($clientInfo) {
-            // Check if the name of the PDF contains the trading_code of the logged-in user
             return strpos($pdf->name, $clientInfo->trading_code) !== false;
         });
 
-        // Output the matched PDFs
         foreach ($matchedPDFs as $pdf) {
             $filePath = $pdf->file_path;
         }

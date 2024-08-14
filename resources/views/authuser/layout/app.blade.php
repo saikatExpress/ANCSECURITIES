@@ -178,8 +178,8 @@
                 <li class="mdl-list__item mdl-list__item--two-line">
                     <span class="mdl-list__item-primary-content">
                         <span class="material-icons mdl-list__item-avatar"></span>
-                        <span>Luke</span>
-                        <span class="mdl-list__item-sub-title">Luke@skywalker.com</span>
+                        <span>{{ auth()->user()->name }}</span>
+                        <span class="mdl-list__item-sub-title">{{ auth()->user()->email }}</span>
                     </span>
                 </li>
                 <li class="list__item--border-top"></li>
