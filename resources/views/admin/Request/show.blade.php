@@ -111,13 +111,25 @@
 
             <div class="container mt-5">
                 <div class="row justify-content-center">
-                    @if ($withdraw->ceostatus === 'approved')
-                        <div class="col-md-12">
-                            <div class="approval-notification">
-                                <i class="fas fa-check-circle"></i>
-                                <h4>Already approved this request</h4>
+                    @if (auth()->user()->role === 'ceo')
+                        @if ($withdraw->ceostatus === 'approved')
+                            <div class="col-md-12">
+                                <div class="approval-notification">
+                                    <i class="fas fa-check-circle"></i>
+                                    <h4>Already approved this request</h4>
+                                </div>
                             </div>
-                        </div>
+                        @endif
+                    @endif
+                    @if (auth()->user()->role === 'md')
+                        @if ($withdraw->mdstatus === 'approved')
+                            <div class="col-md-12">
+                                <div class="approval-notification">
+                                    <i class="fas fa-check-circle"></i>
+                                    <h4>Already approved this request</h4>
+                                </div>
+                            </div>
+                        @endif
                     @endif
                 </div>
             </div>

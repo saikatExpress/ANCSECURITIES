@@ -131,4 +131,43 @@ $(document).ready(function(){
         });
     });
 
+    $('#markAll').click(function() {
+        var isChecked = $(this).data('checked') || false;
+        $('.item-checkbox').prop('checked', !isChecked);
+        $(this).data('checked', !isChecked);
+        $(this).text(isChecked ? 'Mark All' : 'Unmark All');
+    });
+
+    // Make File button functionality
+    $('#makeFile').click(function() {
+        var selectedItems = [];
+        $('.item-checkbox:checked').each(function() {
+            selectedItems.push($(this).data('id'));
+        });
+
+        if (selectedItems.length > 0) {
+            $.ajax({
+                url: '/make/withdraw/file',
+                type: 'GET',
+                data: {
+                    ids: selectedItems
+                },
+                success: function(response) {
+                    if (response && response.success === true) {
+                        toastr.success('File created successfully!');
+                    }
+
+                    if(response && response.success === false) {
+                        toastr.error('Already make file these requests.');
+                    }
+                },
+                error: function(xhr) {
+                    alert('An error occurred while creating the file.');
+                }
+            });
+        } else {
+            $('#errMessage').text('Please select at least one item.');
+            return false;
+        }
+    });
 });

@@ -455,8 +455,13 @@
                         <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">
                             Withdraw Request
                         </h4>
+                        <button id="markAll" class="btn btn-warning btn-sm">Mark All</button>
+                        <button id="makeFile" class="btn btn-primary btn-sm">Make File</button>
+                        <a href="{{ route('make.withdrawpdf') }}" id="viewFile" class="btn btn-success btn-sm">View PDF File</a>
+                        <span id="errMessage" class="text-danger text-sm"></span>
                     </div>
                 </div>
+
 
                 <div class="row">
                     <div class="col-md-12">
@@ -465,10 +470,12 @@
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
+                                            <th><input type="checkbox"></th>
                                             <th>ID</th>
                                             <th>Client Name</th>
                                             <th>Amount</th>
-                                            <th>Account Number</th>
+                                            <th>Code</th>
+                                            <th>AC No</th>
                                             <th>Description</th>
                                             <th>Withdraw Date</th>
                                             <th>Status</th>
@@ -478,9 +485,11 @@
                                     <tbody>
                                         @foreach ($wrequests as $withdrawal)
                                             <tr>
+                                                <td><input type="checkbox" class="item-checkbox" data-id="{{ $withdrawal->id }}"></td>
                                                 <td>{{ $withdrawal->id }}</td>
                                                 <td>{{ $withdrawal->clients->name }}</td>
                                                 <td>{{ number_format($withdrawal->amount, 2) }} Taka</td>
+                                                <td>{{ $withdrawal->clients->trading_code }}</td>
                                                 <td>{{ $withdrawal->ac_no }}</td>
                                                 <td>{{ $withdrawal->description }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y h:i A') }}</td>
@@ -499,6 +508,16 @@
                                                                 @endif
                                                             @else
                                                                 <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for CEO approval</p>
+                                                            @endif
+                                                            @if ($withdrawal->mdstatus != null)
+                                                                @if ($withdrawal->mdstatus === 'approved')
+                                                                    <p style="margin-bottom: 0; font-size: 12px; color:green;">MD approval done</p>
+                                                                @elseif ($withdrawal->mdstatus === 'decline')
+                                                                    <p style="margin-bottom: 0; font-size: 12px; color:tomato;">MD approval declined</p>
+                                                                    <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                @endif
+                                                            @else
+                                                                <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for MD approval</p>
                                                             @endif
                                                         @elseif ($withdrawal->declined_by != null)
                                                             <span style="background-color: darkred;" class="badge">
@@ -522,6 +541,16 @@
                                                             @endif
                                                         @else
                                                             <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for CEO approval</p>
+                                                        @endif
+                                                        @if ($withdrawal->mdstatus != null)
+                                                            @if ($withdrawal->mdstatus === 'approved')
+                                                                <p style="margin-bottom: 0; font-size: 12px; color:green;">MD approval done</p>
+                                                            @elseif ($withdrawal->mdstatus === 'decline')
+                                                                <p style="margin-bottom: 0; font-size: 12px; color:tomato;">MD approval declined</p>
+                                                                <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                            @endif
+                                                        @else
+                                                            <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for MD approval</p>
                                                         @endif
                                                     @endif
                                                 </td>
@@ -1425,6 +1454,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -1445,8 +1475,6 @@
             </div>
         </div>
     </div>
-
-
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">

@@ -135,6 +135,11 @@ Route::middleware(['auth'])->group(function(){
             Route::get('/view/withdraw/request/{id}', 'show')->name('admin.viewwithdrawrequest');
         });
     });
+
+    Route::controller(HelperController::class)->group(function(){
+        Route::get('/make/withdraw/file', 'createFile')->name('create.withdrawfile');
+        Route::get('/make/withdraw/pdf', 'withdrawPdf')->name('make.withdrawpdf');
+    });
 });
 
 Route::middleware(['auth'])->group(function(){

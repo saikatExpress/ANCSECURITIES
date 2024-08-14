@@ -84,4 +84,10 @@ class User extends Authenticatable
         'updated_at'        => 'datetime',
         'deleted_at'        => 'datetime',
     ];
+
+    //Relation Start
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
+    }
 }

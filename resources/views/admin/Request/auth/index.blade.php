@@ -85,7 +85,27 @@
                                                         @endif
                                                     @endif
                                                 @endif
-
+                                                @if (auth()->user()->role === 'md')
+                                                    @if ($limit->mdstatus === 'approved')
+                                                        <label for="" class="btn btn-sm btn-success">
+                                                            {{ $limit->mdstatus }}
+                                                        </label>
+                                                        @if ($limit->ceo != NULL && $limit->ceostatus === 'approved')
+                                                            <p style="margin-bottom: 0;color:green; font-size:8px; font-weight:600;">
+                                                                CEO approval done
+                                                            </p>
+                                                        @endif
+                                                    @else
+                                                        <label for="" class="btn btn-sm btn-danger">
+                                                            {{ $limit->status }}
+                                                        </label>
+                                                        @if ($limit->ceo != NULL && $limit->ceostatus === 'approved')
+                                                            <p style="margin-bottom: 0;color:green; font-size:8px; font-weight:600;">
+                                                                CEO approval done
+                                                            </p>
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             </td>
                                             <td>
                                                 @if ($limit->portfolio_file)

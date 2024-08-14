@@ -85,7 +85,7 @@ class AdminController extends Controller
 
         $data['todayWorks'] = EmployeeWork::whereDate('assign_work_date', Carbon::today())->where('category', auth()->user()->role)->get();
 
-        $data['wrequests'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->get();
+        $data['wrequests'] = Fund::with('clients:id,name,trading_code')->where('category', 'withdraw')->where('status', 'pending')->get();
         if(auth()->user()->role === 'account'){
             $data['balance'] = Account::first();
 
