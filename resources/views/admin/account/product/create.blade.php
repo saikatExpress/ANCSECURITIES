@@ -4,6 +4,7 @@
 
 <div class="content-wrapper">
     <section class="content-header">
+        <x-sub-header/>
         <h1>
             Dashboard
             <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -107,27 +108,21 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
+<script src="{{ asset('admin/assets/js/watch.js') }}"></script>
+
 <script>
     $(document).ready(function() {
-        // Show the alert message
         $('#successAlert').show();
 
-        // Hide the alert message after 3 seconds
         setTimeout(function() {
             $('#successAlert').fadeOut('slow');
         }, 3000);
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        // Show the alert message
+
         $('.errorAlert').show();
 
-        // Hide the alert message after 3 seconds
         setTimeout(function() {
             $('.errorAlert').fadeOut('slow');
         }, 3000);
     });
 </script>
-
 @endsection

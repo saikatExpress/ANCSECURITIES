@@ -9,12 +9,13 @@ use App\Models\Staff;
 use App\Models\BOForm;
 use App\Models\Account;
 use App\Models\Expense;
+use App\Models\Product;
 use App\Models\Attendance;
+use App\Models\EmployeeWork;
 use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\EmployeeWork;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -74,13 +75,17 @@ class AdminController extends Controller
                     $data['totalHours'] = $totalHours;
 
                 } catch (\Exception $e) {
-                    $data['totalHours'] = 'Error: ' . $e->getMessage(); // Handle errors
+                    $data['totalHours'] = 'Error: ' . $e->getMessage();
                 }
             } else {
                 $data['totalHours'] = 0;
             }
         } else {
             $data['totalHours'] = 0;
+        }
+
+        if(in_array(auth()->user()->role, ['ceo', 'admin', 'md', 'Business Head'])){
+            $data['recent_products'] = Product::latest()->take(5)->get();
         }
 
         $data['todayWorks'] = EmployeeWork::whereDate('assign_work_date', Carbon::today())->where('category', auth()->user()->role)->get();
