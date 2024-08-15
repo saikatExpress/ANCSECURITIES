@@ -94,32 +94,6 @@ class RequestController extends Controller
         return view('admin.Request.dcreate')->with($data);
     }
 
-    public function wCreate()
-    {
-        $data['pageTitle'] = 'Create Withdraw';
-
-        $query = Fund::with('clients:id,name,trading_code')
-            ->where('category', 'withdraw')
-            ->where('status', 'pending')
-            ->latest()
-            ->take(20);
-
-        if (auth()->user()->role === 'ceo') {
-            $query->whereNotNull('ceo');
-        } elseif (auth()->user()->role === 'md') {
-            $query->whereNotNull('md');
-        }
-
-        $data['withdraws'] = $query->get();
-
-        if (auth()->user()->role === 'ceo' || auth()->user()->role === 'md') {
-            return view('admin.Request.auth.index')->with($data);
-        }
-
-        return view('admin.Request.wcreate')->with($data);
-
-    }
-
     public function store(Request $request)
     {
         try {
@@ -390,40 +364,6 @@ class RequestController extends Controller
         }
 
         return response()->json(['message' => 'Request status updated successfully']);
-    }
-
-    public function withdrawStore(Request $request)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'trading_code'  => ['required'],
-            'name'          => ['required'],
-            'amount'        => ['required'],
-            'bank_account'  => ['required'],
-            'withdraw_date' => ['required'],
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-        $fundServiceObj = new FundService();
-
-        $category    = 'withdraw';
-        $clientId        = $request->input('client_id');
-        $code        = $request->input('trading_code');
-        $name        = $request->input('name');
-        $mobile      = $request->input('mobile');
-        $amount      = $request->input('amount');
-        $bankAccount = $request->input('bank_account');
-        $date        = $request->input('withdraw_date');
-
-        $res = $fundServiceObj->store($clientId,$code,$name,$mobile,$amount,$bankAccount,$date,$category);
-
-        if($res === true){
-            return redirect()->back()->with('message', 'Withdraw request replacement successfully');
-        }
     }
 
     public function depositeStore(Request $request)

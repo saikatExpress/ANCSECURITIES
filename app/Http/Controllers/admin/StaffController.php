@@ -38,6 +38,9 @@ class StaffController extends Controller
 
     public function create()
     {
+        if(!in_array(auth()->user()->role, ['admin', 'hr', 'Business Head', 'it', 'account'])){
+            return back()->with('message', 'This page is not permitted for you..!');
+        }
         $pageTitle    = 'Create Staff';
         $designations = Designation::all();
         $departments  = Department::all();
@@ -85,7 +88,7 @@ class StaffController extends Controller
                 $signaturefileNameToStore = $fileName.'_'.time().'.'.$extension;
                 $request->file('signature')->storeAs('public/staffSignature', $signaturefileNameToStore);
             } else {
-                $fileNameToStore = 'noimage.jpg';
+                $signaturefileNameToStore = 'noimage.jpg';
             }
 
             $remember   = $request->input('remember');
@@ -104,6 +107,7 @@ class StaffController extends Controller
                 $userObj = new User();
 
                 $userObj->profile_image = $fileNameToStore;
+                $userObj->signature     = $signaturefileNameToStore;
                 $userObj->name          = $name;
                 $userObj->email         = $email;
                 $userObj->address       = $request->input('permanent_address');
@@ -133,6 +137,7 @@ class StaffController extends Controller
                     $staffObj->nationality       = $request->input('nationality');
                     $staffObj->status            = $request->input('status');
                     $staffObj->staff_image       = $fileNameToStore;
+                    $staffObj->signature         = $signaturefileNameToStore;
 
                     $res = $staffObj->save();
                     if($res){

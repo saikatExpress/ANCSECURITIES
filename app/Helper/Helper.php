@@ -16,7 +16,7 @@ function formatDateTime($datetime) {
     $date = new DateTime($datetime);
 
     // Format the date and time
-    return $date->format('m/d/y h:i A');
+    return $date->format('m/d/y');
 }
 
 function numberToWords($number) {

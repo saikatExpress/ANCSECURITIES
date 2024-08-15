@@ -135,7 +135,6 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
         Route::controller(RequestController::class)->group(function(){
             Route::get('/limit/request', 'create')->name('admin.limitrequest');
             Route::get('/desposite/request', 'dCreate')->name('admin.despositerequest');
-            Route::get('/withdraw/request', 'wCreate')->name('admin.withdrawrequest');
             Route::post('/limit/store', 'store')->name('admin.limitstore');
             Route::post('/limit/update', 'update')->name('admin.limitupdate');
             Route::post('/update/req/status', 'updateReqStatus')->name('admin.updateReqStatus');
@@ -200,10 +199,7 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
         Route::post('/request/toggle/{id}', 'toggleStatus')->name('request.toggle');
         Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');
         Route::post('/request/deposit/{id}', 'requestDeposit')->name('request.deposit');
-
-        Route::post('/manual/withdraw/request', 'withdrawStore')->name('manual.withdraw_request');
         Route::post('/manual/deposite/request', 'depositeStore')->name('manual.deposite_request');
-
         Route::get('/fetch-requests', 'fetchRequests')->name('fetch.requests');
         Route::get('/update/limit/request/{id}', 'updateLimitRequest');
         Route::get('/decline/limit/request/{id}', 'declineLimitRequest');

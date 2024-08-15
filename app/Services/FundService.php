@@ -15,7 +15,7 @@ class FundService
         }
     }
 
-    public function store($clientId,$code,$name,$mobile,$amount,$bankAccount,$date, $category)
+    public function store($clientId,$name,$amount,$bankAccount,$date, $category)
     {
         try {
             DB::beginTransaction();
@@ -28,6 +28,7 @@ class FundService
             $fundObj->description   = NULL;
             $fundObj->category      = $category;
             $fundObj->withdraw_date = $date;
+            $fundObj->created_by    = auth()->user()->id;
 
             $res = $fundObj->save();
 

@@ -34,7 +34,7 @@
                 <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
             @endif
 
-            <div class="row">
+            <div class="row" style="background-color: #fff;border-radius: 4px;box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">
                 <div class="col-md-7 offset-md-3" id="withdrawRequest">
                     <div class="card">
                         <div class="card-body">
@@ -42,7 +42,7 @@
                                 <h4 class="card-title">Withdraw Request</h4>
                             </div>
 
-                            <form action="{{ route('manual.withdraw_request') }}" method="post">
+                            <form action="{{ route('admin.withdraw_request') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="client_id" id="wclient_id">
                                 <div class="form-group" id="form-group-code">
@@ -100,7 +100,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="card-header">
-                                <h4 class="card-title">Withdraw Reqeust List</h4>
+                                <h4 class="card-title">Today Withdraw Reqeust List</h4>
                             </div>
 
                             <table class="styled-table">
@@ -111,7 +111,7 @@
                                     <tr>
                                         <th>SL</th>
                                         <th>Name</th>
-                                        <th>AC NO</th>
+                                        <th>Code</th>
                                         <th>Amount</th>
                                         <th>Date</th>
                                         <th>Status</th>
@@ -123,13 +123,20 @@
                                         <tr>
                                             <td>{{ $sl }}</td>
                                             <td>{{ $limit->clients->name }}</td>
-                                            <td>{{ $limit->ac_no }}</td>
+                                            <td>{{ $limit->clients->trading_code }}</td>
                                             <td>{{ number_format($limit->amount, 2) }}</td>
                                             <td>{{ formatDateTime($limit->withdraw_date) }}</td>
-                                            <td style="text-transform: uppercase;">
-                                                <label for="" class="btn btn-sm btn-danger">
-                                                    {{ $limit->status }}
-                                                </label>
+                                            <td>
+                                                @if ($limit->status === 'approved')
+                                                    <label for="" class="btn btn-sm btn-success" style="font-size: 8px; margin-bottom:0;">
+                                                        {{ ucfirst($limit->status) }}
+                                                    </label>
+                                                @else
+                                                    <label for="" class="btn btn-sm btn-danger" style="font-size: 8px; margin-bottom:0;">
+                                                        {{ ucfirst($limit->status) }}
+                                                    </label>
+                                                @endif
+
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-primary editBtn" data-toggle="modal" data-target="#exampleModal"
@@ -161,4 +168,28 @@
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
     <script src="{{ asset('admin/assets/js/index.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Show the alert message
+            $('#successAlert').show();
+
+            // Hide the alert message after 3 seconds
+            setTimeout(function() {
+                $('#successAlert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Show the alert message
+            $('.errorAlert').show();
+
+            // Hide the alert message after 3 seconds
+            setTimeout(function() {
+                $('.errorAlert').fadeOut('slow');
+            }, 3000);
+        });
+    </script>
 @endsection
