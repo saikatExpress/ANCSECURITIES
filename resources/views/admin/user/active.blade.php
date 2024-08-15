@@ -17,8 +17,8 @@
                     Create User
                 </a>
 
-                <a class="btn btn-sm btn-success" href="{{ route('active.user') }}">
-                    Active User
+                <a class="btn btn-sm btn-success" href="{{ route('user.list') }}">
+                    All Users
                 </a>
             </p>
         </section>
@@ -228,7 +228,7 @@
         $(document).ready(function() {
             function fetch_data(page = 1, search = '') {
                 $.ajax({
-                    url: "{{ route('user.list') }}",
+                    url: "{{ route('active.user') }}",
                     type: 'GET',
                     dataType: 'json',
                     data: {

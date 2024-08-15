@@ -146,6 +146,7 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
 Route::middleware(['auth', 'auth.Admin'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         Route::get('/user/list', 'userIndex')->name('user.list');
+        Route::get('active/user/list', 'activeUserIndex')->name('active.user');
         $hashedAdminUrl = md5('admin/dashboard');
         Route::get('/'.$hashedAdminUrl, 'index')->name('admin.dashboard');
         $hashedDirectorUrl = md5('create/director');

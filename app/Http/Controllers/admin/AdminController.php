@@ -224,9 +224,53 @@ class AdminController extends Controller
 
         return view('admin.user.index')->with($data);
     }
+    public function activeUserIndex(Request $request)
+    {
+        if($request->ajax()){
+            $search = $request->get('search');
+            $perPage = $request->get('per_page', 10);
+
+            $user = User::query()
+                ->when($search, function($query, $search){
+                    return $query->where('id','like', "%{$search}%")
+                                ->orWhere('name', 'like', "%{$search}%")
+                                ->orWhere('mobile', 'like', "%{$search}%")
+                                ->orWhere('whatsapp', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%")
+                                ->orWhere('trading_code', 'like', "%{$search}%");
+                })
+                ->where('role', 'user')
+                ->where('status', 'active')
+                ->latest()
+                ->paginate($perPage);
+
+            return response()->json([
+                'pagination' => [
+                    'total'        => $user->total(),
+                    'per_page'     => $user->perPage(),
+                    'current_page' => $user->currentPage(),
+                    'last_page'    => $user->lastPage(),
+                    'from'         => $user->firstItem(),
+                    'to'           => $user->lastItem()
+                ],
+                'data' => $user->items()
+            ]);
+        }
+        $data['pageTitle'] = 'User List';
+        $data['users']     = User::where('role', 'user')->where('status', 'active')->paginate(10);
+
+        return view('admin.user.active')->with($data);
+    }
 
     public function create()
     {
+        $userRole = auth()->user()->role;
+        $allowedRoles = ['admin', 'it', 'Business Head', 'hr'];
+
+        if (!in_array($userRole, $allowedRoles)) {
+            return redirect()->back()->with('error', 'This page is not permitted for you..!');
+        }
+
         $pageTitle = 'Create Director';
 
         return view('admin.director.create', compact('pageTitle'));
@@ -239,10 +283,16 @@ class AdminController extends Controller
 
     public function createUser()
     {
-        $pageTitle = 'Create User';
-        $users = User::where('role', 'user')->latest()->take(20)->get();
+        $userRole     = auth()->user()->role;
+        $allowedRoles = ['admin', 'it', 'Business Head', 'hr'];
 
-        return view('admin.user.create', compact('pageTitle', 'users'));
+        if (!in_array($userRole, $allowedRoles)) {
+            return redirect()->back()->with('error', 'This page is not permitted for you..!');
+        }
+
+        $pageTitle = 'Create User';
+
+        return view('admin.user.create', compact('pageTitle'));
     }
 
     public function store(Request $request)

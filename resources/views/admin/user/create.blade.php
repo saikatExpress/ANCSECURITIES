@@ -1,8 +1,55 @@
 @extends('admin.layout.app')
+<style>
+    .wizard {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.step {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875em;
+}
+
+.wizard-nav {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.nav-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    background-color: #007bff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.nav-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+</style>
 @section('content')
     <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
         <section class="content-header">
+            <x-sub-header/>
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -14,6 +61,9 @@
             <p style="text-align: right;">
                 <a class="btn btn-sm btn-primary" href="{{ route('user.list') }}">
                     User List
+                </a>
+                <a class="btn btn-sm btn-success" href="{{ route('active.user') }}">
+                    Active User List
                 </a>
             </p>
         </section>
@@ -30,16 +80,15 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Create User</h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
 
                         <strong class="text-danger fw-bold ml-3" id="accountExits"></strong>
                         <strong style="display: none;" id="avaiable" class="text-success fw-bold ml-3"><i class="fas fa-solid fa-check"></i> Avaiable</strong>
                         <strong style="display: none;" id="notavaiable" class="text-danger fw-bold ml-3"><i class="fas fa-solid fa-circle-exclamation"></i> Not found</strong>
 
                         <div class="box-body">
-                            <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
+                            {{-- <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="form-group">
                                     <label for="">Trading Code <span class="text-danger">*</span></label>
@@ -66,6 +115,13 @@
                                     <label for="">Mobile <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" name="mobile" id="mobile">
                                     @error('mobile')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <label for="">Address <span class="text-danger">*</span></label>
+                                    <textarea name="address" class="form-control" id=""></textarea>
+                                    @error('address')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -98,35 +154,82 @@
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Create User</button>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <h4 class="about_head">User List</h4>
+                            </form> --}}
+                            <div class="wizard">
+                                <!-- Step 1 -->
+                                <div class="step" id="step-1">
+                                    <h3>Step 1: Account Information</h3>
+                                    <form id="user-form">
+                                        <div class="form-group">
+                                            <label for="trading_code">Trading Code <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="trading_code" id="trading_code">
+                                            <span class="error-message" id="error-trading_code"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="name">Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="name" id="name">
+                                            <span class="error-message" id="error-name"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="email">Email <span class="text-danger">*</span></label>
+                                            <input type="email" class="form-control" name="email" id="email">
+                                            <span class="error-message" id="error-email"></span>
+                                        </div>
+                                    </form>
+                                </div>
 
-                        <div class="user_list">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Mobile</th>
-                                        <!-- Add more columns as per your User model -->
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($users as $user)
-                                    <tr>
-                                        <td>{{ $user->id }}</td>
-                                        <td>{{ $user->name }}</td>
-                                        <td>{{ $user->email }}</td>
-                                        <td>{{ $user->mobile }}</td>
-                                        <!-- Add more columns as per your User model -->
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                <!-- Step 2 -->
+                                <div class="step" id="step-2" style="display: none;">
+                                    <h3>Step 2: Contact Details</h3>
+                                    <form id="user-form">
+                                        <div class="form-group">
+                                            <label for="mobile">Mobile <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="mobile" id="mobile">
+                                            <span class="error-message" id="error-mobile"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="address">Address <span class="text-danger">*</span></label>
+                                            <textarea name="address" class="form-control" id="address"></textarea>
+                                            <span class="error-message" id="error-address"></span>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Step 3 -->
+                                <div class="step" id="step-3" style="display: none;">
+                                    <h3>Step 3: Additional Information</h3>
+                                    <form id="user-form">
+                                        <div class="form-group">
+                                            <label for="password">Password <span class="text-danger">*</span></label>
+                                            <input type="password" class="form-control" name="password" id="password">
+                                            <span class="error-message" id="error-password"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="profile_image">Upload Image</label>
+                                            <input type="file" name="profile_image" id="profile_image" class="form-control">
+                                            <span class="error-message" id="error-profile_image"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="signature">Signature</label>
+                                            <input type="file" name="signature" id="signature" class="form-control">
+                                            <span class="error-message" id="error-signature"></span>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- Step 4 -->
+                                <div class="step" id="step-4" style="display: none;">
+                                    <h3>Step 4: Review & Submit</h3>
+                                    <p>Review your information before submission.</p>
+                                    <button type="button" id="submit-button">Submit</button>
+                                </div>
+
+                                <!-- Navigation Buttons -->
+                                <div class="wizard-nav">
+                                    <button type="button" id="prev-btn" class="nav-btn" style="display: none;">Previous</button>
+                                    <button type="button" id="next-btn" class="nav-btn">Next</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -134,9 +237,9 @@
         </section>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -185,6 +288,56 @@
                     });
                 }
             });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let currentStep = 1;
+            const totalSteps = 4;
+
+            const showStep = (step) => {
+                for (let i = 1; i <= totalSteps; i++) {
+                    document.getElementById(`step-${i}`).style.display = (i === step) ? 'block' : 'none';
+                }
+                document.getElementById('prev-btn').style.display = (step === 1) ? 'none' : 'inline-block';
+                document.getElementById('next-btn').textContent = (step === totalSteps) ? 'Submit' : 'Next';
+            };
+
+            document.getElementById('next-btn').addEventListener('click', function() {
+                if (currentStep < totalSteps) {
+                    if (validateStep(currentStep)) {
+                        currentStep++;
+                        showStep(currentStep);
+                    }
+                } else {
+                    document.getElementById('user-form').submit();
+                }
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', function() {
+                if (currentStep > 1) {
+                    currentStep--;
+                    showStep(currentStep);
+                }
+            });
+
+            const validateStep = (step) => {
+                let isValid = true;
+                document.querySelectorAll(`#step-${step} .form-control`).forEach(input => {
+                    const errorId = `error-${input.id}`;
+                    const errorMessage = document.getElementById(errorId);
+                    if (input.value.trim() === '') {
+                        errorMessage.textContent = 'This field is required';
+                        isValid = false;
+                    } else {
+                        errorMessage.textContent = '';
+                    }
+                });
+                return isValid;
+            };
+
+            showStep(currentStep);
         });
     </script>
 @endsection
