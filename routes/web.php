@@ -163,7 +163,7 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
         Route::get('/'.$hashedShowFormUrl.'/{id}', 'showForm')->name('show.form');
         Route::get('/create/bo', 'create')->name('create.bo');
         Route::get('/open/bo/form', 'openBoForm')->name('openbo.form');
-        Route::post('/account/store', 'acStore')->name('acbo.store');
+        Route::post('/store/account', 'acStore')->name('store.bo');
         Route::post('/bo/account/store', 'store')->name('boaccount.store');
         Route::post('/bank/store', 'bankStore')->name('bank.store');
         Route::post('/authorize/store', 'authorizeStore')->name('authorize.store');

@@ -1,8 +1,8 @@
 @extends('admin.layout.app')
-
 @section('content')
     <div class="content-wrapper">
         <section class="content-header">
+            <x-sub-header/>
             <h1>
                 Dashboard
                 <strong class="text-sm text-success fw-bold">Admin</strong>
@@ -29,44 +29,57 @@
                 </div>
             @endif
 
-            <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">BO List</h3>
-            </div>
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>BO ID</th>
-                        <th>Name</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($bos as $form)
-                        <tr class="list-item">
-                            <td>{{ $form->id }}</td>
-                            <td>
-                                {{ str_pad($form->bo_id, 4,0, STR_PAD_LEFT) }}
-                            </td>
-                            <td>
-                                {{ $form->name }}
-                            </td>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-                            <td>
-                                <button type="button" class="btn btn-sm btn-primary">
-                                    Edit
-                                </button>
-                                <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $form->id }}">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-              </table>
-            </div>
+            <div class="box">
+                <div class="box-header">
+                <h3 class="box-title">BO List</h3>
+                </div>
+                <div class="box-body">
+
+                    <div style="display: flex; justify-content:space-between; align-items:center;">
+                        <input style="margin-bottom: 10px;width: 200px;height: 37px;" type="text" id="search" placeholder="Search BO ID or Name...">
+                    </div>
+
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>BO ID</th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bo-table-body">
+                            @foreach ($bos as $form)
+                                <tr class="list-item">
+                                    <td>{{ $form->id }}</td>
+                                    <td>{{ str_pad($form->bo_id, 4,0, STR_PAD_LEFT) }}</td>
+                                    <td>{{ $form->name }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary">
+                                            Edit
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="{{ $form->id }}">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    <div id="pagination-links">
+                        {{ $bos->links() }}
+                    </div>
+                </div>
           </div>
         </section>
     </div>
@@ -81,7 +94,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('acbo.store') }}" method="post">
+
+                <div>
+                    <p class="text-danger text-sm">
+                        When you create a BO,it's must be create as an investor..By default,created investor account is deactive..when investor login
+                        into the system,then the account is active automatically...
+                    </p>
+                </div>
+
+                <form action="{{ route('store.bo') }}" method="post">
                     @csrf
                     <div class="form-group">
                         <label for="">BO ID : <span class="text-danger"> * </span></label>
@@ -90,6 +111,18 @@
                     <div class="form-group">
                         <label for="">Name : </label>
                         <input type="text" class="form-control" name="client_name" id="client_name">
+                        @error('client_name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="nameErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Email : </label>
+                        <input type="email" class="form-control" name="email" id="email">
+                        @error('email')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="emailErr"></span>
                     </div>
                     <div class="form-group">
                         <label for="">Account type : </label>
@@ -98,6 +131,81 @@
                             <option value="indivijual">Individual Account</option>
                             <option value="joint">Joint Account</option>
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Father Name</label>
+                        <input type="text" class="form-control" name="father_name" id="fatherName">
+                        @error('father_name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="fnameErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Spouse Name</label>
+                        <input type="text" class="form-control" name="spouse_name" id="spouseName">
+                        @error('spouse_name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="fnameErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Mother Name</label>
+                        <input type="text" class="form-control" name="mother_name" id="motherName">
+                        @error('mother_name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="mnameErr"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Mobile</label>
+                        <input type="text" class="form-control" name="cell_no" id="mobile">
+                        @error('cell_no')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="mobileErr"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Address</label>
+                        <textarea class="form-control" name="address" id="address"></textarea>
+                        @error('address')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="addressErr"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">Ac Open Date</label>
+                        <input type="date" name="ac_open_date" id="ac_open_date" class="form-control">
+                        @error('ac_open_date')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="acopenErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Bank Account No</label>
+                        <input type="text" name="bank_account_no" id="bank_account_no" class="form-control">
+                        @error('bank_account_no')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="">Bank Name</label>
+                        <input type="text" name="bank_name" id="bank_name" class="form-control">
+                        @error('bank_name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="bankErr"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Branch Name</label>
+                        <input type="text" name="branch_name" id="branch_name" class="form-control">
+                        @error('branch_name')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                        <span id="branchErr"></span>
                     </div>
 
                     <input type="submit" class="btn btn-sm btn-primary" value="Save BO">
@@ -139,6 +247,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -153,7 +262,73 @@
     </script>
 
     <script>
+        $(document).ready(function() {
+            function fetch_data(page = 1, search = '') {
+                $.ajax({
+                    url: "{{ route('create.bo') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        page: page,
+                        search: search
+                    },
+                    success: function(response) {
+                        let html = '';
+                        response.data.forEach(item => {
+                            html += `<tr class="list-item">
+                                <td>${item.id}</td>
+                                <td>${String(item.bo_id).padStart(4, '0')}</td>
+                                <td>${item.name}</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary">Edit</button>
+                                    <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="${item.id}">Delete</button>
+                                </td>
+                            </tr>`;
+                        });
 
+                        $('#bo-table-body').html(html);
+                        let paginationLinks = '';
+
+                        if (response.pagination.current_page > 1) {
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="1">First</a>`;
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="${response.pagination.current_page - 1}">Previous</a>`;
+                        }
+
+                        for (let i = 1; i <= response.pagination.last_page; i++) {
+                            if (i === response.pagination.current_page) {
+                                paginationLinks += `<span class="pagination-link active">${i}</span>`;
+                            } else {
+                                paginationLinks += `<a href="#" class="pagination-link" data-page="${i}">${i}</a>`;
+                            }
+                        }
+
+                        if (response.pagination.current_page < response.pagination.last_page) {
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="${response.pagination.current_page + 1}">Next</a>`;
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="${response.pagination.last_page}">Last</a>`;
+                        }
+
+                        $('#pagination-links').html(paginationLinks);
+                    }
+                });
+            }
+
+            // Initial fetch
+            fetch_data();
+
+            // Search input
+            $('#search').on('keyup', function() {
+                let search = $(this).val();
+                fetch_data(1, search);
+            });
+
+            // Pagination links
+            $(document).on('click', '.pagination-link', function(e) {
+                e.preventDefault();
+                let page = $(this).data('page');
+                let search = $('#search').val();
+                fetch_data(page, search);
+            });
+        });
     </script>
 
 @endsection

@@ -1,0 +1,33 @@
+#pagination-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination-link {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #007bff;
+    text-decoration: none;
+    background-color: #f8f9fa;
+}
+
+.pagination-link:hover {
+    background-color: #e9ecef;
+    border-color: #ddd;
+}
+
+.pagination-link.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+    pointer-events: none;
+}
+
+.pagination-link.disabled {
+    color: #6c757d;
+    pointer-events: none;
+    cursor: not-allowed;
+}

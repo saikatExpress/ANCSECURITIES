@@ -259,7 +259,6 @@ class AuthController extends Controller
         try {
             DB::beginTransaction();
 
-            // Validation
             $validator = Validator::make($request->all(), [
                 'email'    => ['required', 'email'],
                 'password' => ['required'],

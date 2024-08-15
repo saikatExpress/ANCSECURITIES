@@ -28,81 +28,76 @@
             @endif
 
             <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">User List</h3>
-            </div>
-            <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Mobile</th>
-                        <th>Whatsapp</th>
-                        <th>Joined On</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($users as $user)
-                        <tr class="list-item">
-                            <td>{{ $user->id }}</td>
-                            <td>
-                                {{ $user->name }}
-                            </td>
-                            <td>
-                                {{ $user->email }}
-                            </td>
-                            <td>
-                                {{ $user->mobile }}
-                            </td>
-                            <td>
-                                <a href="https://api.whatsapp.com/send?phone=880{{ $user->whatsapp }}" target="_blank">
-                                    {{ $user->whatsapp }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ $user->created_at->format('d-M-Y') }}
-                            </td>
-                            @if ($user->status === 'active')
-                                <td>
-                                    <label for="" class="btn btn-sm btn-success">Active</label>
-                                </td>
-                            @else
-                                <td>
-                                    <label for="" class="btn btn-sm btn-danger">Deactive</label>
-                                </td>
-                            @endif
-                            <td>
-                                <button type="button" class="btn btn-sm btn-primary userBtn"
-                                    data-id="{{ $user->id }}" data-name="{{ $user->name }}"
-                                    data-email="{{ $user->email }}" data-mobile="{{ $user->mobile }}"
-                                    data-whatsapp="{{ $user->whatsapp }}" data-status="{{ $user->status }}"
-                                    data-trading_code="{{ $user->trading_code }}"
-                                    data-toggle="modal" data-target="#userModal">
-                                    Edit
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+                <div class="box-header">
+                <h3 class="box-title">User List</h3>
+                </div>
+                <div class="box-body">
+                    <div style="display: flex; justify-content:space-between; align-items:center;">
+                        <input style="margin-bottom: 10px;width: 200px;height: 37px;" type="text" id="search" placeholder="Search BO ID or Name...">
+                    </div>
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Mobile</th>
+                                <th>Whatsapp</th>
+                                <th>Joined On</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bo-table-body">
+                            @foreach ($users as $user)
+                                <tr class="list-item">
+                                    <td>{{ $user->id }}</td>
+                                    <td>
+                                        {{ $user->name }}
+                                    </td>
+                                    <td>
+                                        {{ $user->email }}
+                                    </td>
+                                    <td>
+                                        {{ $user->mobile }}
+                                    </td>
+                                    <td>
+                                        <a href="https://api.whatsapp.com/send?phone=880{{ $user->whatsapp }}" target="_blank">
+                                            {{ $user->whatsapp }}
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {{ $user->created_at->format('d-M-Y') }}
+                                    </td>
+                                    @if ($user->status === 'active')
+                                        <td>
+                                            <label for="" class="btn btn-sm btn-success">Active</label>
+                                        </td>
+                                    @else
+                                        <td>
+                                            <label for="" class="btn btn-sm btn-danger">Deactive</label>
+                                        </td>
+                                    @endif
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-primary userBtn"
+                                            data-id="{{ $user->id }}" data-name="{{ $user->name }}"
+                                            data-email="{{ $user->email }}" data-mobile="{{ $user->mobile }}"
+                                            data-whatsapp="{{ $user->whatsapp }}" data-status="{{ $user->status }}"
+                                            data-trading_code="{{ $user->trading_code }}"
+                                            data-toggle="modal" data-target="#userModal">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
 
-                <tfoot>
-                    <tr>
-                    <th>ID</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                    <th>CSS grade</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                    </tr>
-                </tfoot>
-              </table>
-            </div>
+                    </table>
+                    <div id="pagination-links">
+                        {{ $users->links() }}
+                    </div>
+                </div>
           </div>
         </section>
     </div>
@@ -189,6 +184,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -223,4 +219,86 @@
             });
         });
     </script>
+
+    <script>
+        $(document).ready(function() {
+            function fetch_data(page = 1, search = '') {
+                $.ajax({
+                    url: "{{ route('user.list') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    data: {
+                        page: page,
+                        search: search
+                    },
+                    success: function(response) {
+                        let html = '';
+                        response.data.forEach(item => {
+                            let buttonClass = item.status === 'active' ? 'btn-success' : 'btn-danger';
+                            let buttonText = item.status === 'active' ? 'Activate' : 'Deactivate';
+                            let formattedDate = moment(item.created_at).format('DD-MM-YY, h:mmA');
+
+                            html += `<tr class="list-item">
+                                <td>${item.id}</td>
+                                <td>${String(item.trading_code).padStart(4, '0')}</td>
+                                <td>${item.name}</td>
+                                <td>${item.email}</td>
+                                <td>${item.mobile}</td>
+                                <td>${item.whatsapp}</td>
+                                <td>${formattedDate}</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm ${buttonClass}">${buttonText}</button>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-primary" data-id="${item.id}">Edit</button>
+                                    <button type="button" class="btn btn-sm btn-danger deleteBtn" data-id="${item.id}">Delete</button>
+                                </td>
+                            </tr>`;
+                        });
+
+                        $('#bo-table-body').html(html);
+                        let paginationLinks = '';
+
+                        if (response.pagination.current_page > 1) {
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="1">First</a>`;
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="${response.pagination.current_page - 1}">Previous</a>`;
+                        }
+
+                        for (let i = 1; i <= response.pagination.last_page; i++) {
+                            if (i === response.pagination.current_page) {
+                                paginationLinks += `<span class="pagination-link active">${i}</span>`;
+                            } else {
+                                paginationLinks += `<a href="#" class="pagination-link" data-page="${i}">${i}</a>`;
+                            }
+                        }
+
+                        if (response.pagination.current_page < response.pagination.last_page) {
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="${response.pagination.current_page + 1}">Next</a>`;
+                            paginationLinks += `<a href="#" class="pagination-link" data-page="${response.pagination.last_page}">Last</a>`;
+                        }
+
+                        $('#pagination-links').html(paginationLinks);
+                    }
+                });
+            }
+
+            // Initial fetch
+            fetch_data();
+
+            // Search input
+            $('#search').on('keyup', function() {
+                let search = $(this).val();
+                fetch_data(1, search);
+            });
+
+            // Pagination links
+            $(document).on('click', '.pagination-link', function(e) {
+                e.preventDefault();
+                let page = $(this).data('page');
+                let search = $('#search').val();
+                fetch_data(page, search);
+            });
+        });
+    </script>
+
 @endsection

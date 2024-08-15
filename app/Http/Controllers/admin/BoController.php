@@ -9,8 +9,10 @@ use App\Models\BoNominee;
 use App\Models\BoDocument;
 use App\Models\CustomerBo;
 use App\Models\BoAuthorize;
+use Illuminate\Support\Str;
 use App\Models\BoNomineeTwo;
 use Illuminate\Http\Request;
+use App\Services\UserService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -28,10 +30,35 @@ class BoController extends Controller
         }
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->ajax()) {
+            $search = $request->get('search');
+            $perPage = $request->get('per_page', 10);
+
+            $bos = BoAccount::query()
+                ->when($search, function ($query, $search) {
+                    return $query->where('bo_id', 'like', "%{$search}%")
+                                ->orWhere('name', 'like', "%{$search}%");
+                })
+                ->latest()
+                ->paginate($perPage);
+
+            return response()->json([
+                'pagination' => [
+                    'total'        => $bos->total(),
+                    'per_page'     => $bos->perPage(),
+                    'current_page' => $bos->currentPage(),
+                    'last_page'    => $bos->lastPage(),
+                    'from'         => $bos->firstItem(),
+                    'to'           => $bos->lastItem()
+                ],
+                'data' => $bos->items()
+            ]);
+        }
+
         $data['pageTitle'] = 'BO List';
-        $data['bos'] = BoAccount::latest()->get();
+        $data['bos'] = BoAccount::latest()->paginate(10);
 
         return view('admin.bo.create')->with($data);
     }
@@ -613,7 +640,6 @@ class BoController extends Controller
 
     public function firstapplicantpassportFrontClear(Request $request, $id)
     {
-        // Find the image record in the database
         $image = BoDocument::where('bo_id', $id)->first();
 
         if ($image) {
@@ -631,7 +657,6 @@ class BoController extends Controller
 
     public function firstapplicantpassportBackClear(Request $request, $id)
     {
-        // Find the image record in the database
         $image = BoDocument::where('bo_id', $id)->first();
 
         if ($image) {
@@ -654,10 +679,9 @@ class BoController extends Controller
         ]);
 
         if ($request->hasFile('bo_file')) {
-            $file = $request->file('bo_file');
+            $file     = $request->file('bo_file');
             $filePath = $file->storeAs('uploads', $file->getClientOriginalName());
 
-            // Import the data to the database
             Excel::import(new BoImport, $filePath);
 
             return redirect()->back()->with('message','File uploaded and data imported successfully');
@@ -672,7 +696,13 @@ class BoController extends Controller
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'boId' => ['required'],
+                'boId'            => ['required'],
+                'client_name'     => ['required', 'string', 'max:250', 'min:2'],
+                'email'           => ['required', 'email', 'unique:users'],
+                'cell_no'         => ['required'],
+                'bank_account_no' => ['required'],
+                'bank_name'       => ['required', 'string'],
+                'branch_name'     => ['required', 'string'],
             ]);
 
             if ($validator->fails()) {
@@ -683,15 +713,40 @@ class BoController extends Controller
 
             $boObj = new BoAccount();
 
-            $boObj->bo_id = $request->input('boId');
-            $boObj->name = ($request->input('client_name')) ?? 'N/A';
-            $boObj->ac_type = ($request->input('ac_type')) ?? 'N/A';
+            $boObj->bo_id           = $request->input('boId');
+            $boObj->name            = strtoupper($request->input('client_name', NULL));
+            $boObj->email           = Str::lower($request->input('email'));
+            $boObj->ac_type         = $request->input('ac_type');
+            $boObj->father_name     = $request->input('father_name');
+            $boObj->spouse_name     = $request->input('spouse_name');
+            $boObj->mother_name     = $request->input('mother_name');
+            $boObj->cell_no         = $request->input('cell_no');
+            $boObj->address         = $request->input('address');
+            $boObj->ac_open_date    = $request->input('ac_open_date');
+            $boObj->bank_account_no = $request->input('bank_account_no');
+            $boObj->bank_name       = $request->input('bank_name');
+            $boObj->branch_name     = $request->input('branch_name');
 
             $res = $boObj->save();
 
             DB::commit();
             if($res){
-                return redirect()->back()->with('message', 'Successfully added');
+                $userServiceObj = new UserService();
+                $userServiceObj->create(
+                    $request->input('boId'),
+                    $request->input('client_name'),
+                    $request->input('email'),
+                    $request->input('father_name'),
+                    $request->input('spouse_name'),
+                    $request->input('mother_name'),
+                    $request->input('cell_no'),
+                    $request->input('address'),
+                    $request->input('bank_account_no'),
+                    $request->input('bank_name'),
+                    $request->input('branch_name')
+                );
+
+                return redirect()->back()->with('message', 'Successfully added Bo and Investor..!');
             }
 
         } catch (\Exception $e) {
@@ -710,7 +765,6 @@ class BoController extends Controller
     {
         $client = BOForm::findOrFail($id);
 
-        // return view('admin.bo.show', compact('client'));
         $pdf = PDF::loadView('admin.bo.test', compact('client'));
         return $pdf->download('client_information.pdf');
     }

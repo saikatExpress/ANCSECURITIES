@@ -21,17 +21,6 @@ class UserSeeder extends Seeder
         User::insert([
             [
                 'id'         => 1,
-                'name'       => 'Saikat Talukder',
-                'email'      => 'saikat@gmail.com',
-                'mobile'     => '01713617913',
-                'whatsapp'   => '01713617913',
-                'address'    => 'Netrakona , Mymensingh',
-                'password'   => Hash::make($password),
-                'role'       => 'user',
-                'created_at' => $now,
-            ],
-            [
-                'id'         => 2,
                 'name'       => 'ANC ADMIN',
                 'email'      => 'uftcl.bd@gmail.com',
                 'mobile'     => '01714761685',

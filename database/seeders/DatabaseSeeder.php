@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            AboutSeeder::class,
-            DesignationSeeder::class,
-            RolePermissionSeeder::class,
-            SettingSeeder::class,
+            // AboutSeeder::class,
+            // DesignationSeeder::class,
+            // RolePermissionSeeder::class,
+            // SettingSeeder::class,
         ]);
     }
 }
