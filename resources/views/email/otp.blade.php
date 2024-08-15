@@ -17,7 +17,7 @@ Thank you for registering.
 {{-- Subcopy --}}
 @slot('subcopy')
     @component('mail::subcopy')
-        If you have any trouble receiving your OTP, please contact us at <a href="tel:0171352712">0171352712</a>.
+        If you have any trouble receiving your OTP, please contact us at <a href="tel:01844547916">01844547916</a>.
     @endcomponent
 @endslot
 

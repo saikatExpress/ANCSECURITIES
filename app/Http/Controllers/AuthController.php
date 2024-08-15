@@ -278,6 +278,7 @@ class AuthController extends Controller
 
             if ($user) {
                 if ($user->status === 'deactive') {
+                    Session::put('status_session', $user->status);
                     DB::rollBack();
                     return response()->json(['error' => 'This account is deactive. If you want to activate your account, please contact admin.']);
                 }

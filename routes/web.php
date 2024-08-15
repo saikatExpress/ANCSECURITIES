@@ -27,6 +27,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StatusController;
 use App\Http\Controllers\UserCOntroller;
 use Illuminate\Queue\Console\WorkCommand;
 use Illuminate\Support\Facades\Route;
@@ -100,6 +101,13 @@ Route::controller(AuthController::class)->group(function(){
     Route::get('/get/name/check', 'getNameCheck');
     Route::get('/get/email/check', 'getEmailCheck');
     Route::get('/get/mobile/check', 'getMobileCheck');
+});
+
+//StatusController for user
+Route::controller(StatusController::class)->group(function(){
+    Route::get('/user/status', 'create')->name('user.status');
+    Route::post('/user/send-otp', 'sendOtp')->name('user.sendOtp');
+    Route::post('/user/verify-otp', 'verifyOtp')->name('user.verifyOtp');
 });
 
 Route::middleware(['user.guard'])->group(function(){

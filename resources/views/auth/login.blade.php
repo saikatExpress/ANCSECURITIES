@@ -95,6 +95,11 @@
             border-radius: 4px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+
+        .authErrorMessage a {
+            color: blue;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -146,6 +151,21 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault(); // Disable right-click context menu
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disable F12 (DevTools), Ctrl+Shift+I (DevTools), Ctrl+U (View Source)
+            if (e.keyCode === 123 ||
+                (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
+                (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+            }
+        });
+    </script>
+
+    <script>
         $(document).ready(function() {
             // Show the alert message
             $('#successAlert').show();
@@ -164,6 +184,7 @@
 
                 var email    = $('#email').val().trim();
                 var password = $('#password').val().trim();
+                var userStatusUrl = "{{ route('user.status') }}";
 
                 $('#emailerror-message').html('');
                 $('#passworderror-message').html('');
@@ -195,15 +216,16 @@
                                 icon: 'success',
                                 title: response.success,
                                 showConfirmButton: false,
-                                timer: 2000 // Automatically close the alert after 2 seconds
+                                timer: 2000
                             }).then(function() {
-                                // Redirect to the specified URL
                                 window.location.href = response.redirect;
                             });
                         } else if (response.validationerror) {
                             $('#authErrorMessage').html(response.validationerror).addClass('authErrorMessage');
                         } else {
-                            $('#authErrorMessage').html(response.error).addClass('authErrorMessage');
+                            var errorMessage = response.error;
+                            var linkHtml = `<a href="${userStatusUrl}" class="btn btn-info">Go Here</a>`;
+                            $('#authErrorMessage').html(errorMessage + '<br>' + linkHtml).addClass('authErrorMessage');
                         }
 
                     },

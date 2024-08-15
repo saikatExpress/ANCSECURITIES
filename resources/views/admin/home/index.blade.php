@@ -171,16 +171,18 @@
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-yellow">
-                            <i style="margin-top: 20px;" class="ion ion-ios-people-outline"></i>
-                        </span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Clients</span>
-                            <span class="info-box-number">{{ number_format($totalUsers) }}</span>
-                            <span style="color: green;">Active : {{ $totalUsers }}</span>
+                    <a href="{{ route('user.list') }}">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-yellow">
+                                <i style="margin-top: 20px;" class="ion ion-ios-people-outline"></i>
+                            </span>
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Clients</span>
+                                <span class="info-box-number">{{ number_format($totalUsers) }}</span>
+                                <span style="color: green;">Active : <span class="badge badge-success">{{ $activeUsers }}</span></span>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
 

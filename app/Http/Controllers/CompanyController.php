@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,6 +21,7 @@ class CompanyController extends Controller
 {
     public function welcome()
     {
+        Session::forget('status_session');
         $data['news'] = NewsPortal::latest()->limit(3)->get();
 
         return view('welcome')->with($data);

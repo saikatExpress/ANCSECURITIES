@@ -118,6 +118,7 @@ class AdminController extends Controller
         $data['authUserExpense'] = Expense::with('staff:id,name')->where('staff_id', Auth::id())->get();
 
         $data['totalUsers'] = User::where('role', 'user')->count();
+        $data['activeUsers'] = User::where('role', 'user')->where('status', 'active')->count();
         $data['latestUsers'] = User::where('role', 'user')->latest()->take(8)->get();
 
         $notifications = [];
