@@ -327,11 +327,20 @@
                                     </td>
 
                                     <td>{{ $expense->staff->name }}</td>
-                                    <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
                                     <td>
-                                        <!-- Action Dropdown Menu -->
+                                        @if ($expense->status === 'approved')
+                                            <label for="" style="font-size: 8px; margin-bottom:0;" class="btn btn-sm btn-success" >
+                                                {{ ucfirst($expense->status) }}
+                                            </label>
+                                        @else
+                                            <label style="font-size: 8px; margin-bottom:0;" for="" class="btn btn-sm btn-danger" >
+                                                {{ ucfirst($expense->status) }}
+                                            </label>
+                                        @endif
+                                    </td>
+                                    <td>
                                         <div class="dropdown">
-                                            <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ $expense->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <button style="font-size: 8px; margin-bottom:0;" class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ $expense->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 Action
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{ $expense->id }}">
@@ -349,32 +358,32 @@
                                     </td>
                                     <td>
                                         @if ($expense->assign_to_ceo == 1 || $expense->assign_to_hr == 1)
-                                            <button type="button"  class="btn btn-sm btn-secondary expenseAssignBtn" data-id="{{ $expense->id }}">
+                                            <button type="button" style="font-size: 8px; margin-bottom:0;" class="btn btn-sm btn-secondary expenseAssignBtn" data-id="{{ $expense->id }}">
                                                 Assigned
                                             </button>
-                                        @elseif ($expense->assign_to_ceo  == 2 && $expense->assign_to_hr == 2)
-                                            <button type="button"  class="btn btn-sm btn-success expenseAssignBtn" data-id="{{ $expense->id }}">
+                                        @elseif ($expense->assign_to_ceo == 2 && $expense->assign_to_hr == 2)
+                                            <button type="button" style="font-size: 8px; margin-bottom:0;" class="btn btn-sm btn-success expenseAssignBtn" data-id="{{ $expense->id }}">
                                                 Download
                                             </button>
                                         @elseif($expense->assign_to_ceo == null && $expense->assign_to_hr == null)
-                                            <button type="button"  class="btn btn-sm btn-warning expenseAssignBtn" data-id="{{ $expense->id }}">
+                                            <button type="button" style="font-size: 8px; margin-bottom:0;" class="btn btn-sm btn-warning expenseAssignBtn" data-id="{{ $expense->id }}">
                                                 Assign
                                             </button>
                                         @endif
                                         <br>
                                         @if ($expense->assign_to_ceo == null)
-                                            <span class="text-sm text-warning">not assign CEO</span> <br>
+                                            <span class="text-sm text-warning" style="font-size: 8px; margin-bottom:0;">not assign CEO</span> <br>
                                         @elseif ($expense->assign_to_ceo == 1)
-                                            <span style="color:red;" class="text-sm">Left from CEO</span> <br>
+                                            <span style="color:red;" class="text-sm" style="font-size: 8px; margin-bottom:0;">Left from CEO</span> <br>
                                         @elseif ($expense->assign_to_ceo == 2)
-                                            <span style="color:green;" class="text-sm">Complete from CEO</span> <br>
+                                            <span style="color:green;" class="text-sm" style="font-size: 8px; margin-bottom:0;">Complete from CEO</span> <br>
                                         @endif
                                         @if ($expense->assign_to_hr == null)
-                                            <span class="text-sm text-warning">not assign HR</span>
+                                            <span class="text-sm text-warning" style="font-size: 8px; margin-bottom:0;">not assign HR</span>
                                         @elseif ($expense->assign_to_hr == 1)
-                                            <span style="color:red;" class="text-sm">Left from HR</span>
+                                            <span style="color:red;" class="text-sm" style="font-size: 8px; margin-bottom:0;">Left from HR</span>
                                         @elseif ($expense->assign_to_hr == 2)
-                                            <span style="color:green;" class="text-sm">Complete from HR</span> <br>
+                                            <span style="color:green;" class="text-sm" style="font-size: 8px; margin-bottom:0;">Complete from HR</span> <br>
                                         @endif
                                     </td>
                                 </tr>
@@ -496,7 +505,6 @@
                                             <th>Amount</th>
                                             <th>Code</th>
                                             <th>AC No</th>
-                                            <th>Description</th>
                                             <th>Withdraw Date</th>
                                             <th>Status</th>
                                             <th>Action</th>
@@ -511,7 +519,6 @@
                                                 <td>{{ number_format($withdrawal->amount, 2) }} Taka</td>
                                                 <td>{{ $withdrawal->clients->trading_code }}</td>
                                                 <td>{{ $withdrawal->ac_no }}</td>
-                                                <td>{{ $withdrawal->description }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y h:i A') }}</td>
                                                 <td>
                                                     @if (auth()->user()->role === 'Business Head')
@@ -521,23 +528,23 @@
                                                             </span>
                                                             @if ($withdrawal->ceostatus != null)
                                                                 @if ($withdrawal->ceostatus === 'approved')
-                                                                    <p style="margin-bottom: 0; font-size: 12px; color:green;">CEO approval done</p>
+                                                                    <p style="margin-bottom: 0; font-size: 8px; color:green;">CEO approval done</p>
                                                                 @elseif ($withdrawal->ceostatus === 'decline')
-                                                                    <p style="margin-bottom: 0; font-size: 12px; color:tomato;">CEO approval declined</p>
+                                                                    <p style="margin-bottom: 0; font-size: 8px; color:tomato;">CEO approval declined</p>
                                                                     <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
                                                                 @endif
                                                             @else
-                                                                <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for CEO approval</p>
+                                                                <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for CEO approval</p>
                                                             @endif
                                                             @if ($withdrawal->mdstatus != null)
                                                                 @if ($withdrawal->mdstatus === 'approved')
-                                                                    <p style="margin-bottom: 0; font-size: 12px; color:green;">MD approval done</p>
+                                                                    <p style="margin-bottom: 0; font-size: 8px; color:green;">MD approval done</p>
                                                                 @elseif ($withdrawal->mdstatus === 'decline')
-                                                                    <p style="margin-bottom: 0; font-size: 12px; color:tomato;">MD approval declined</p>
+                                                                    <p style="margin-bottom: 0; font-size: 8px; color:tomato;">MD approval declined</p>
                                                                     <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
                                                                 @endif
                                                             @else
-                                                                <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for MD approval</p>
+                                                                <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for MD approval</p>
                                                             @endif
                                                         @elseif ($withdrawal->declined_by != null)
                                                             <span style="background-color: darkred;" class="badge">
@@ -554,23 +561,23 @@
                                                         </span> <br>
                                                         @if ($withdrawal->ceostatus != null)
                                                             @if ($withdrawal->ceostatus === 'approved')
-                                                                <p style="margin-bottom: 0; font-size: 12px; color:green;">CEO approval done</p>
+                                                                <p style="margin-bottom: 0; font-size: 8px; color:green;">CEO approval done</p>
                                                             @elseif ($withdrawal->ceostatus === 'decline')
-                                                                <p style="margin-bottom: 0; font-size: 12px; color:tomato;">CEO approval declined</p>
+                                                                <p style="margin-bottom: 0; font-size: 8px; color:tomato;">CEO approval declined</p>
                                                                 <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
                                                             @endif
                                                         @else
-                                                            <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for CEO approval</p>
+                                                            <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for CEO approval</p>
                                                         @endif
                                                         @if ($withdrawal->mdstatus != null)
                                                             @if ($withdrawal->mdstatus === 'approved')
-                                                                <p style="margin-bottom: 0; font-size: 12px; color:green;">MD approval done</p>
+                                                                <p style="margin-bottom: 0; font-size: 8px; color:green;">MD approval done</p>
                                                             @elseif ($withdrawal->mdstatus === 'decline')
-                                                                <p style="margin-bottom: 0; font-size: 12px; color:tomato;">MD approval declined</p>
+                                                                <p style="margin-bottom: 0; font-size: 8px; color:tomato;">MD approval declined</p>
                                                                 <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
                                                             @endif
                                                         @else
-                                                            <p style="margin-bottom: 0; font-size: 12px; color:red;">Waiting for MD approval</p>
+                                                            <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for MD approval</p>
                                                         @endif
                                                     @endif
                                                 </td>
@@ -637,9 +644,19 @@
                                             </a>
                                         </td>
                                         <td>{{ $expense->staff->name }}</td>
-                                        <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
                                         <td>
-                                            <!-- Action Dropdown Menu -->
+                                            @if ($expense->status === 'approved')
+                                                <label for="" class="btn btn-sm btn-success">
+                                                    {{ ucfirst($expense->status) }}
+                                                </label>
+                                            @else
+                                                <label for="" class="btn btn-sm btn-danger">
+                                                    {{ ucfirst($expense->status) }}
+                                                </label>
+                                            @endif
+
+                                        </td>
+                                        <td>
                                             <div class="dropdown">
                                                 <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="dropdownMenuButton-{{ $expense->id }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     Action
