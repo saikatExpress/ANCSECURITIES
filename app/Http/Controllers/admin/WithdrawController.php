@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\admin;
 
 use App\Models\Fund;
+use App\Models\Staff;
+use App\Models\RequestFile;
 use Illuminate\Http\Request;
 use App\Services\FundService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -15,8 +18,40 @@ class WithdrawController extends Controller
     {
         $sessionId = Session::get('user_id');
         if(!$sessionId){
-            return route('login');
+            return route('logout.us');
         }
+    }
+
+    public function index()
+    {
+        $data['pageTitle'] = "Withdraw Request Title";
+
+        $groupedData = RequestFile::select('created_by', DB::raw('count(*) as total'))
+            ->groupBy('created_by')
+            ->get();
+
+        $requestFiles = RequestFile::with('funds')->get();
+
+        $data['combinedData'] = $groupedData->map(function ($group) use ($requestFiles) {
+            return [
+                'created_by' => $group->created_by,
+                'total' => $group->total,
+                'details' => $requestFiles->filter(function ($requestFile) use ($group) {
+                    return $requestFile->created_by == $group->created_by;
+                })
+            ];
+        });
+
+        return view('admin.Request.withdraw.index', compact('groupedData'))->with($data);
+    }
+
+    public function withdrawIndex()
+    {
+        $pageTitle = 'Client Fund withdraw Request';
+
+        $limitRequests = Fund::with('clients:id,name,email,trading_code,mobile,whatsapp')->where('category', 'withdraw')->get();
+
+        return view('admin.Request.withdraw', compact('pageTitle','limitRequests'));
     }
 
     public function create()
@@ -42,7 +77,6 @@ class WithdrawController extends Controller
         }
 
         return view('admin.Request.wcreate')->with($data);
-
     }
 
     public function store(Request $request)
@@ -74,6 +108,49 @@ class WithdrawController extends Controller
 
         if($res === true){
             return redirect()->back()->with('message', 'Withdraw request replacement successfully');
+        }
+    }
+
+    public function show($id)
+    {
+        $data['pageTitle'] = 'Show Withdraw Form';
+        $data['withdraw'] = Fund::with('clients:id,name,mobile,trading_code,status')->where('id',$id)->where('category', 'withdraw')->first();
+
+        $data['staff'] = Staff::find($data['withdraw']->approved_by);
+
+        return view('admin.Request.show')->with($data);
+    }
+
+    public function update(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'reqId'  => ['required'],
+                'amount' => ['required'],
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+            }
+
+            $reqId = $request->input('reqId');
+
+            $withdraw = Fund::findOrFail($reqId);
+
+            $withdraw->amount = $request->input('amount');
+            $res = $withdraw->save();
+
+            DB::commit();
+            if($res){
+                return redirect()->back()->with('message', 'Withdraw update successfully');
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
         }
     }
 }

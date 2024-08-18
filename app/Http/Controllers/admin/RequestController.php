@@ -189,16 +189,6 @@ class RequestController extends Controller
         }
     }
 
-    public function show($id)
-    {
-        $data['pageTitle'] = 'Show Withdraw Form';
-        $data['withdraw'] = Fund::with('clients:id,name,mobile,trading_code,status')->where('id',$id)->where('category', 'withdraw')->first();
-
-        $data['staff'] = Staff::find($data['withdraw']->approved_by);
-
-        return view('admin.Request.show')->with($data);
-    }
-
     public function update(Request $request)
     {
         try {
@@ -289,15 +279,6 @@ class RequestController extends Controller
             info($e);
             return false;
         }
-    }
-
-    public function withdrawIndex()
-    {
-        $pageTitle = 'Client Fund withdraw Request';
-
-        $limitRequests = Fund::with('clients:id,name,email,trading_code,mobile,whatsapp')->where('category', 'withdraw')->get();
-
-        return view('admin.Request.withdraw', compact('pageTitle','limitRequests'));
     }
 
     public function depositIndex()

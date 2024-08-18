@@ -519,7 +519,7 @@
                                                 <td>{{ number_format($withdrawal->amount, 2) }} Taka</td>
                                                 <td>{{ $withdrawal->clients->trading_code }}</td>
                                                 <td>{{ $withdrawal->ac_no }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y h:i A') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y') }}</td>
                                                 <td>
                                                     @if (auth()->user()->role === 'Business Head')
                                                         @if ($withdrawal->approved_by != null)
@@ -747,10 +747,16 @@
                                     </td>
                                     <td>{{ $expense->staff->name }}</td>
                                     @if ($expense->status === 'pending')
-                                        <td class="btn btn-sm btn-danger" style="color:#fff;">{{ ucfirst($expense->status) }}</td>
+                                        <td class="">
+                                            <label for="" class="btn btn-sm btn-danger" style="margin-bottom: 0%; font-size:10px;">
+                                                {{ ucfirst($expense->status) }}
+                                            </label>
+                                        </td>
                                     @elseif ($expense->status === 'accepted')
-                                        <td class="btn btn-sm btn-success" style="color:#fff;">
-                                            {{ ucfirst($expense->status) }}
+                                        <td>
+                                            <label for="" class="btn btn-sm btn-success" style="margin-bottom: 0%; font-size:10px;">
+                                                {{ ucfirst($expense->status) }}
+                                            </label>
                                         </td>
                                     @else
 

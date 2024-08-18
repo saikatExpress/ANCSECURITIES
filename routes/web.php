@@ -138,8 +138,6 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
             Route::post('/limit/store', 'store')->name('admin.limitstore');
             Route::post('/limit/update', 'update')->name('admin.limitupdate');
             Route::post('/update/req/status', 'updateReqStatus')->name('admin.updateReqStatus');
-
-            Route::get('/view/withdraw/request/{id}', 'show')->name('admin.viewwithdrawrequest');
         });
     });
 
@@ -194,7 +192,6 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
         Route::get('/declined/request', 'declineIndex')->name('declined.request');
         Route::get('/get/client/code/{code}', 'getClientInfo');
         Route::post('/manual/request/store', 'manualStore')->name('manual.request_store');
-        Route::get('/withdraw/request', 'withdrawIndex')->name('withdraw.request');
         Route::get('/deposit/request', 'depositIndex')->name('deposit.request');
         Route::post('/request/toggle/{id}', 'toggleStatus')->name('request.toggle');
         Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');

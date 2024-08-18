@@ -13,7 +13,7 @@
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
             <p style="text-align: right;">
-                <a class="btn btn-sm btn-primary" href="{{ route('staff.list') }}">Withdraw Request List</a>
+                <a class="btn btn-sm btn-primary" href="{{ route('admin.withdrawlist') }}">Withdraw Request List</a>
             </p>
         </section>
 
@@ -139,14 +139,12 @@
 
                                             </td>
                                             <td>
-                                                <button type="button" class="btn btn-sm btn-primary editBtn" data-toggle="modal" data-target="#exampleModal"
-                                                 data-id="{{ $limit->id }}" data-name="{{ $limit->clients->name }}" data-amount="{{ $limit->limit_amount }}"
-                                                  data-trading_code="{{ $limit->trade_id }}" data-status="{{ $limit->status }}"
-                                                   data-client_id="{{ $limit->client_id }}">
+                                                <button style="font-size: 8px; margin-bottom:0%;" type="button" class="btn btn-sm btn-primary editBtn"
+                                                    data-toggle="modal" data-target="#exampleModal"
+                                                    data-id="{{ $limit->id }}" data-name="{{ $limit->clients->name }}" data-amount="{{ $limit->amount }}"
+                                                    data-trading_code="{{ $limit->trade_id }}" data-status="{{ $limit->status }}"
+                                                    data-client_id="{{ $limit->client_id }}">
                                                     <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-danger" data-id="{{ $limit->id }}">
-                                                    <i class="fa-solid fa-trash"></i>
                                                 </button>
                                             </td>
                                         </tr>
@@ -163,7 +161,39 @@
         </section>
     </div>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Request</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('admin.withdrawupdate') }}" method="post">
+                        @csrf
+                        <input type="hidden" id="limitId" name="reqId">
+                        <div class="form-group">
+                            <label for="wname">Name</label>
+                            <input type="text" id="withdrawname" class="form-control" name="name" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="wamount">Amount</label>
+                            <input type="text" id="wamount" class="form-control" name="amount">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
@@ -190,6 +220,23 @@
             setTimeout(function() {
                 $('.errorAlert').fadeOut('slow');
             }, 3000);
+        });
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            // Event listener for the edit button
+            $('.editBtn').on('click', function(){
+                var limitId  = $(this).data('id');
+                var name     = $(this).data('name');
+                var amount   = $(this).data('amount');
+                var clientId = $(this).data('client_id');
+
+                $('#limitId').val(limitId);
+                $('#withdrawname').val(name);
+                $('#wamount').val(amount);
+                $('#clientId').val(clientId);
+            });
         });
     </script>
 @endsection
