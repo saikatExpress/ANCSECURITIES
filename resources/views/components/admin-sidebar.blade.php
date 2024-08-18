@@ -146,7 +146,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="pages/UI/buttons.html">
+                        <a href="{{ route('employee.salary') }}">
                             <i class="fa fa-money"></i>
                             Staff Salary
                         </a>
