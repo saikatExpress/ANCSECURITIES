@@ -18,11 +18,11 @@ class UserGuard
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            return redirect()->route(md5('login'));
+            return redirect()->route('login');
         }
 
         if(Auth::check() && Auth::user()->role !== 'user'){
-            return redirect()->route(md5('login'));
+            return redirect()->route('login');
         }
         return $next($request);
     }

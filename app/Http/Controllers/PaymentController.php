@@ -9,6 +9,7 @@ use App\Models\LimitRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use App\Interfaces\FundRepositoryInterface;
 
@@ -25,9 +26,16 @@ class PaymentController extends Controller
 
     public function fundWithdrawCreate()
     {
+        Session::put('withdraw', 'active');
+        $value = Session::get('withdraw');
+        if($value != 'active'){
+            abort(403);
+        }
+
         if(auth()->user()->role !== 'user'){
             return redirect()->back()->with('error', 'This page is not permitted for you..!');
         }
+
         $data['funds'] = Fund::where('client_id', Auth::id())->where('category', 'withdraw')->latest()->get();
 
         return view('user.fund.withdraw')->with($data);

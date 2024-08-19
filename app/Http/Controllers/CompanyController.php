@@ -22,6 +22,7 @@ class CompanyController extends Controller
     public function welcome()
     {
         Session::forget('status_session');
+        Session::forget('withdraw');
         $data['news'] = NewsPortal::latest()->limit(3)->get();
 
         return view('welcome')->with($data);

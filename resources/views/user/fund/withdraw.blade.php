@@ -8,76 +8,9 @@
     <title>Withdraw Money | ANC SECURITIES</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .navbar-custom {
-            background: linear-gradient(45deg, #007bff, #0056b3);
-        }
-        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
-            color: white;
-        }
-        .navbar-custom .nav-link.active {
-            color: #ffcc00;
-        }
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .card-header {
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            color: white;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-        }
-        .btn-primary {
-            background: #007bff;
-            border: none;
-            transition: background 0.3s ease;
-        }
-        .btn-primary:hover {
-            background: #0056b3;
-        }
-        .form-control {
-            border-radius: 5px;
-        }
-        .history-table {
-            margin-top: 20px;
-        }
-        .content {
-            display: inline;
-        }
-        .more {
-            display: none;
-        }
-        .show-more, .show-less {
-            display: none;
-            color: blue;
-            cursor: pointer;
-            font-size: 8px;
-        }
-
-        .footer {
-            background-color: #f8f9fa;
-            padding: 20px 0;
-            text-align: center;
-            border-top: 1px solid #e9ecef;
-        }
-        .footer img {
-            max-width: 150px;
-            margin-bottom: 10px;
-        }
-        .footer p {
-            margin: 0;
-            color: #6c757d;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('user/assets/css/withdraw.css') }}">
 </head>
-<body>
-
-    <!-- Navigation Bar -->
+<body style=" background-repeat: no-repeat, repeat; background-position: center; background-color: #cccccc;height: 1000px; background-size: cover;background-image: url({{ asset('auth/money.webp') }})">
     <nav class="navbar navbar-expand-lg navbar-custom">
         <a class="navbar-brand" href="{{ url('/') }}">
             <img src="{{ asset('auth/logo.png') }}" style="width: 60px; height:60px;margin-left:1rem;background: #fff;border-radius: 50%;padding: 2px;" alt="Anc Securities Ltd">
@@ -121,6 +54,11 @@
                                 {{ session('error') }}
                             </div>
                         @endif
+
+                        <div>
+                            <h4><i class="fa-solid fa-user"></i> {{ auth()->user()->name }}</h4>
+                        </div>
+
                         <form method="POST" action="{{ route('withdraw.store') }}">
                             @csrf
                             <div class="form-group">
@@ -236,14 +174,5 @@
     <script src="{{ asset('user/assets/js/numbertowords.js') }}"></script>
     <script src="{{ asset('user/assets/js/withdraw.js') }}"></script>
     <script src="{{ asset('user/assets/js/read.js') }}"></script>
-
-    <script>
-        setTimeout(function() {
-            document.getElementById('success-message').style.display = 'none';
-        }, 3000);
-        setTimeout(function() {
-            document.getElementById('error-message').style.display = 'none';
-        }, 5000);
-    </script>
 </body>
 </html>

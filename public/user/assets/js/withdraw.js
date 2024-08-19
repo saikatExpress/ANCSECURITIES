@@ -27,3 +27,10 @@ $(document).ready(function(){
         });
     });
 });
+
+setTimeout(function() {
+    document.getElementById('success-message').style.display = 'none';
+}, 3000);
+setTimeout(function() {
+    document.getElementById('error-message').style.display = 'none';
+}, 5000);
