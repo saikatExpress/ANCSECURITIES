@@ -1,51 +1,5 @@
 @extends('admin.layout.app')
-<style>
-    .wizard {
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-.step {
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.error-message {
-    color: red;
-    font-size: 0.875em;
-}
-
-.wizard-nav {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.nav-btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    background-color: #007bff;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.nav-btn:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-}
-</style>
+<link rel="stylesheet" href="{{ asset('admin/css/user.css') }}">
 @section('content')
     <div class="content-wrapper">
         <section class="content-header">
@@ -75,6 +29,11 @@
                     {{ session('message') }}
                 </div>
             @endif
+            @if(session('error'))
+                <div class="alert alert-danger" id="errorAlert">
+                    {{ session('error') }}
+                </div>
+            @endif
 
             <div class="box box-warning">
                 <div class="box-header with-border">
@@ -88,78 +47,12 @@
                         <strong style="display: none;" id="notavaiable" class="text-danger fw-bold ml-3"><i class="fas fa-solid fa-circle-exclamation"></i> Not found</strong>
 
                         <div class="box-body">
-                            {{-- <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">
+                            <form id="user-form" action="{{ route('user.store') }}" method="post" enctype="multipart/form-data">
                                 @csrf
-                                <div class="form-group">
-                                    <label for="">Trading Code <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="trading_code" id="trading_code">
-                                    @error('trading_code')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="name" id="name">
-                                    @error('name')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" name="email" id="email">
-                                    @error('email')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Mobile <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="mobile" id="mobile">
-                                    @error('mobile')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Address <span class="text-danger">*</span></label>
-                                    <textarea name="address" class="form-control" id=""></textarea>
-                                    @error('address')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Password <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="password" id="password">
-                                    @error('password')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div id="fileInputsContainer">
-                                    <div class="form-group">
-                                        <label for="">Upload Image</label>
-                                        <input type="file" name="profile_image" id="profile_image" class="form-control">
-                                        @error('profile_image')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="">Signature</label>
-                                    <input type="file" name="signature" id="signature" class="form-control">
-                                    @error('signature')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Create User</button>
-                                </div>
-                            </form> --}}
-                            <div class="wizard">
-                                <!-- Step 1 -->
-                                <div class="step" id="step-1">
-                                    <h3>Step 1: Account Information</h3>
-                                    <form id="user-form">
+                                <div class="wizard">
+                                    <!-- Step 1 -->
+                                    <div class="step" id="step-1">
+                                        <h3 class="step_header">Account Information</h3>
                                         <div class="form-group">
                                             <label for="trading_code">Trading Code <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="trading_code" id="trading_code">
@@ -175,30 +68,66 @@
                                             <input type="email" class="form-control" name="email" id="email">
                                             <span class="error-message" id="error-email"></span>
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
 
-                                <!-- Step 2 -->
-                                <div class="step" id="step-2" style="display: none;">
-                                    <h3>Step 2: Contact Details</h3>
-                                    <form id="user-form">
+                                    <!-- Step 2 -->
+                                    <div class="step" id="step-2" style="display: none;">
+                                        <h3 class="step_header">Contact Details</h3>
+                                        <div class="form-group">
+                                            <label for="fathername">Father Name</label>
+                                            <input type="text" class="form-control" name="father_name" id="father_name">
+                                            <span class="error-message" id="error-father_name"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mothername">Mother Name</label>
+                                            <input type="text" class="form-control" name="mother_name" id="mother_name">
+                                            <span class="error-message" id="error-mother_name"></span>
+                                        </div>
                                         <div class="form-group">
                                             <label for="mobile">Mobile <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="mobile" id="mobile">
                                             <span class="error-message" id="error-mobile"></span>
                                         </div>
                                         <div class="form-group">
+                                            <label for="mobile">Whatsapp <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="whatsapp" id="whatsapp">
+                                            <span class="error-message" id="error-whatsapp"></span>
+                                        </div>
+                                        <div class="form-group">
                                             <label for="address">Address <span class="text-danger">*</span></label>
                                             <textarea name="address" class="form-control" id="address"></textarea>
                                             <span class="error-message" id="error-address"></span>
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
 
-                                <!-- Step 3 -->
-                                <div class="step" id="step-3" style="display: none;">
-                                    <h3>Step 3: Additional Information</h3>
-                                    <form id="user-form">
+                                    <!-- Step 3 -->
+                                    <div class="step" id="step-3" style="display: none;">
+                                        <h3 class="step_header">Bank Info</h3>
+                                        <div class="form-group">
+                                            <label for="bank">Bank Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="bank_name" id="bank_name">
+                                            <span class="error-message" id="error-bank"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="bankac">Bank A/C No <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="bank_account_no" id="bank_account_no">
+                                            <span class="error-message" id="error-bank_account_no"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="bankac">Branch Name <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="branch_name" id="branch_name">
+                                            <span class="error-message" id="error-branch"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="bankac">Routing Number <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" name="routing_number" id="routing_number">
+                                            <span class="error-message" id="error-routing"></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 4 -->
+                                    <div class="step" id="step-4" style="display: none;">
+                                        <h3 class="step_header">Additional Information</h3>
                                         <div class="form-group">
                                             <label for="password">Password <span class="text-danger">*</span></label>
                                             <input type="password" class="form-control" name="password" id="password">
@@ -214,22 +143,37 @@
                                             <input type="file" name="signature" id="signature" class="form-control">
                                             <span class="error-message" id="error-signature"></span>
                                         </div>
-                                    </form>
-                                </div>
+                                    </div>
 
-                                <!-- Step 4 -->
-                                <div class="step" id="step-4" style="display: none;">
-                                    <h3>Step 4: Review & Submit</h3>
-                                    <p>Review your information before submission.</p>
-                                    <button type="button" id="submit-button">Submit</button>
-                                </div>
+                                    <!-- Step 5 -->
+                                    <div class="step" id="step-5" style="display: none;">
+                                        <h3 class="step_header">Review & Submit</h3>
+                                        <div class="form-group">
+                                            <label for="">Role</label>
+                                            <select name="role" class="form-control" id="role">
+                                                <option value="" selected disabled>Select</option>
+                                                @foreach ($roles as $role)
+                                                    <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group form-check">
+                                            <input class="form-check-input" type="checkbox" value="1" name="checkBo" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                Are you want to create an Trading Code...?
+                                            </label>
+                                        </div>
 
-                                <!-- Navigation Buttons -->
-                                <div class="wizard-nav">
-                                    <button type="button" id="prev-btn" class="nav-btn" style="display: none;">Previous</button>
-                                    <button type="button" id="next-btn" class="nav-btn">Next</button>
+                                        <p class="text-success">Review your information before submission.</p>
+                                        <button type="submit" class="btn btn-sm btn-primary" id="submit-button">Submit</button>
+                                    </div>
+
+                                    <div class="wizard-nav">
+                                        <button type="button" class="btn btn-sm btn-primary" id="prev-btn" class="nav-btn" style="display: none;">Previous</button>
+                                        <button type="button" class="btn btn-sm btn-primary" id="next-btn" class="nav-btn">Next</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -240,104 +184,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            // Show the alert message
-            $('#successAlert').show();
-
-            // Hide the alert message after 3 seconds
-            setTimeout(function() {
-                $('#successAlert').fadeOut('slow');
-            }, 3000);
-        });
-    </script>
-
-    <script>
-        $(document).ready(function(){
-            $('#trading_code').on('input', function(){
-                var code = $(this).val();
-
-                if(code){
-                    $.ajax({
-                        url: '/get/trade/code/' + code,
-                        type: 'GET',
-                        success: function(response){
-                            if(response && response.warning === false){
-                                $('#accountExits').html('Sorry : This account already registered..!');
-                                $('#notavaiable').hide();
-                                $('#name, #email, #mobile').val('');
-                                return false;
-                            }
-
-                            if (response && response.success === true) {
-                                $('#avaiable, .instructions, #register_form').show();
-                                $('#notavaiable').hide();
-                                $('#accountExits').hide();
-                                $('#name').val(response.traderInfo.name);
-                                $('#email').val(response.traderInfo.email);
-                                $('#mobile').val(response.traderInfo.cell_no);
-                            } else {
-                                $('#notavaiable').show();
-                                $('#name, #email, #mobile').val('');
-                            }
-                        },
-                        error: function(error){
-                            console.error('An error occurred:', error);
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let currentStep = 1;
-            const totalSteps = 4;
-
-            const showStep = (step) => {
-                for (let i = 1; i <= totalSteps; i++) {
-                    document.getElementById(`step-${i}`).style.display = (i === step) ? 'block' : 'none';
-                }
-                document.getElementById('prev-btn').style.display = (step === 1) ? 'none' : 'inline-block';
-                document.getElementById('next-btn').textContent = (step === totalSteps) ? 'Submit' : 'Next';
-            };
-
-            document.getElementById('next-btn').addEventListener('click', function() {
-                if (currentStep < totalSteps) {
-                    if (validateStep(currentStep)) {
-                        currentStep++;
-                        showStep(currentStep);
-                    }
-                } else {
-                    document.getElementById('user-form').submit();
-                }
-            });
-
-            document.getElementById('prev-btn').addEventListener('click', function() {
-                if (currentStep > 1) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
-
-            const validateStep = (step) => {
-                let isValid = true;
-                document.querySelectorAll(`#step-${step} .form-control`).forEach(input => {
-                    const errorId = `error-${input.id}`;
-                    const errorMessage = document.getElementById(errorId);
-                    if (input.value.trim() === '') {
-                        errorMessage.textContent = 'This field is required';
-                        isValid = false;
-                    } else {
-                        errorMessage.textContent = '';
-                    }
-                });
-                return isValid;
-            };
-
-            showStep(currentStep);
-        });
-    </script>
+    <script src="{{ asset('admin/assets/js/user.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/step.js') }}"></script>
 @endsection

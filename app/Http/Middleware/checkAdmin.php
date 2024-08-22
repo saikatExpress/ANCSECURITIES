@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 
-class checkAdmin
+class CheckAdmin
 {
     /**
      * Handle an incoming request.
@@ -16,11 +16,9 @@ class checkAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
-        if ($user->role !== 'user') {
-            return $next($request);
+        if(Session::get('role') === 'user'){
+            return redirect('/')->with('error', 'Access denied. Admins Panel only.');
         }
-
-        return redirect()->route('logout.us');
+        return $next($request);
     }
 }

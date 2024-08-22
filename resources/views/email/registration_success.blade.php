@@ -76,10 +76,10 @@
             <p>Thank you for registering with us. Your registration was successful.</p>
             <p>We look forward to providing you with our services.</p>
             <p>Please insert the OTP and verify your account.</p>
-            <a href="{{ $verificationUrl }}" class="button">Verify Your Account</a>
+            <a href="" class="button">Verify Your Account</a>
         </div>
         <div class="footer">
-            <p>If you have any questions, feel free to <a href="mailto:support@example.com">contact us</a>.</p>
+            <p>If you have any questions, feel free to <a href="mailto:ancsecurities@gmail.com">contact us</a>.</p>
             <p>&copy; {{ date('Y') }} Anc Securities Limited. All rights reserved.</p>
         </div>
     </div>

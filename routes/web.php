@@ -14,6 +14,7 @@ use App\Http\Controllers\admin\ExpenseController;
 use App\Http\Controllers\admin\FormController;
 use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\HelperController;
+use App\Http\Controllers\admin\HomeController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\PermissionController;
@@ -30,7 +31,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StatusController;
-use App\Http\Controllers\UserCOntroller;
+use App\Http\Controllers\UserController;
 use Illuminate\Queue\Console\WorkCommand;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -165,19 +166,30 @@ Route::middleware(['auth','onlyAdmin'])->group(function(){
     });
 });
 
-Route::middleware(['auth'])->group(function(){
+// User,Client Route
+Route::middleware(['auth', 'CheckAdmin'])->group(function(){
+    Route::prefix('user')->group(function(){
+        Route::controller(HomeController::class)->group(function(){
+            Route::get('/list', 'index')->name('user.list');
+            Route::get('/active', 'activeUserIndex')->name('active.user');
+            Route::get('/create', 'create')->name('create.user');
+            Route::post('/store', 'store')->name('user.store');
+        });
+    });
+});
+
+Route::middleware(['auth', 'CheckAdmin'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
-        Route::get('/user/list', 'userIndex')->name('user.list');
-        Route::get('active/user/list', 'activeUserIndex')->name('active.user');
         $hashedAdminUrl = md5('admin/dashboard');
         Route::get('/'.$hashedAdminUrl, 'index')->name('admin.dashboard');
+
         $hashedDirectorUrl = md5('create/director');
         Route::get('/'.$hashedDirectorUrl, 'create')->name('director.create');
+
         $hashedBoUrl = md5('bo/list');
         Route::get('/'.$hashedBoUrl, 'boIndex')->name('bo.list');
+
         Route::get('/profile', 'profile')->name('profile.us');
-        Route::get('/create/user', 'createUser')->name('create.user');
-        Route::post('/user/store', 'store')->name('user.store');
         Route::post('/user/update', 'update')->name('user.update');
     });
 
