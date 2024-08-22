@@ -82,10 +82,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Send Reset Link</button>
                 <div class="text-center mt-3">
-                    @php
-                        $url = md5('login');
-                    @endphp
-                    <a href="{{ route($url) }}">Back to Login</a>
+                    <a href="{{ route('login') }}">Back to Login</a>
                 </div>
             </form>
         </div>

@@ -16,7 +16,7 @@
                         </div>
                         <div class="col-md-4 text-center text-md-right mt-3 mt-md-0">
                             <div class="call-to-action-btn">
-                                <a class="btn btn-dark" href="{{ route('contact.us') }}">Get Started</a>
+                                <a class="btn btn-dark" href="{{ route('login') }}">Get Started</a>
                             </div>
                         </div>
                     </div>
