@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,16 +23,9 @@ class RoleController extends Controller
     public function index()
     {
         $data['pageTitle'] = 'Role List';
-        $data['roles'] = Role::with('permissions')->latest()->get();
+        $data['roles']     = Role::with('permissions')->latest()->get();
 
         return view('admin.role.index')->with($data);
-    }
-
-    public function permissionIndex()
-    {
-        $permissions = Permission::all();
-
-        return view('admin.role.partials.index', compact('permissions'));
     }
 
     public function create()
@@ -40,25 +34,6 @@ class RoleController extends Controller
         $permissions = Permission::all();
 
         return view('admin.role.create', compact('pageTitle', 'permissions'));
-    }
-
-    public function permissionCreate()
-    {
-        return view('admin.role.partials.create');
-    }
-
-    public function storePermission(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|unique:permissions,name',
-        ]);
-
-        Permission::create([
-            'name'       => $request->input('name'),
-            'guard_name' => 'web',
-        ]);
-
-        return response()->json(['success' => 'Permission created successfully']);
     }
 
     public function permissionUpdate(Request $request)
@@ -136,49 +111,33 @@ class RoleController extends Controller
         }
     }
 
-    public function permissionDestroy($id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $permission = Permission::find($id);
-
-            if (!$permission) {
-                return response()->json(['message' => 'Permission not found.'], 404);
-            }
-
-            $res = $permission->delete();
-
-            DB::commit();
-            if($res){
-                return response()->json(['message' => 'Permission deleted successfully.']);
-            }
-        } catch (\Exception $e) {
-            DB::rollback();
-            info($e);
-        }
-    }
-
     public function destroy($id)
     {
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
+        try {
             $role = Role::find($id);
 
             if (!$role) {
                 return response()->json(['message' => 'Role not found.'], 404);
             }
 
+            $role->permissions()->detach();
+
             $res = $role->delete();
 
-            DB::commit();
-            if($res){
-                return response()->json(['message' => 'Role deleted successfully.']);
+            if ($res) {
+                DB::commit();
+                return response()->json(['message' => 'Role and its associated permissions deleted successfully.']);
+            } else {
+                DB::rollback();
+                return response()->json(['message' => 'Failed to delete the role.'], 500);
             }
         } catch (\Exception $e) {
             DB::rollback();
             info($e);
+            return response()->json(['message' => 'An error occurred.'], 500);
         }
     }
+
 }

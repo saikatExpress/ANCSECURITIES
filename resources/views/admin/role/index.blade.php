@@ -2,9 +2,10 @@
 @section('content')
     <div class="content-wrapper">
         <section class="content-header">
+            <x-sub-header/>
             <h1>
                 Dashboard
-                <strong class="text-sm text-success fw-bold">Admin</strong>
+                <strong class="text-sm text-success fw-bold" style="text-transform: uppercase;">{{ auth()->user()->role }}</strong>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -27,7 +28,7 @@
 
             <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Form List</h3>
+              <h3 class="box-title">Role List</h3>
             </div>
             <div class="box-body">
               <table id="example1" class="table table-bordered table-striped">
@@ -40,9 +41,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $sl = 1;
+                    @endphp
                     @foreach ($roles as $role)
                         <tr class="list-item">
-                            <td>{{ $role->id }}</td>
+                            <td>{{ $sl }}</td>
                             <td style="text-transform: uppercase;">
                                 {{ $role->name }}
                             </td>
@@ -60,17 +64,11 @@
                                 </button>
                             </td>
                         </tr>
+                        @php
+                            $sl++;
+                        @endphp
                     @endforeach
                 </tbody>
-
-                <tfoot>
-                    <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    </tr>
-                </tfoot>
               </table>
             </div>
           </div>
@@ -119,6 +117,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('admin/assets/js/role.js') }}"></script>
+    <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
 
     <script>
         $(document).ready(function() {

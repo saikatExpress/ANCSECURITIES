@@ -310,6 +310,7 @@ class AuthController extends Controller
                 if (auth()->user()->role === 'user') {
                     $redirectRoute = route('user.dashboard');
                 } else {
+                    Session::put('role', auth()->user()->role);
                     $redirectRoute = route('admin.dashboard');
                 }
 

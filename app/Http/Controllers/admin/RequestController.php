@@ -85,15 +85,6 @@ class RequestController extends Controller
         return view('admin.Request.create')->with($data);
     }
 
-    public function dCreate()
-    {
-        $data['pageTitle'] = 'Create Deposite';
-
-        $data['deposits'] = Fund::with('clients')->where('category', 'deposit')->latest()->get();
-
-        return view('admin.Request.dcreate')->with($data);
-    }
-
     public function store(Request $request)
     {
         try {
@@ -270,7 +261,7 @@ class RequestController extends Controller
             }elseif($requestType === 'withdraw'){
                 Fund::createData($requestType,$clientId,$code,$name, $email, $mobile, $amount, $bankAccount, $date, $path);
                 return redirect()->back()->with('message', $requestType.' request saved successfully');
-            }elseif($requestType === 'deposite'){
+            }elseif($requestType === 'deposit'){
                 Fund::createData($requestType,$clientId,$code,$name, $email, $mobile, $amount, $bankAccount, $date, $path);
                 return redirect()->back()->with('message', $requestType.' request saved successfully');
             }
@@ -345,47 +336,6 @@ class RequestController extends Controller
         }
 
         return response()->json(['message' => 'Request status updated successfully']);
-    }
-
-    public function depositeStore(Request $request)
-    {
-
-        $validator = Validator::make($request->all(), [
-            'trading_code'  => ['required'],
-            'name'          => ['required'],
-            'amount'        => ['required'],
-            'bank_account'  => ['required'],
-            'deposite_date' => ['required'],
-            'bank_slip'     => ['required', 'image', 'mimes:png,jpg,jpeg,webp', 'max:2024'],
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-
-        $fundServiceObj = new FundService();
-
-        $category    = 'deposite';
-        $clientId    = $request->input('client_id');
-        $code        = $request->input('trading_code');
-        $name        = $request->input('name');
-        $mobile      = $request->input('mobile');
-        $amount      = $request->input('amount');
-        $bankAccount = $request->input('bank_account');
-        $date        = $request->input('deposite_date');
-
-        if ($request->hasFile('bank_slip')) {
-            $file = $request->file('bank_slip');
-            $path = $file->store('bank_slips', 'public');
-        }
-
-        $res = $fundServiceObj->depostore($clientId,$code,$name,$mobile,$amount,$bankAccount,$date,$category, $path);
-
-        if($res === true){
-            return redirect()->back()->with('message', 'Deposite request submitted successfully');
-        }
     }
 
     public function fetchLimitRequest()

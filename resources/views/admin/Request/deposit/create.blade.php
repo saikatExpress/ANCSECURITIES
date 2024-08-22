@@ -38,7 +38,7 @@
                 <div class="col-md-7 offset-md-3" id="despositeRequest">
                     <div style="background-color: #fff; padding: 10px; border-radius:4px; margin-bottom: 10px;">
                         <h4>Deposite Request</h4>
-                        <form action="{{ route('manual.deposite_request') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('deposit.store') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="client_id" id="dclient_id">
                             <div class="form-group" id="form-group-code">
@@ -177,9 +177,9 @@
                             <label for="status" class="form-label">Status</label>
                             <select id="status" name="status" class="form-select form-control" required>
                                 <option value="" selected disabled>Select</option>
-                                <option value="pending" {{ $deposit->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="approved" {{ $deposit->status == 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="rejected" {{ $deposit->status == 'declined' ? 'selected' : '' }}>Rejected</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
                             </select>
                         </div>
                         <div style="margin-top: 20px;">

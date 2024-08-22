@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\AdminController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\BoController;
 use App\Http\Controllers\admin\DepartmentController;
+use App\Http\Controllers\admin\DepositController;
 use App\Http\Controllers\admin\DesignationController;
 use App\Http\Controllers\admin\DpController;
 use App\Http\Controllers\admin\EmployeeController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\admin\GalleryController;
 use App\Http\Controllers\admin\HelperController;
 use App\Http\Controllers\admin\LeaveController;
 use App\Http\Controllers\admin\NewsController;
+use App\Http\Controllers\admin\PermissionController;
 use App\Http\Controllers\admin\PortfolioController;
 use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ReportController;
@@ -110,14 +112,21 @@ Route::controller(StatusController::class)->group(function(){
     Route::post('/user/verify-otp', 'verifyOtp')->name('user.verifyOtp');
 });
 
-Route::middleware(['auth', 'auth.Admin'])->group(function(){
+Route::middleware(['auth'])->group(function(){
     Route::prefix('admin')->group(function(){
         Route::controller(RequestController::class)->group(function(){
             Route::get('/limit/request', 'create')->name('admin.limitrequest');
-            Route::get('/desposite/request', 'dCreate')->name('admin.despositerequest');
             Route::post('/limit/store', 'store')->name('admin.limitstore');
             Route::post('/limit/update', 'update')->name('admin.limitupdate');
             Route::post('/update/req/status', 'updateReqStatus')->name('admin.updateReqStatus');
+        });
+    });
+
+    // Deposite Route
+    Route::prefix('deposit')->group(function(){
+        Route::controller(DepositController::class)->group(function(){
+            Route::get('/', 'create')->name('desposit.request');
+            Route::post('/', 'store')->name('deposit.store');
         });
     });
 
@@ -128,7 +137,35 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
     });
 });
 
-Route::middleware(['auth', 'auth.Admin'])->group(function(){
+// Role Permission Route
+Route::middleware(['auth','onlyAdmin'])->group(function(){
+    Route::prefix('role')->group(function(){
+        Route::controller(RoleController::class)->group(function(){
+            Route::get('/', 'index')->name('role.list');
+            Route::get('/create', 'create')->name('create.role');
+            Route::post('/store', 'store')->name('role.store');
+            Route::get('/delete/{id}','destroy')->name('role.destroy');
+        });
+    });
+
+    Route::prefix('permission')->group(function(){
+        Route::controller(PermissionController::class)->group(function(){
+            Route::get('/list', 'index')->name('permission.list');
+            Route::get('/create', 'create')->name('create.permissions');
+            Route::post('/store', 'store')->name('permission.store');
+            Route::get('/delete/{id}','destroy')->name('permission.destroy');
+        });
+    });
+
+    Route::controller(RoleController::class)->group(function(){
+        Route::get('/get/permissions/{id}', 'fetchPermission');
+        Route::post('/edit/permission', 'permissionUpdate')->name('permission.edit');
+        Route::get('/edit-permissions/{role}', 'editPermissions');
+        Route::post('/update-permissions/{role}', 'updatePermissions');
+    });
+});
+
+Route::middleware(['auth'])->group(function(){
     Route::controller(AdminController::class)->group(function(){
         Route::get('/user/list', 'userIndex')->name('user.list');
         Route::get('active/user/list', 'activeUserIndex')->name('active.user');
@@ -176,7 +213,6 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
         Route::post('/request/toggle/{id}', 'toggleStatus')->name('request.toggle');
         Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');
         Route::post('/request/deposit/{id}', 'requestDeposit')->name('request.deposit');
-        Route::post('/manual/deposite/request', 'depositeStore')->name('manual.deposite_request');
         Route::get('/fetch-requests', 'fetchRequests')->name('fetch.requests');
         Route::get('/update/limit/request/{id}', 'updateLimitRequest');
         Route::get('/decline/limit/request/{id}', 'declineLimitRequest');
@@ -282,23 +318,6 @@ Route::middleware(['auth', 'auth.Admin'])->group(function(){
         Route::get('/'.$hashedNewsUrl, 'index')->name('news.portal');
         Route::post('/news/store', 'store')->name('news.store');
         Route::get('/news/delete/{id}', 'destroy');
-    });
-
-    Route::controller(RoleController::class)->group(function(){
-        $hashedRoleUrl = md5('role/list');
-        Route::get('/'.$hashedRoleUrl, 'index')->name('role.list');
-        Route::get('/permission/list', 'permissionIndex')->name('permission.list');
-        $hashedCreateRoleUrl = md5('create/role');
-        Route::get('/'.$hashedCreateRoleUrl, 'create')->name('create.role');
-        Route::post('/role/store', 'store')->name('role.store');
-        Route::get('/get/permissions/{id}', 'fetchPermission');
-        Route::post('/edit/permission', 'permissionUpdate')->name('permission.edit');
-        Route::get('/edit-permissions/{role}', 'editPermissions');
-        Route::post('/update-permissions/{role}', 'updatePermissions');
-        Route::post('/store/permission', 'storePermission')->name('permission.store');
-        Route::get('/permissions/create', 'permissionCreate')->name('create.permissions');
-        Route::get('/role/delete/{id}','destroy');
-        Route::get('/permission/delete/{id}','permissionDestroy');
     });
 
     Route::controller(ReportController::class)->group(function(){

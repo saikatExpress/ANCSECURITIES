@@ -152,11 +152,10 @@
 
     <script>
         document.addEventListener('contextmenu', function(e) {
-            e.preventDefault(); // Disable right-click context menu
+            e.preventDefault();
         });
 
         document.addEventListener('keydown', function(e) {
-            // Disable F12 (DevTools), Ctrl+Shift+I (DevTools), Ctrl+U (View Source)
             if (e.keyCode === 123 ||
                 (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
                 (e.ctrlKey && e.keyCode === 85)) {
