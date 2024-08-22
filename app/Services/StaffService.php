@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class StaffService
 {
-    public function userCreate(string $name, $email, $mobile, string $role, $fileNameToStore)
+    public function userCreate(string $name, $email, $mobile, string $role, $fileNameToStore, $signature)
     {
         try {
             DB::beginTransaction();
@@ -16,6 +16,7 @@ class StaffService
             $userObj = new User;
 
             $userObj->profile_image = $fileNameToStore;
+            $userObj->signature     = $signature;
             $userObj->name          = $name;
             $userObj->email         = $email;
             $userObj->mobile        = $mobile;

@@ -23,7 +23,7 @@
         <section class="content">
 
             @if ($errors->any())
-                <div class="alert alert-danger" id="errorAlert">
+                <div class="alert alert-danger errorAlert">
                     @foreach ($errors->all() as $error)
                         <p>{{ $error }}</p>
                     @endforeach
@@ -37,9 +37,8 @@
 
             <div class="box box-warning">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Create Staff</h3>
+                    <h3 class="box-title">Update Staff</h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body">
                     <form id="staffForm" action="{{ route('staff.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -55,7 +54,7 @@
                                 <label for="image">Staff Image</label>
                                 <div class="current-image">
                                     @if($staff->staff_image && $staff->staff_image != 'noimage.jpg')
-                                        <img src="{{ asset('storage/staffs/' . $staff->staff_image) }}" alt="Staff Image" style="width: 150px; height: auto;">
+                                        <img style="width: 80px;height:80px;border-radius:4px;box-shadow:0 0 10px;" src="{{ asset('storage/user_photo/profile/' . $staff->staff_image) }}" alt="Staff Image" style="width: 150px; height: auto;">
                                     @else
                                         <p>No image available</p>
                                     @endif
@@ -68,6 +67,13 @@
 
                             <div class="form-group">
                                 <label for="">Signature</label>
+                                <div class="current-image">
+                                    @if($staff->signature && $staff->signature != 'noimage.jpg')
+                                        <img style="width: 80px;height:80px;border-radius:4px;box-shadow:0 0 10px;" src="{{ asset('storage/user_photo/signature/' . $staff->signature) }}" alt="Staff Image" style="width: 150px; height: auto;">
+                                    @else
+                                        <p>No image available</p>
+                                    @endif
+                                </div>
                                 <input type="file" name="signature" class="form-control">
                                 @error('signature')
                                     <div class="alert alert-danger">{{ $message }}</div>
@@ -233,75 +239,5 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            // Show the alert message
-            $('#successAlert').show();
-
-            // Hide the alert message after 3 seconds
-            setTimeout(function() {
-                $('#successAlert').fadeOut('slow');
-            }, 3000);
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            // Show the alert message
-            $('#errorAlert').show();
-
-            // Hide the alert message after 3 seconds
-            setTimeout(function() {
-                $('#errorAlert').fadeOut('slow');
-            }, 3000);
-        });
-    </script>
-
-    <script>
-        $(document).ready(function() {
-            let currentStep = 0;
-            const steps = $('.form-step');
-            const totalSteps = steps.length;
-
-            function showStep(stepIndex) {
-                steps.hide();
-                $(steps[stepIndex]).show();
-            }
-
-            function validateStep(stepIndex) {
-                let isValid = true;
-                $(steps[stepIndex]).find('input, select').each(function() {
-                    if ($(this).prop('required') && !$(this).val()) {
-                        isValid = false;
-                        $(this).addClass('is-invalid');
-                    } else {
-                        $(this).removeClass('is-invalid');
-                    }
-                });
-                return isValid;
-            }
-
-            $('.btn-next').on('click', function() {
-                if (validateStep(currentStep)) {
-                    currentStep++;
-                    if (currentStep >= totalSteps) {
-                        currentStep = totalSteps - 1;
-                    }
-                    showStep(currentStep);
-                }
-            });
-
-            $('.btn-prev').on('click', function() {
-                currentStep--;
-                if (currentStep < 0) {
-                    currentStep = 0;
-                }
-                showStep(currentStep);
-            });
-
-            showStep(currentStep);
-        });
-    </script>
-
+    <script src="{{ asset('admin/assets/js/staff.js') }}"></script>
 @endsection

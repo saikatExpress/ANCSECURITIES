@@ -16,6 +16,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,6 +42,7 @@ class StaffController extends Controller
         if(!in_array(auth()->user()->role, ['admin', 'hr', 'Business Head', 'it', 'account'])){
             return back()->with('message', 'This page is not permitted for you..!');
         }
+
         $pageTitle    = 'Create Staff';
         $designations = Designation::all();
         $departments  = Department::all();
@@ -58,6 +60,7 @@ class StaffController extends Controller
 
             $request->validate([
                 'image'             => 'required|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
+                'signature'         => 'required|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
                 'branch-slug'       => 'nullable',
                 'name'              => 'required',
                 'email'             => 'required|email|unique:staff,email|unique:users,email',
@@ -76,19 +79,15 @@ class StaffController extends Controller
                 $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $request->file('image')->getClientOriginalExtension();
                 $fileNameToStore = $fileName.'_'.time().'.'.$extension;
-                $request->file('image')->storeAs('public/staffs', $fileNameToStore);
-            } else {
-                $fileNameToStore = 'noimage.jpg';
+                $request->file('image')->storeAs('public/user_photo/profile', $fileNameToStore);
             }
 
             if ($request->hasFile('signature')) {
                 $fileNameWithExt = $request->file('signature')->getClientOriginalName();
                 $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $request->file('signature')->getClientOriginalExtension();
-                $signaturefileNameToStore = $fileName.'_'.time().'.'.$extension;
-                $request->file('signature')->storeAs('public/staffSignature', $signaturefileNameToStore);
-            } else {
-                $signaturefileNameToStore = 'noimage.jpg';
+                $signature = $fileName.'_'.time().'.'.$extension;
+                $request->file('signature')->storeAs('public/user_photo/signature', $signature);
             }
 
             $remember   = $request->input('remember');
@@ -107,7 +106,7 @@ class StaffController extends Controller
                 $userObj = new User();
 
                 $userObj->profile_image = $fileNameToStore;
-                $userObj->signature     = $signaturefileNameToStore;
+                $userObj->signature     = $signature;
                 $userObj->name          = $name;
                 $userObj->email         = $email;
                 $userObj->address       = $request->input('permanent_address');
@@ -125,7 +124,7 @@ class StaffController extends Controller
                     $staffObj->name              = Str::title($name);
                     $staffObj->slug              = Str::slug($name, '-');
                     $staffObj->email             = $email;
-                    $staffObj->signature         = $signaturefileNameToStore;
+                    $staffObj->signature         = $signature;
                     $staffObj->designation_id    = $request->input('designation_id');
                     $staffObj->department_id     = $request->input('department_id');
                     $staffObj->mobile            = $request->input('mobile');
@@ -137,7 +136,7 @@ class StaffController extends Controller
                     $staffObj->nationality       = $request->input('nationality');
                     $staffObj->status            = $request->input('status');
                     $staffObj->staff_image       = $fileNameToStore;
-                    $staffObj->signature         = $signaturefileNameToStore;
+                    $staffObj->signature         = $signature;
 
                     $res = $staffObj->save();
                     if($res){
@@ -150,10 +149,6 @@ class StaffController extends Controller
             DB::rollback();
             info($e);
             Log::error('Staff creation failed: '.$e->getMessage());
-
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['error' => $e->getMessage()]);
         }
     }
 
@@ -323,10 +318,10 @@ class StaffController extends Controller
 
             $request->validate([
                 'image'             => 'nullable|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
+                'signature'         => 'nullable|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
                 'branch-slug'       => 'nullable',
                 'name'              => 'required',
                 'email'             => 'required|email',
-                'signature'         => 'nullable|image|mimes:webp,jpeg,png,jpg,gif|max:2048',
                 'designation_id'    => 'required',
                 'mobile'            => 'required',
                 'permanent_address' => 'required',
@@ -340,40 +335,44 @@ class StaffController extends Controller
 
             $staff = Staff::findOrFail($request->input('staff_id'));
 
-            // Initialize variable for file name
-            $fileNameToStore = $staff->staff_image; // Use the existing image by default
+            $fileNameToStore = $staff->staff_image;
+            $signature = $staff->signature;
 
             if ($request->hasFile('image')) {
+                $file = $staff->staff_image;
+                if ($file) {
+                    Storage::disk('public')->delete('user_photo/profile' . $file);
+
+                    File::delete(public_path('user_photo/profile' . $file));
+                }
+
                 $fileNameWithExt = $request->file('image')->getClientOriginalName();
                 $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $request->file('image')->getClientOriginalExtension();
                 $fileNameToStore = $fileName.'_'.time().'.'.$extension;
-                $request->file('image')->storeAs('public/staffs', $fileNameToStore);
-
-                // Delete old image if it's not the default image
-                if ($staff->staff_image && $staff->staff_image != 'noimage.jpg') {
-                    Storage::delete('public/staffs/' . $staff->staff_image);
-                }
+                $request->file('image')->storeAs('public/user_photo/profile', $fileNameToStore);
             }
 
             if ($request->hasFile('signature')) {
+                $file = $staff->signature;
+                if ($file) {
+                    Storage::disk('public')->delete('user_photo/signature' . $file);
+
+                    File::delete(public_path('user_photo/signature' . $file));
+                }
+
                 $fileNameWithExt = $request->file('signature')->getClientOriginalName();
                 $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
                 $extension = $request->file('signature')->getClientOriginalExtension();
-                $signaturefileNameToStore = $fileName.'_'.time().'.'.$extension;
-                $request->file('signature')->storeAs('public/staffSignature', $signaturefileNameToStore);
-
-                // Delete old image if it's not the default image
-                if ($staff->signature && $staff->signature != 'noimage.jpg') {
-                    Storage::delete('public/staffSignature/' . $staff->signature);
-                }
+                $signature = $fileName.'_'.time().'.'.$extension;
+                $request->file('signature')->storeAs('public/user_photo/signature', $signature);
             }
 
             $staff->branch_slug       = $request->input('branch-slug', null);
             $staff->name              = Str::title($request->input('name'));
             $staff->slug              = Str::slug($request->input('name'), '-');
             $staff->email             = $request->input('email');
-            $staff->signature         = $signaturefileNameToStore;
+            $staff->signature         = $signature;
             $staff->designation_id    = $request->input('designation_id');
             $staff->mobile            = $request->input('mobile');
             $staff->permanent_address = $request->input('permanent_address');
@@ -395,7 +394,7 @@ class StaffController extends Controller
                 $mobile     = $request->input('mobile');
                 $role       = $request->input('role');
 
-                $result = $staffServiceObj->userUpdate((string)$name, $email, $mobile, (string)$role, $fileNameToStore);
+                $result = $staffServiceObj->userUpdate((string)$name, $email, $mobile, (string)$role, $fileNameToStore, $signature);
                 if ($result == 1) {
                     return redirect()->back()->with('message', 'Staff & User updated successfully');
                 }
@@ -408,7 +407,6 @@ class StaffController extends Controller
             return redirect()->back()->withErrors('An error occurred while updating the staff.');
         }
     }
-
 
     public function edit($id)
     {

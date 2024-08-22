@@ -49,7 +49,7 @@
                         <tr class="list-item">
                             <td>{{ $staff->id }}</td>
                             <td>
-                                <img style="width:60px;height:60px;border-radius:50%;" src="{{ asset('storage/staffs/'. $staff->staff_image) }}" alt="Image">
+                                <img style="width:60px;height:60px;border-radius:50%;" src="{{ asset('storage/user_photo/profile/'. $staff->staff_image) }}" alt="Image">
                             </td>
                             <td>
                                 {{ $staff->name }}
@@ -99,16 +99,5 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="{{ asset('admin/assets/js/form.js') }}"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
-
-    <script>
-        $(document).ready(function() {
-            // Show the alert message
-            $('#successAlert').show();
-
-            // Hide the alert message after 3 seconds
-            setTimeout(function() {
-                $('#successAlert').fadeOut('slow');
-            }, 3000);
-        });
-    </script>
+    <script src="{{ asset('admin/assets/js/staff.js') }}"></script>
 @endsection

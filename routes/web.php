@@ -288,17 +288,21 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/get/withdraw/status/{id}', 'withdrawStatus');
     });
 
+    // Staff Route
+    Route::prefix('staff')->group(function(){
+        Route::controller(StaffController::class)->group(function(){
+            Route::get('/list', 'index')->name('staff.list');
+            Route::get('/create', 'create')->name('staff.create');
+            Route::post('/store', 'store')->name('staff.store');
+            Route::get('/edit/{id}', 'edit')->name('staff.edit');
+            Route::post('/update', 'update')->name('staff.update');
+        });
+    });
+
     Route::controller(StaffController::class)->group(function(){
-        $hashedStaffIndexUrl = md5('staff/list');
-        Route::get('/'.$hashedStaffIndexUrl, 'index')->name('staff.list');
-        $hashedStaffUrl = md5('staff/create');
-        Route::get('/'.$hashedStaffUrl, 'create')->name('staff.create');
         $hashedAttedanceUrl = md5('staff/attendace');
         Route::get('/'.$hashedAttedanceUrl, 'createAttendance')->name('staff.attendance');
-        Route::get('/staff/edit/{id}', 'edit')->name('staff.edit');
-        Route::post('/staff/update', 'update')->name('staff.update');
         Route::post('/attendance', 'empattendanceStore')->name('empattendance.store');
-        Route::post('/staff/store', 'store')->name('staff.store');
         Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
         Route::post('/update/attendance/status/{employeeId}', 'updateAttendanceStatus');
         Route::post('/update-all-attendance', 'updateAllAttendance');
