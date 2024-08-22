@@ -44,6 +44,8 @@ class AdminController extends Controller
             })
             ->where('users.role', '!=', 'user')
             ->where('users.role', '!=', 'admin')
+            ->whereNot('users.role', 'ceo')
+            ->whereNot('users.role', 'md')
             ->select(
                 'users.id',
                 'users.name',

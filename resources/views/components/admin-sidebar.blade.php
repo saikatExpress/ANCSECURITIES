@@ -5,7 +5,7 @@
         <div class="user-panel">
             <div class="pull-left image">
                 @if (auth()->user()->profile_image)
-                    <img src="{{ asset('storage/staffs/' . auth()->user()->profile_image) }}" class="img-circle" alt="Image">
+                    <img src="{{ asset('storage/user_photo/profile/' . auth()->user()->profile_image) }}" class="img-circle" alt="Image">
                 @else
                     <img src="{{ asset('admin/assets/dist/img/user2-160x160.jpg') }}" class="img-circle" alt="Image">
                 @endif

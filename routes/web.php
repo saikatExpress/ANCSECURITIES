@@ -3,6 +3,7 @@
 use App\Http\Controllers\admin\AboutController;
 use App\Http\Controllers\admin\AccountController;
 use App\Http\Controllers\admin\AdminController;
+use App\Http\Controllers\admin\AttendanceController;
 use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\BoController;
 use App\Http\Controllers\admin\DepartmentController;
@@ -299,13 +300,15 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         });
     });
 
-    Route::controller(StaffController::class)->group(function(){
-        $hashedAttedanceUrl = md5('staff/attendace');
-        Route::get('/'.$hashedAttedanceUrl, 'createAttendance')->name('staff.attendance');
-        Route::post('/attendance', 'empattendanceStore')->name('empattendance.store');
-        Route::post('/attendance/store', 'attendanceStore')->name('attendance.store');
-        Route::post('/update/attendance/status/{employeeId}', 'updateAttendanceStatus');
-        Route::post('/update-all-attendance', 'updateAllAttendance');
+    // Attendance Route
+    Route::prefix('attendace')->group(function(){
+        Route::controller(AttendanceController::class)->group(function(){
+            Route::get('/create', 'create')->name('staff.attendance');
+            Route::post('/store', 'store')->name('attendance.store');
+            Route::post('/update/status/{employeeId}', 'updateAttendanceStatus');
+            Route::post('/update-all-attendance', 'updateAllAttendance');
+            Route::post('/insert', 'empattendanceStore')->name('empattendance.store');
+        });
     });
 
     Route::controller(WorkController::class)->group(function(){
