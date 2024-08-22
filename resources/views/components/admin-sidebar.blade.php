@@ -80,6 +80,12 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('admin.list') }}">
+                            <i class="fa fa-users"></i>
+                            Admin List
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('create.bo') }}">
                             <i class="fa fa-id-card"></i>
                             Add BO ID

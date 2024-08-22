@@ -147,6 +147,7 @@ class HomeController extends Controller
         $role          = $request->input('role');
 
         $userExits = User::where('trading_code', $code)->first();
+
         if($userExits){
             return redirect()->back()->with('error', 'This account already opened..! ' . 'Name : '. $userExits->name);
         }
@@ -164,7 +165,7 @@ class HomeController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('signature')->getClientOriginalExtension();
             $signature = $filename.'_'.time().'.'.$extension;
-            $request->file('signature')->storeAs('public/user_photo/signature', $fileNameToStore);
+            $request->file('signature')->storeAs('public/user_photo/signature', $signature);
         }
 
         $res = UserService::store(

@@ -175,6 +175,11 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
             Route::get('/create', 'create')->name('create.user');
             Route::post('/store', 'store')->name('user.store');
         });
+
+        Route::controller(UserController::class)->group(function(){
+            Route::get('/admin', 'index')->name('admin.list');
+            Route::post('/admin/update', 'update')->name('admin.update');
+        });
     });
 });
 
