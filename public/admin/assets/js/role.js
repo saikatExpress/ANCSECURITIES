@@ -38,17 +38,68 @@ $(document).ready(function(){
         });
     });
 
-    $(document).on('click', '.permissionBtn', function(){
-        var roleId = $(this).data('id');
+    $('.permissionBtn').on('click', function(){
+        const roleId = $(this).data('id');
+
+        if(roleId != ''){
+            $.ajax({
+                url: '/get/permissions/' + roleId,
+                type: 'GET',
+                success: function(response){
+                    $('#permissionModal .modal-body').html(response);
+                },
+                error: function(xhr) {
+                    console.error('Error fetching permissions:', xhr);
+                }
+            });
+        }
+    });
+
+    $('.editRoleBtn').on('click', function(){
+        const roleId = $(this).data('id');
+
+        if(roleId != ''){
+            $.ajax({
+                url: '/edit-permissions/' + roleId,
+                type: 'GET',
+                success: function(response) {
+                    $('#editPermissionModal .modal-body').html(response);
+                    $('#editPermissionModal').modal('show');
+                },
+                error: function(xhr) {
+                    console.error('Error fetching permissions:', xhr);
+                }
+            });
+        }
+    });
+
+    $('.savePermissionsBtn').on('click', function(){
+        const form = $('#editPermissionForm');
         $.ajax({
-            url: '/get/permissions/' + roleId,
-            type: 'GET',
-            success: function(response){
-                console.log(response);
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            success: function(response) {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Permissions updated successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
             },
-            error: function(error){
-                console.log(error);
+            error: function(xhr) {
+                console.error('Error saving permissions:', xhr);
             }
         });
     });
+
+    $('#successAlert').show();
+
+    setTimeout(function() {
+        $('#successAlert').fadeOut('slow');
+    }, 3000);
 });

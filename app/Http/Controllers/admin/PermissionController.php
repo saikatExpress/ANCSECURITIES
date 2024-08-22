@@ -43,6 +43,17 @@ class PermissionController extends Controller
         return response()->json(['success' => 'Permission created successfully']);
     }
 
+    public function update(Request $request)
+    {
+        $id = $request->input('permissionid');
+        $permission             = Permission::find($id);
+        $permission->name       = $request->input('name');
+        $permission->guard_name = 'web';
+        $permission->save();
+
+        return response()->json(['success' => 'Permission updated successfully']);
+    }
+
     public function destroy($id)
     {
         try {

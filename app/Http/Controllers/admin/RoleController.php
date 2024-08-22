@@ -36,17 +36,6 @@ class RoleController extends Controller
         return view('admin.role.create', compact('pageTitle', 'permissions'));
     }
 
-    public function permissionUpdate(Request $request)
-    {
-        $id = $request->input('permissionid');
-        $permission             = Permission::find($id);
-        $permission->name       = $request->input('name');
-        $permission->guard_name = 'web';
-        $permission->save();
-
-        return response()->json(['success' => 'Permission updated successfully']);
-    }
-
     public function fetchPermission($id)
     {
         $role = Role::find($id);

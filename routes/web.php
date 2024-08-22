@@ -153,13 +153,13 @@ Route::middleware(['auth','onlyAdmin'])->group(function(){
             Route::get('/list', 'index')->name('permission.list');
             Route::get('/create', 'create')->name('create.permissions');
             Route::post('/store', 'store')->name('permission.store');
+            Route::post('/edit', 'update')->name('permission.edit');
             Route::get('/delete/{id}','destroy')->name('permission.destroy');
         });
     });
 
     Route::controller(RoleController::class)->group(function(){
         Route::get('/get/permissions/{id}', 'fetchPermission');
-        Route::post('/edit/permission', 'permissionUpdate')->name('permission.edit');
         Route::get('/edit-permissions/{role}', 'editPermissions');
         Route::post('/update-permissions/{role}', 'updatePermissions');
     });

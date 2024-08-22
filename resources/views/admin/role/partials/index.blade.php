@@ -13,7 +13,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td style="text-transform: uppercase;">{{ $permission->name }}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning permissionEditBtn"
+                        <button class="btn btn-sm btn-warning permissionEditBtn" data-toggle="modal" data-target="#editPermissionModal"
                             data-id="{{ $permission->id }}" data-name="{{ $permission->name }}">
                             Edit
                         </button>
@@ -56,19 +56,16 @@
 <script>
     $(document).ready(function() {
         $('#editPermissionForm').on('submit', function(event) {
-            event.preventDefault(); // Prevent the default form submission
+            event.preventDefault();
 
-            // Get form data
             const formData = $(this).serialize();
             const formUrl = $(this).attr('action');
 
-            // Make AJAX request
             $.ajax({
                 url: formUrl,
                 type: 'POST',
                 data: formData,
                 success: function(response) {
-                    // Handle success response
                     Swal.fire({
                         title: 'Success!',
                         text: response.success,
@@ -81,7 +78,6 @@
                     });
                 },
                 error: function(xhr) {
-                    // Handle error response
                     console.error('Error updating permission:', xhr);
                     let errorMessage = 'An error occurred while updating the permission.';
                     if (xhr.responseJSON && xhr.responseJSON.errors) {
