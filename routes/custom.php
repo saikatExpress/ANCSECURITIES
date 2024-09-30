@@ -8,7 +8,7 @@ Route::controller(WithdrawController::class)->group(function(){
 
 });
 
-Route::middleware(['auth', 'auth.Admin'])->group(function(){
+Route::middleware(['auth'])->group(function(){
     Route::prefix('admin')->group(function(){
         Route::controller(WithdrawController::class)->group(function(){
             Route::get('/withdraw/list', 'index')->name('admin.withdrawlist');

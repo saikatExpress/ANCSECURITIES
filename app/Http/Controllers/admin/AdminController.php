@@ -102,6 +102,7 @@ class AdminController extends Controller
                       ->count();
 
         $data['wrequests'] = Fund::with('clients:id,name,trading_code')->where('category', 'withdraw')->where('status', 'pending')->get();
+
         if(auth()->user()->role === 'account'){
             $data['balance'] = Account::first();
 
