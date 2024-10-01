@@ -49,6 +49,7 @@
                                         <th>AC NO</th>
                                         <th>Amount</th>
                                         <th>Requisition Date</th>
+                                        <th>Audit</th>
                                         <th>Status</th>
                                         <th>Portfolio</th>
                                         <th>Action</th>
@@ -63,6 +64,17 @@
                                             <td>{{ $limit->ac_no }}</td>
                                             <td>{{ number_format($limit->amount, 2) }}</td>
                                             <td>{{ formatDateTime($limit->withdraw_date) }}</td>
+                                            <td>
+                                                @if ($limit->flag === 1)
+                                                    <label class="btn btn-sm btn-success">
+                                                        <i class="fa-solid fa-circle-check"></i>
+                                                    </label>
+                                                @else
+                                                    <label class="btn btn-sm btn-danger">
+                                                        <i class="fa-solid fa-xmark"></i>
+                                                    </label>
+                                                @endif
+                                            </td>
                                             <td style="text-transform: uppercase;">
                                                 @if (auth()->user()->role === 'ceo')
                                                     @if ($limit->ceostatus === 'approved')

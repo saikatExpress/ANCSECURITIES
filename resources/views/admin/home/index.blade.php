@@ -554,7 +554,6 @@
                     </div>
                 </div>
 
-
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
@@ -568,6 +567,7 @@
                                             <th>Amount</th>
                                             <th>Code</th>
                                             <th>AC No</th>
+                                            <th>Created By</th>
                                             <th>Withdraw Date</th>
                                             <th>Status</th>
                                             <th>Action</th>
@@ -582,16 +582,74 @@
                                                 <td>{{ number_format($withdrawal->amount, 2) }} Taka</td>
                                                 <td>{{ $withdrawal->clients->trading_code }}</td>
                                                 <td>{{ $withdrawal->ac_no }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y') }}</td>
+                                                <td>{{ name($withdrawal->created_by) }}</td>
+                                                <td>{{ formatDateTime($withdrawal->withdraw_date) }}</td>
                                                 <td>
-                                                    @if (auth()->user()->role === 'Business Head')
-                                                        @if ($withdrawal->approved_by != null)
-                                                            <span style="background-color: tomato;" class="badge">
-                                                                {{ ucfirst('proccesing...') }}
-                                                            </span>
+                                                    @if ($withdrawal->flag === 0)
+                                                        <span style="background-color: tomato;" class="badge">
+                                                            {{ ucfirst('not approved by business head...') }}
+                                                        </span>
+                                                        <br>
+                                                        <span style="background-color: tomato;" class="badge">
+                                                            {{ ucfirst('not assign audit...') }}
+                                                        </span>
+                                                    @else
+                                                        @if (auth()->user()->role === 'Business Head')
+                                                            @if ($withdrawal->approved_by != null)
+                                                                <span style="background-color: tomato;" class="badge">
+                                                                    {{ ucfirst('proccesing...') }}
+                                                                </span>
+                                                                @if ($withdrawal->ceostatus != null)
+                                                                    @if ($withdrawal->ceostatus === 'approved')
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:green;">CEO approval done</p>
+                                                                    @elseif ($withdrawal->ceostatus === 'assign')
+                                                                        <div style="box-shadow: 0 0 10px rgba(0,0,0,0.1);border-radius: 4px;padding: 3px;margin-top: 5px;margin-bottom: 3px;">
+                                                                            <p style="margin-bottom: 0; font-size: 8px; color:tomato;">Handover to CEO</p>
+                                                                            <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                        </div>
+                                                                    @elseif ($withdrawal->ceostatus === 'decline')
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:tomato;">CEO approval declined</p>
+                                                                        <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                    @endif
+                                                                @else
+                                                                    <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for CEO approval</p>
+                                                                @endif
+
+                                                                @if ($withdrawal->mdstatus != null)
+                                                                    @if ($withdrawal->mdstatus === 'approved')
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:green;">MD approval done</p>
+                                                                    @elseif ($withdrawal->mdstatus === 'decline')
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:tomato;">MD approval declined</p>
+                                                                        <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                    @endif
+                                                                @else
+                                                                    <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for MD approval</p>
+                                                                @endif
+
+                                                            @elseif ($withdrawal->declined_by != null)
+                                                                <span style="background-color: darkred;" class="badge">
+                                                                    {{ ucfirst('declined') }}
+                                                                </span>
+                                                            @else
+                                                                <span style="background-color: darkred;" class="badge">
+                                                                    {{ ucfirst($withdrawal->status) }}
+                                                                </span>
+                                                            @endif
+                                                        @else
+                                                            <span style="background-color: darkred;" class="badge">
+                                                                {{ ucfirst($withdrawal->status) }}
+                                                            </span> <br>
+                                                            <span style="background-color: darkgreen;" class="badge">
+                                                                {{ ucfirst('clear from business head') }}
+                                                            </span> <br>
                                                             @if ($withdrawal->ceostatus != null)
                                                                 @if ($withdrawal->ceostatus === 'approved')
                                                                     <p style="margin-bottom: 0; font-size: 8px; color:green;">CEO approval done</p>
+                                                                @elseif ($withdrawal->ceostatus === 'assign')
+                                                                    <div style="box-shadow: 0 0 10px rgba(0,0,0,0.1);border-radius: 4px;padding: 3px;margin-top: 5px;margin-bottom: 3px;">
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:tomato;">Handover to CEO</p>
+                                                                        <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                    </div>
                                                                 @elseif ($withdrawal->ceostatus === 'decline')
                                                                     <p style="margin-bottom: 0; font-size: 8px; color:tomato;">CEO approval declined</p>
                                                                     <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
@@ -609,38 +667,6 @@
                                                             @else
                                                                 <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for MD approval</p>
                                                             @endif
-                                                        @elseif ($withdrawal->declined_by != null)
-                                                            <span style="background-color: darkred;" class="badge">
-                                                                {{ ucfirst('declined') }}
-                                                            </span>
-                                                        @else
-                                                            <span style="background-color: darkred;" class="badge">
-                                                                {{ ucfirst($withdrawal->status) }}
-                                                            </span>
-                                                        @endif
-                                                    @else
-                                                        <span style="background-color: darkred;" class="badge">
-                                                            {{ ucfirst($withdrawal->status) }}
-                                                        </span> <br>
-                                                        @if ($withdrawal->ceostatus != null)
-                                                            @if ($withdrawal->ceostatus === 'approved')
-                                                                <p style="margin-bottom: 0; font-size: 8px; color:green;">CEO approval done</p>
-                                                            @elseif ($withdrawal->ceostatus === 'decline')
-                                                                <p style="margin-bottom: 0; font-size: 8px; color:tomato;">CEO approval declined</p>
-                                                                <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
-                                                            @endif
-                                                        @else
-                                                            <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for CEO approval</p>
-                                                        @endif
-                                                        @if ($withdrawal->mdstatus != null)
-                                                            @if ($withdrawal->mdstatus === 'approved')
-                                                                <p style="margin-bottom: 0; font-size: 8px; color:green;">MD approval done</p>
-                                                            @elseif ($withdrawal->mdstatus === 'decline')
-                                                                <p style="margin-bottom: 0; font-size: 8px; color:tomato;">MD approval declined</p>
-                                                                <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
-                                                            @endif
-                                                        @else
-                                                            <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for MD approval</p>
                                                         @endif
                                                     @endif
                                                 </td>
@@ -921,7 +947,7 @@
                             <p><strong>Code:</strong> <span id="tradeCode"></span></p>
                             <p><strong>Status:</strong> <span id="status"></span></p>
                             <p><strong>Feedback:</strong> <span id="feedback"></span></p>
-                            <p><strong>Remark:</strong> <span id="remark"></span></p>
+                            <p style="color: teal;"><strong>Remark:</strong> <span id="remark"></span></p>
                         </div>
                     </div>
                 </div>
@@ -957,6 +983,10 @@
                     <div id="itemBody" class="item_body">
 
                     </div>
+                    @if (auth()->user()->role === 'Business Head' || auth()->user()->role === 'audit')
+                        <textarea class="form-control" name="remark_text" id="remark_text" style="margin-top: 10px;"></textarea>
+                        <button type="button" class="btn btn-sm btn-info" style="margin-top: 10px;" id="sendRemarkBtn">Send Remark</button>
+                    @endif
                 </div>
                 <div class="modal-footer" id="modalfooter">
                     <button type="submit" class="btn btn-sm btn-primary">Save changes</button>

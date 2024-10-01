@@ -287,6 +287,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/upload/portfolio', 'uploadPortfolio')->name('upload.portfolio');
         Route::post('/upgrade/withdraw/status', 'upgradeWithdrawStatus');
         Route::get('/get/withdraw/status/{id}', 'withdrawStatus');
+        Route::get('/send/remark', 'sendRemark');
     });
 
     // Staff Route

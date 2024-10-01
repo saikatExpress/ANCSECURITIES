@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use Carbon\Carbon;
 use App\Models\Fund;
 use App\Models\User;
 use App\Models\Staff;
@@ -29,7 +30,7 @@ class HelperController extends Controller
 
         foreach($ids as $id){
             $request = Fund::find($id);
-            if($request->ceo === NULL){
+            if($request->flag === 0){
                 return response()->json(['error' => false]);
             }
             $alreadyExits = RequestFile::where('request_id', $id)->where('category', 'withdraw')->first();
@@ -188,7 +189,6 @@ class HelperController extends Controller
 
     public function uploadPortfolio(Request $request)
     {
-        // Validate the request
         $request->validate([
             'reqId'          => 'required|integer',
             'portfolio_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:2048',
@@ -222,6 +222,27 @@ class HelperController extends Controller
         }
     }
 
+    public function sendRemark(Request $request)
+    {
+        $id = $request->input('id');
+        $remark = $request->input('remark');
+
+        if($id == '' || $remark == ''){
+            return response()->json(['error' => false, 'message' => 'ID or Remark missing..Try Again...']);
+        }
+
+        $withdraw = Fund::findOrFail($id);
+        if($withdraw){
+            $withdraw->remark = $remark . ' - ' . auth()->user()->name . ' at ' . formatDateTime(Carbon::now());
+            $res = $withdraw->save();
+            if($res){
+                return response()->json(['success' => true, 'message' => 'Remark added']);
+            }
+        }
+
+        return response()->json(['error' => false, 'message' => 'ID or Remark missing..Try Again...']);
+    }
+
     public function upgradeWithdrawStatus(Request $request)
     {
         $request->validate([
@@ -242,17 +263,25 @@ class HelperController extends Controller
         if ($status === 'accept') {
             $withdrawRequest->approved_by = auth()->user()->id;
             $withdrawRequest->declined_by = null;
-            $withdrawRequest->ceo = $ceo->name;
+            $withdrawRequest->ceo = null;
+            $withdrawRequest->ceostatus = null;
             if(auth()->user()->role === 'audit'){
+                $withdrawRequest->ceo = $ceo->name;
                 $withdrawRequest->ceostatus = 'assign';
+                $withdrawRequest->remark = 'handover to the ceo..thank you.' . ' - ' . auth()->user()->name . ' at ' . formatDateTime(Carbon::now());
             }
+            $withdrawRequest->flag = 1;
         } elseif ($status === 'deny') {
             $withdrawRequest->declined_by = auth()->user()->id;
             $withdrawRequest->approved_by = null;
             $withdrawRequest->ceo = null;
+            $withdrawRequest->ceostatus = null;
             if(auth()->user()->role === 'audit'){
+                $withdrawRequest->ceo = null;
                 $withdrawRequest->ceostatus = null;
+                $withdrawRequest->remark = 'declined this request..thank you.' . ' - ' . auth()->user()->name . ' at ' . formatDateTime(Carbon::now());
             }
+            $withdrawRequest->flag = 0;
         }
 
         $withdrawRequest->save();

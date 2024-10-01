@@ -65,7 +65,7 @@ class WithdrawController extends Controller
             ->take(20);
 
         if (auth()->user()->role === 'ceo') {
-            $query->whereNotNull('ceo');
+            $query->whereNotNull('ceo')->where('flag', 1);
         } elseif (auth()->user()->role === 'md') {
             $query->whereNotNull('md');
         }
@@ -81,6 +81,9 @@ class WithdrawController extends Controller
 
     public function store(Request $request)
     {
+        if (!in_array(auth()->user()->role, ['account', 'admin', 'hr'])) {
+            return redirect()->back()->with('error', 'This action is not permitted for you.');
+        }
 
         $validator = Validator::make($request->all(), [
             'trading_code'  => ['required'],

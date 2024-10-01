@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+
 function isBangla($text) {
     $bangla_pattern = '/[\x{0980}-\x{09FF}]/u';
 
@@ -10,13 +12,16 @@ function isBangla($text) {
     return $bangla_matches > $english_matches;
 }
 
+function name($id) : string {
+    $user = User::findOrFail($id);
+    return $user->name;
+}
+
 
 function formatDateTime($datetime) {
-    // Convert the string to a DateTime object
     $date = new DateTime($datetime);
 
-    // Format the date and time
-    return $date->format('m/d/y');
+    return $date->format('d/m/y');
 }
 
 function numberToWords($number) {

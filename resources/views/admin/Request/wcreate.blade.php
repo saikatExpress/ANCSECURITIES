@@ -29,9 +29,11 @@
             @if(session('message'))
                 <div class="alert alert-success" id="successAlert">{{ session('message') }}</div>
             @endif
-
             @if(session('errors'))
                 <div class="alert alert-danger errorAlert">{{ session('errors') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger errorAlert">{{ session('error') }}</div>
             @endif
 
             <div class="row" style="background-color: #fff;border-radius: 4px;box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;">

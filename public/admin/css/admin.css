@@ -9,7 +9,7 @@
     overflow-y: auto;
     border: 1px solid #ccc;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 1;
     padding: 10px;
     box-sizing: border-box;
@@ -39,7 +39,7 @@
 .card-custom {
     border: 1px solid #dee2e6;
     border-radius: 0.375rem;
-    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
 
 .card-header {
@@ -66,24 +66,25 @@
 }
 
 .styled-table thead {
-    background-color: #4CAF50;
+    background-color: cadetblue;
     color: #fff;
     text-align: left;
 }
 
-.styled-table th{
+.styled-table th {
     font-size: 10px;
     font-weight: 600;
     color: #fff;
 }
 
-.styled-table td{
+.styled-table td {
     font-size: 10px;
     font-weight: 600;
     color: #000;
 }
 
-.styled-table th, .styled-table td {
+.styled-table th,
+.styled-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #ddd;
 }

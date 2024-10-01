@@ -84,6 +84,7 @@ $(document).ready(function(){
 
                     $('#itemBody').html(`
                         <div class="client-info">
+                            <input type="hidden" name="req_id" id="req_id" value="${response.id}"/>
                             <h6>Client Name: ${response.client_name}</h6>
                             <p>Amount: ${response.amount + ' taka'}</p>
                             <p>Description: ${response.description}</p>
@@ -175,6 +176,36 @@ $(document).ready(function(){
         } else {
             $('#errMessage').text('Please select at least one item.');
             return false;
+        }
+    });
+
+    $('#sendRemarkBtn').on('click', function(){
+        const id = $('#req_id').val();
+        const remark = $('#remark_text').val().trim();
+
+        if(remark === ''){
+            toastr.error('Please write something.');
+            return false;
+        }else{
+            $.ajax({
+                url: '/send/remark',
+                method: 'GET',
+                data: {
+                    id: id,
+                    remark: remark
+                },
+                success: function(response){
+                    if(response && response.success === true){
+                        toastr.success(response.message);
+                        $('#remark_text').val('');
+                    }else{
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr){
+                    console.log(xhr);
+                }
+            });
         }
     });
 });
