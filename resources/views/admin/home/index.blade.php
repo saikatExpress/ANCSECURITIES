@@ -478,6 +478,69 @@
                 </div>
             @endif
 
+            @if (auth()->user()->role === 'audit')
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">
+                            Withdraw Request
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Client Name</th>
+                                            <th>Amount</th>
+                                            <th>Code</th>
+                                            <th>AC No</th>
+                                            <th>Withdraw Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($withdrawForAudit as $withdrawal)
+                                            <tr>
+                                                <td>{{ $withdrawal->id }}</td>
+                                                <td>{{ $withdrawal->clients->name }}</td>
+                                                <td>{{ number_format($withdrawal->amount, 2) }} Taka</td>
+                                                <td>{{ $withdrawal->clients->trading_code }}</td>
+                                                <td>{{ $withdrawal->ac_no }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y') }}</td>
+                                                <td>
+                                                    @if ($withdrawal->ceostatus === 'assign')
+                                                        <span style="background-color: tomato;" class="badge">
+                                                            {{ ucfirst('proccesing...') }}
+                                                        </span>
+                                                    @else
+                                                        <span style="background-color: darkred;" class="badge">
+                                                            {{ ucfirst('pending...') }}
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-primary withdrawStatusBtn"
+                                                        data-id="{{ $withdrawal->id }}"
+                                                        data-toggle="modal" data-target="#statusModal">
+                                                        <i class="fa-regular fa-chart-bar"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             @if (auth()->user()->role === 'account' || auth()->user()->role === 'Business Head')
                 <div class="row">
                     <div class="col-md-12">

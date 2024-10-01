@@ -19,6 +19,7 @@ use Illuminate\Http\Request;
 use App\Mail\RegistrationSuccess;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\RequestFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -116,6 +117,12 @@ class AdminController extends Controller
             if(auth()->user()->role === 'hr'){
                 $data['waitingExpenses'] = Expense::where('assign_to_hr', 1)->get();
             }
+        }
+
+        if(auth()->user()->role === 'audit'){
+            $requestIds = RequestFile::pluck('request_id');
+
+            $data['withdrawForAudit'] = Fund::whereIn('id', $requestIds)->where('category', 'withdraw')->get();
         }
 
         $data['authUserExpense'] = Expense::with('staff:id,name')->where('staff_id', Auth::id())->get();

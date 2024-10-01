@@ -243,10 +243,16 @@ class HelperController extends Controller
             $withdrawRequest->approved_by = auth()->user()->id;
             $withdrawRequest->declined_by = null;
             $withdrawRequest->ceo = $ceo->name;
+            if(auth()->user()->role === 'audit'){
+                $withdrawRequest->ceostatus = 'assign';
+            }
         } elseif ($status === 'deny') {
             $withdrawRequest->declined_by = auth()->user()->id;
             $withdrawRequest->approved_by = null;
             $withdrawRequest->ceo = null;
+            if(auth()->user()->role === 'audit'){
+                $withdrawRequest->ceostatus = null;
+            }
         }
 
         $withdrawRequest->save();
