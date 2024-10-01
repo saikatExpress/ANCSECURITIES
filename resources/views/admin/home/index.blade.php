@@ -873,8 +873,8 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Save changes</button>
                     </form>
                 </div>
             </div>
@@ -896,7 +896,7 @@
                     </div>
                 </div>
                 <div class="modal-footer" id="modalfooter">
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Save changes</button>
                 </div>
             </div>
         </div>
@@ -911,10 +911,9 @@
     <script src="{{ asset('admin/assets/js/index.js') }}"></script>
     <script src="{{ asset('admin/assets/js/watch.js') }}"></script>
     <script src="{{ asset('admin/assets/js/withdraw.js') }}"></script>
-    <!-- Lightbox JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
-    @if (auth()->user()->role === 'it' || auth()->user()->role === 'account' || auth()->user()->role === 'hr')
+    {{-- @if (auth()->user()->role === 'it' || auth()->user()->role === 'account' || auth()->user()->role === 'hr')
         <script>
             $(document).ready(function() {
                 var displayedRequests = [];
@@ -926,31 +925,27 @@
                         dataType: 'json',
                         success: function(response) {
                             if (response && response.length > 0) {
-                                var newRequests = []; // Array to store IDs of newly fetched requests
+                                var newRequests = [];
 
                                 response.forEach(function(request) {
                                     var requestId = request.id;
 
-                                    // Check if this request is already displayed
                                     if (displayedRequests.indexOf(requestId) === -1) {
-                                        // If not displayed, add it to newRequests array and display
                                         newRequests.push(requestId);
 
                                         var tradingCode = request.clients.trading_code;
                                         var amount = request.limit_amount;
 
                                         var alertDiv = $('<div class="alert alert-info" style="display: block; margin:5px 5px 5px;">');
-                                        alertDiv.data('requestId', requestId); // Store requestId in data attribute
+                                        alertDiv.data('requestId', requestId);
                                         alertDiv.append('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>');
                                         alertDiv.append('<h4>' + request.clients.name + ' sent you a limit request..!</h4>');
                                         alertDiv.append('<span>Trading Code : <b style="color: purple;font-size: 17px;">' + tradingCode + '</b></span> <strong style="">Amount : <b style="color: purple;font-size: 17px;">' + amount + '</b></strong> <br>');
                                         alertDiv.append('<button class="btn btn-sm btn-primary limitAcceptBtn" data-id="' + requestId + '">Accept</button>');
                                         alertDiv.append('<button class="btn btn-sm btn-danger limitDeclineBtn" data-id="' + requestId + '" style="margin-left:10px;">Deny</button>');
 
-                                        // Append alertDiv to the notification container
                                         $('#notificationContainer').append(alertDiv);
 
-                                        // Add requestId to displayedRequests array
                                         displayedRequests.push(requestId);
                                     }
                                 });
@@ -1026,7 +1021,7 @@
                 });
             });
         </script>
-    @endif
+    @endif --}}
 
     <script>
         $(document).ready(function() {

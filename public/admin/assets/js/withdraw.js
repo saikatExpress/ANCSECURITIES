@@ -4,20 +4,25 @@ $(document).ready(function(){
 
         if(reqId) {
             $.ajax({
-                url: '/get/withdraw/info/' + reqId, // Replace with your actual route
+                url: '/get/withdraw/info/' + reqId,
                 type: 'GET',
                 success: function(response){
                     if (response.length > 0) {
                         const data = response[0];
 
-                        if (data.md === null) {
-                            $('#mdStatus').text('Processing...').removeClass('btn-success').addClass('btn-warning'); // Change to 'Processing...' and update button class
+                        if (data.mdstatus === null) {
+                            $('#mdStatus').text('Processing...').removeClass('btn-success').addClass('btn-warning');
                         } else {
-                            $('#mdStatus').text('Complete').removeClass('btn-warning').addClass('btn-success'); // Change back to 'Complete' and update button class
+                            $('#mdStatus').text('Complete').removeClass('btn-warning').addClass('btn-success');
+                        }
+
+                        if (data.ceostatus === null) {
+                            $('#ceoStatus').text('Processing...').removeClass('btn-success').addClass('btn-warning');
+                        } else {
+                            $('#ceoStatus').text('Complete').removeClass('btn-warning').addClass('btn-success');
                         }
 
 
-                        // Populate modal with response data
                         $('#reqId').val(data.id);
                         $('#clientName').text(data.client_name);
                         $('#amount').text(new Intl.NumberFormat('bn-BD', { style: 'currency', currency: 'BDT' }).format(data.amount));
@@ -41,7 +46,6 @@ $(document).ready(function(){
                         $('#feedback').text(data.feedback || 'N/A');
                         $('#remark').text(data.remark || 'N/A');
 
-                        // Show the modal
                         $('#exampleModal').modal('show');
                     } else {
                         console.log('No data found');
@@ -73,7 +77,7 @@ $(document).ready(function(){
                     $('#statusModalLabel').text('Withdraw Request Status');
                     let portfolioHtml = '';
                     if (response.portfolio_file) {
-                        portfolioHtml = `<a href="/storage/${response.portfolio_file}" target="_blank" class="btn btn-info">View Portfolio</a>`;
+                        portfolioHtml = `<a href="/storage/${response.portfolio_file}" target="_blank" class="btn btn-sm btn-info">View Portfolio</a>`;
                     } else {
                         portfolioHtml = `<p style="color:red;margin-top:10px;">No portfolio attached</p>`;
                     }
@@ -89,9 +93,9 @@ $(document).ready(function(){
                     `);
 
                     $('#modalfooter').html(`
-                        <button type="button" class="btn btn-success" id="acceptBtn" data-id="${response.id}">Accept</button>
-                        <button type="button" class="btn btn-danger" id="denyBtn" data-id="${response.id}">Deny</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-success" id="acceptBtn" data-id="${response.id}">Accept</button>
+                        <button type="button" class="btn btn-sm btn-danger" id="denyBtn" data-id="${response.id}">Deny</button>
+                        <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
                     `);
 
                 },
@@ -138,7 +142,6 @@ $(document).ready(function(){
         $(this).text(isChecked ? 'Mark All' : 'Unmark All');
     });
 
-    // Make File button functionality
     $('#makeFile').click(function() {
         var selectedItems = [];
         $('.item-checkbox:checked').each(function() {
@@ -159,6 +162,10 @@ $(document).ready(function(){
 
                     if(response && response.success === false) {
                         toastr.error('Already make file these requests.');
+                    }
+
+                    if(response && response.error === false) {
+                        toastr.error('Not approved by Business Head.');
                     }
                 },
                 error: function(xhr) {

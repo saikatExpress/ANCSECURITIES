@@ -27,30 +27,21 @@ class HelperController extends Controller
     {
         $ids = $request->input('ids');
 
-        if (is_array($ids)) {
-            $exists = RequestFile::whereIn('request_id', $ids)->get();
-            if ($exists->isNotEmpty()) {
-                return response()->json(['success' => false]);
-            } else {
-                // No records found
-            }
-        }else{
-            $exists = RequestFile::where('request_id', $ids)->first();
-            if($exists){
-                return 'false';
-            }
-        }
-
         foreach($ids as $id){
-            $fileObj = new RequestFile();
+            $request = Fund::find($id);
+            if($request->ceo === NULL){
+                return response()->json(['error' => false]);
+            }
+            $alreadyExits = RequestFile::where('request_id', $id)->where('category', 'withdraw')->first();
+            if(!$alreadyExits){
+                $fileObj = new RequestFile();
 
-            $fileObj->request_id = $id;
-            $fileObj->created_by = auth()->user()->id;
-            $fileObj->category = 'withdraw';
-            $fileObj->save();
+                $fileObj->request_id = $id;
+                $fileObj->created_by = auth()->user()->id;
+                $fileObj->category = 'withdraw';
+                $fileObj->save();
+            }
         }
-
-
         return response()->json(['success' => true]);
     }
 

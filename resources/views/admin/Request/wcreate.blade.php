@@ -103,57 +103,66 @@
                                 <h4 class="card-title">Today Withdraw Reqeust List</h4>
                             </div>
 
-                            <table class="styled-table">
-                                @php
-                                    $sl = 1;
-                                @endphp
-                                <thead>
-                                    <tr>
-                                        <th>SL</th>
-                                        <th>Name</th>
-                                        <th>Code</th>
-                                        <th>Amount</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($withdraws as $limit)
+                            <form action="" method="post">
+                                @csrf
+                                <table class="styled-table">
+                                    @php
+                                        $sl = 1;
+                                    @endphp
+                                    <thead>
                                         <tr>
-                                            <td>{{ $sl }}</td>
-                                            <td>{{ $limit->clients->name }}</td>
-                                            <td>{{ $limit->clients->trading_code }}</td>
-                                            <td>{{ number_format($limit->amount, 2) }}</td>
-                                            <td>{{ formatDateTime($limit->withdraw_date) }}</td>
-                                            <td>
-                                                @if ($limit->status === 'approved')
-                                                    <label for="" class="btn btn-sm btn-success" style="font-size: 8px; margin-bottom:0;">
-                                                        {{ ucfirst($limit->status) }}
-                                                    </label>
-                                                @else
-                                                    <label for="" class="btn btn-sm btn-danger" style="font-size: 8px; margin-bottom:0;">
-                                                        {{ ucfirst($limit->status) }}
-                                                    </label>
-                                                @endif
-
-                                            </td>
-                                            <td>
-                                                <button style="font-size: 8px; margin-bottom:0%;" type="button" class="btn btn-sm btn-primary editBtn"
-                                                    data-toggle="modal" data-target="#exampleModal"
-                                                    data-id="{{ $limit->id }}" data-name="{{ $limit->clients->name }}" data-amount="{{ $limit->amount }}"
-                                                    data-trading_code="{{ $limit->trade_id }}" data-status="{{ $limit->status }}"
-                                                    data-client_id="{{ $limit->client_id }}">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </td>
+                                            <th>
+                                                <input type="checkbox" id="select-all">
+                                            </th>
+                                            <th>SL</th>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
-                                        @php
-                                            $sl++;
-                                        @endphp
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($withdraws as $limit)
+                                            <tr>
+                                                <td>
+                                                    <input type="checkbox" class="select-item">
+                                                </td>
+                                                <td>{{ $sl }}</td>
+                                                <td>{{ $limit->clients->name }}</td>
+                                                <td>{{ $limit->clients->trading_code }}</td>
+                                                <td>{{ number_format($limit->amount, 2) }}</td>
+                                                <td>{{ formatDateTime($limit->withdraw_date) }}</td>
+                                                <td>
+                                                    @if ($limit->status === 'approved')
+                                                        <label for="" class="btn btn-sm btn-success" style="font-size: 8px; margin-bottom:0;">
+                                                            {{ ucfirst($limit->status) }}
+                                                        </label>
+                                                    @else
+                                                        <label for="" class="btn btn-sm btn-danger" style="font-size: 8px; margin-bottom:0;">
+                                                            {{ ucfirst($limit->status) }}
+                                                        </label>
+                                                    @endif
+
+                                                </td>
+                                                <td>
+                                                    <button style="font-size: 8px; margin-bottom:0%;" type="button" class="btn btn-sm btn-primary editBtn"
+                                                        data-toggle="modal" data-target="#exampleModal"
+                                                        data-id="{{ $limit->id }}" data-name="{{ $limit->clients->name }}" data-amount="{{ $limit->amount }}"
+                                                        data-trading_code="{{ $limit->trade_id }}" data-status="{{ $limit->status }}"
+                                                        data-client_id="{{ $limit->client_id }}">
+                                                        <i class="fa-solid fa-pen-to-square"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            @php
+                                                $sl++;
+                                            @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -201,10 +210,8 @@
 
     <script>
         $(document).ready(function() {
-            // Show the alert message
             $('#successAlert').show();
 
-            // Hide the alert message after 3 seconds
             setTimeout(function() {
                 $('#successAlert').fadeOut('slow');
             }, 3000);
@@ -213,10 +220,8 @@
 
     <script>
         $(document).ready(function() {
-            // Show the alert message
             $('.errorAlert').show();
 
-            // Hide the alert message after 3 seconds
             setTimeout(function() {
                 $('.errorAlert').fadeOut('slow');
             }, 3000);
@@ -225,7 +230,6 @@
 
     <script>
         $(document).ready(function(){
-            // Event listener for the edit button
             $('.editBtn').on('click', function(){
                 var limitId  = $(this).data('id');
                 var name     = $(this).data('name');
@@ -236,6 +240,21 @@
                 $('#withdrawname').val(name);
                 $('#wamount').val(amount);
                 $('#clientId').val(clientId);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#select-all').on('click', function() {
+                $('.select-item').prop('checked', this.checked);
+            });
+
+            $('.select-item').on('change', function() {
+                if (!$(this).is(':checked')) {
+                    $('#select-all').prop('checked', false);
+                } else if ($('.select-item:checked').length === $('.select-item').length) {
+                    $('#select-all').prop('checked', true);
+                }
             });
         });
     </script>
