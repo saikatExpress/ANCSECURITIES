@@ -135,39 +135,33 @@ class RequestController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $validator = Validator::make($request->all(), [
                 'status' => ['required'],
             ]);
-
             if ($validator->fails()) {
                 return redirect()->back()
                             ->withErrors($validator)
                             ->withInput();
             }
 
-            $reqId = $request->input('req_id');
-
-            $withdraw = Fund::find($reqId);
-            $md = User::where('role', 'md')->where('status', 'active')->first();
-
-            if(!$md){
-                return redirect()->back()->with('errorMsg', 'Manager Director account not found');
-            }
-
-            if(!$withdraw){
+            $withdraw = Fund::find($request->input('req_id'));
+            if (!$withdraw) {
                 return redirect()->back()->with('errors', 'Request not found');
             }
 
-            $withdraw->ceostatus = $request->input('status');
-            $withdraw->mdstatus = $request->input('status');
-            $withdraw->md = $md->name;
+            $status = $request->input('status');
+            $userRole = auth()->user()->role;
 
-            $res = $withdraw->save();
+            if ($userRole === 'md') {
+                $this->handleMDApproval($withdraw, $status);
+            } else {
+                $this->handleCEOApproval($withdraw, $status);
+            }
 
             DB::commit();
+            $res = $withdraw->save();
             if($res){
-                return redirect()->back()->with('message', 'Update successfully and sending done to Managing Director approval..!');
+                return redirect()->back()->with('message', 'Update successful and sent to Managing Director for approval.');
             }
         } catch (\Exception $e) {
             DB::rollback();
@@ -178,6 +172,52 @@ class RequestController extends Controller
                 ->withInput()
                 ->withErrors(['error' => $e->getMessage()]);
         }
+    }
+
+    private function handleMDApproval($withdraw, $status)
+    {
+        if ($status === 'approved') {
+            $withdraw->ceostatus = $status;
+            $withdraw->mdstatus = $status;
+            $withdraw->remark = $this->formatRemark('successfully approved by managing director');
+        } elseif ($status === 'deny') {
+            $this->declineRequest($withdraw);
+            RequestFile::where('request_id', $withdraw->id)->delete();
+        }
+    }
+
+    private function handleCEOApproval($withdraw, $status)
+    {
+        $md = User::where('role', 'md')->where('status', 'active')->first();
+        if (!$md) {
+            throw new \Exception('Managing Director account not found');
+        }
+
+        if ($status === 'approved') {
+            $withdraw->ceostatus = $status;
+            $withdraw->mdstatus = 'assign';
+            $withdraw->md = $md->name;
+            $withdraw->remark = $this->formatRemark('handover to the managing director');
+        } elseif ($status === 'deny') {
+            $this->declineRequest($withdraw);
+            RequestFile::where('request_id', $withdraw->id)->delete();
+        }
+    }
+
+    private function declineRequest($withdraw)
+    {
+        $withdraw->ceo = null;
+        $withdraw->ceostatus = 'decline';
+        $withdraw->mdstatus = null;
+        $withdraw->md = null;
+        $withdraw->approved_by = null;
+        $withdraw->flag = 0;
+        $withdraw->remark = $this->formatRemark('declined this request');
+    }
+
+    private function formatRemark($message)
+    {
+        return $message . ' by ' . auth()->user()->name . ' at ' . formatDateTime(now());
     }
 
     public function update(Request $request)

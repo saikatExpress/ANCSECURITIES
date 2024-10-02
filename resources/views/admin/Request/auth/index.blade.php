@@ -130,8 +130,7 @@
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-sm btn-primary statusBtn"
-                                                data-id="{{ $limit->id }}"
-                                                data-toggle="modal" data-target="#updateModal">
+                                                    data-id="{{ $limit->id }}">
                                                     <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
                                                 <a href="{{ route('admin.viewwithdrawrequest', ['id' => $limit->id]) }}" class="btn btn-sm btn-warning">
@@ -187,6 +186,14 @@
         </div>
     </div>
 
+    <div id="statusPanel" class="status-panel">
+        <button type="button" id="closePanelBtn" class="btn btn-sm btn-danger">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="statusContent"></div>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
@@ -194,23 +201,33 @@
     <script src="{{ asset('admin/assets/js/index.js') }}"></script>
 
     <script>
-        $(document).ready(function(){
-            $('.statusBtn').on('click', function(){
-                const reqId = $(this).data('id');
+        $(document).ready(function() {
+            $('.statusBtn').on('click', function() {
+                const id = $(this).data('id');
 
-                if(reqId != null){
-                    $('#reqId').val(reqId);
-                }
+                $('#statusPanel').addClass('active');
+                $.ajax({
+                    url: '/admin/fetch/withdraw/info/' + id,
+                    method: 'GET',
+                    success: function(response){
+                        $('#statusContent').html(response);
+                    },
+                    error: function(xhr){
+
+                    }
+                });
+            });
+
+            $('#closePanelBtn').on('click', function() {
+                $('#statusPanel').removeClass('active');
             });
         });
     </script>
 
     <script>
         $(document).ready(function() {
-            // Show the alert message
             $('#successAlert').show();
 
-            // Hide the alert message after 3 seconds
             setTimeout(function() {
                 $('#successAlert').fadeOut('slow');
             }, 3000);
@@ -218,10 +235,8 @@
     </script>
     <script>
         $(document).ready(function() {
-            // Show the alert message
             $('.errorAlert').show();
 
-            // Hide the alert message after 3 seconds
             setTimeout(function() {
                 $('.errorAlert').fadeOut('slow');
             }, 3000);

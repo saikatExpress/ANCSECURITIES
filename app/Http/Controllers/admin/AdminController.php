@@ -122,7 +122,7 @@ class AdminController extends Controller
         if(auth()->user()->role === 'audit'){
             $requestIds = RequestFile::pluck('request_id');
 
-            $data['withdrawForAudit'] = Fund::whereIn('id', $requestIds)->where('category', 'withdraw')->where('flag', 1)->get();
+            $data['withdrawForAudit'] = Fund::whereIn('id', $requestIds)->where('category', 'withdraw')->whereNull('ceostatus')->whereNull('mdstatus')->where('flag', 1)->get();
         }
 
         $data['authUserExpense'] = Expense::with('staff:id,name')->where('staff_id', Auth::id())->get();

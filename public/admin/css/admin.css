@@ -48,6 +48,7 @@
     padding: 1rem;
     font-size: 1.25rem;
     font-weight: 500;
+    color: teal;
 }
 
 .card-body {
@@ -99,4 +100,42 @@
 
 .styled-table th {
     font-weight: 600;
+}
+
+/* Hidden by default */
+.status-panel {
+    position: fixed;
+    top: 0;
+    right: -60%;
+    width: 60%;
+    height: 100%;
+    background-color: #f4f4f4;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease;
+    z-index: 9999;
+}
+
+/* Class to make it slide in */
+.status-panel.active {
+    right: 0; /* Bring the div into view */
+}
+
+.status-footer {
+    padding: 15px;
+    background-color: teal;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid #ccc;
+}
+
+.footer-text {
+    margin: 0;
+}
+
+#statusContent {
+    overflow-y: auto;
+    height: calc(100vh - 150px); /* Adjust height dynamically */
+    padding: 15px;
+    border: 1px solid #ddd;
 }

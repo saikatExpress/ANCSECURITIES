@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Services\FundService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\BoAccount;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -67,7 +68,7 @@ class WithdrawController extends Controller
         if (auth()->user()->role === 'ceo') {
             $query->whereNotNull('ceo')->where('flag', 1);
         } elseif (auth()->user()->role === 'md') {
-            $query->whereNotNull('md');
+            $query->where('mdstatus', 'assign')->whereNotNull('md');
         }
 
         $data['withdraws'] = $query->get();
@@ -77,6 +78,14 @@ class WithdrawController extends Controller
         }
 
         return view('admin.Request.wcreate')->with($data);
+    }
+
+    public function fetchRequestInfo($id)
+    {
+        $request = Fund::with('clients')->where('id', $id)->first();
+        $account = BoAccount::where('bank_account_no', $request->ac_no)->first();
+
+        return view('admin.request.partials.create', compact('request', 'account'))->render();
     }
 
     public function store(Request $request)

@@ -644,11 +644,14 @@
                                                             </span> <br>
                                                             @if ($withdrawal->ceostatus != null)
                                                                 @if ($withdrawal->ceostatus === 'approved')
-                                                                    <p style="margin-bottom: 0; font-size: 8px; color:green;">CEO approval done</p>
+                                                                    <p style="margin-bottom: 0;background-color: darkgreen;" class="badge">
+                                                                        CEO approval done
+                                                                    </p>
                                                                 @elseif ($withdrawal->ceostatus === 'assign')
                                                                     <div style="box-shadow: 0 0 10px rgba(0,0,0,0.1);border-radius: 4px;padding: 3px;margin-top: 5px;margin-bottom: 3px;">
                                                                         <p style="margin-bottom: 0; font-size: 8px; color:tomato;">Handover to CEO</p>
                                                                         <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for CEO approval</p>
                                                                     </div>
                                                                 @elseif ($withdrawal->ceostatus === 'decline')
                                                                     <p style="margin-bottom: 0; font-size: 8px; color:tomato;">CEO approval declined</p>
@@ -659,7 +662,13 @@
                                                             @endif
                                                             @if ($withdrawal->mdstatus != null)
                                                                 @if ($withdrawal->mdstatus === 'approved')
-                                                                    <p style="margin-bottom: 0; font-size: 8px; color:green;">MD approval done</p>
+                                                                    <p style="margin-bottom: 0;background-color: darkgreen;" class="badge">MD approval done</p>
+                                                                @elseif ($withdrawal->mdstatus === 'assign')
+                                                                    <div style="box-shadow: 0 0 10px rgba(0,0,0,0.1);border-radius: 4px;padding: 3px;margin-top: 5px;margin-bottom: 3px;">
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:tomato;">Handover to MD</p>
+                                                                        <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
+                                                                        <p style="margin-bottom: 0; font-size: 8px; color:red;">Waiting for MD approval</p>
+                                                                    </div>
                                                                 @elseif ($withdrawal->mdstatus === 'decline')
                                                                     <p style="margin-bottom: 0; font-size: 8px; color:tomato;">MD approval declined</p>
                                                                     <p style="margin-bottom: 0;">{{ $withdrawal->remark }}</p>
