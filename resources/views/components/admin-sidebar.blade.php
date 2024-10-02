@@ -209,12 +209,15 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li>
-                        <a href="{{ route('manual.request') }}">
-                            <i class="fa fa-clock-o"></i>
-                            Manual Request
-                        </a>
-                    </li>
+                    @can('manual request')
+                        <li>
+                            <a href="{{ route('manual.request') }}">
+                                <i class="fa fa-clock-o"></i>
+                                Manual Request
+                            </a>
+                        </li>
+                    @endcan
+
                     <li>
                         <a href="{{ route('today.limit_request') }}">
                             <i class="fa fa-clock-o"></i>

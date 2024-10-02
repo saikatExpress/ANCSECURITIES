@@ -108,7 +108,7 @@
                                     <th>Name</th>
                                     <th>Whatsapp</th>
                                     <th>Amount</th>
-                                    <th>Date</th>
+                                    <th>Created By</th>
                                     <th>Status</th>
                                     <th>Perform</th>
                                     <th>Action</th>
@@ -128,10 +128,10 @@
                                             </a>
                                         </td>
                                         <td>
-                                            {{ number_format($request->limit_amount) }}
+                                            {{ number_format($request->amount) }}
                                         </td>
                                         <td>
-                                            {{ $request->created_at->format('d-M-Y') }}
+                                            {{ name($request->created_by) }}
                                         </td>
 
                                         @if ($request->status === 'pending')
@@ -192,22 +192,20 @@
 
         <script>
             $(document).ready(function() {
-                // Show the alert message
                 $('#successAlert').show();
 
-                // Hide the alert message after 3 seconds
                 setTimeout(function() {
                     $('#successAlert').fadeOut('slow');
                 }, 3000);
             });
         </script>
 
-        <script>
+        {{-- <script>
             $(document).ready(function() {
                 $('.toggle-status').change(function() {
                     var requestId = $(this).data('id');
                     var actionUrl = $(this).data('action');
-                    var status = $(this).prop('checked') ? 'approved' : 'canceled'; // Determine new status based on checkbox state
+                    var status = $(this).prop('checked') ? 'approved' : 'canceled';
 
                     $.ajax({
                         url: actionUrl,
@@ -221,27 +219,25 @@
                         },
                         error: function(xhr) {
                             console.error('Error updating status:', xhr.responseText);
-                            // Handle error, show error message, etc.
                         }
                     });
                 });
             });
-        </script>
+        </script>--}}
 
         <script>
             $(document).ready(function() {
-                // Listen for change in select dropdown
                 $('#requestType').change(function() {
                     var selectedType = $(this).val();
 
                     $.ajax({
-                        url: '{{ route('fetch.requests') }}', // Replace with your Laravel route
+                        url: '{{ route('fetch.requests') }}',
                         type: 'GET',
                         data: {
                             type: selectedType
                         },
                         success: function(response) {
-                            $('#example11 tbody').empty(); // Clear existing rows
+                            $('#example11 tbody').empty();
 
                             $.each(response, function(index, request) {
                                 var statusLabel = getStatusLabel(request.status);
@@ -277,7 +273,6 @@
                     });
                 });
 
-                // Function to get status label based on status
                 function getStatusLabel(status) {
                     if (status === 'pending') {
                         return '<label class="btn btn-sm btn-danger">Pending</label>';
@@ -288,12 +283,10 @@
                     }
                 }
 
-                // Function to format number with commas
                 function numberWithCommas(x) {
                     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 }
 
-                // Function to format date
                 function formatDate(dateString) {
                     var date = new Date(dateString);
                     return date.toLocaleDateString();

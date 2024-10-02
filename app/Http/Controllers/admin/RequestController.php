@@ -30,17 +30,8 @@ class RequestController extends Controller
     public function index()
     {
         $pageTitle = 'All Request';
-
-        $limitRequests = LimitRequest::with('clients:id,name,email,trading_code,mobile,whatsapp')->get();
-
-        return view('admin.Request.index', compact('pageTitle','limitRequests'));
-    }
-
-    public function manuelRequest()
-    {
-        $pageTitle = 'Manual Request';
-
-        return view('admin.Request.manual', compact('pageTitle'));
+        $limitRequests = Fund::where('category', 'withdraw')->where('status', 'approved')->get();
+        return view('admin.Request.index', compact('pageTitle', 'limitRequests'));
     }
 
     public function getClientInfo($code)
@@ -424,13 +415,11 @@ class RequestController extends Controller
         if ($type === 'withdraw') {
             $requests = Fund::with('clients')
                 ->where('category', 'withdraw')
-                ->where('status', 'pending')
                 ->orderByDesc('id')
                 ->get();
         } elseif ($type === 'deposit') {
             $requests = Fund::with('clients')
                 ->where('category', 'deposit')
-                ->where('status', 'pending')
                 ->orderByDesc('id')
                 ->get();
         } else {

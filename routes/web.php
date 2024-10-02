@@ -231,7 +231,6 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
 
     Route::controller(RequestController::class)->group(function(){
         Route::get('/all/request', 'index')->name('all.request');
-        Route::get('/manual/request', 'manuelRequest')->name('manual.request');
         Route::get('/today/limit/request', 'limitIndex')->name('today.limit_request');
         Route::get('/declined/request', 'declineIndex')->name('declined.request');
         Route::get('/get/client/code/{code}', 'getClientInfo');

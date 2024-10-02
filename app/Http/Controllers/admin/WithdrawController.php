@@ -82,6 +82,13 @@ class WithdrawController extends Controller
         return view('admin.Request.wcreate')->with($data);
     }
 
+    public function manuelRequest()
+    {
+        $pageTitle = 'Manual Request';
+
+        return view('admin.Request.manual', compact('pageTitle'));
+    }
+
     public function requestWithdraw(Request $request, $id)
     {
         $request->validate([
