@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 
 class StaffService
@@ -22,19 +23,22 @@ class StaffService
             $userObj->mobile        = $mobile;
             $userObj->whatsapp      = $mobile;
             $userObj->password      = Hash::make('123456');
-            $userObj->role          = $role;
-
             $res = $userObj->save();
 
-            DB::commit();
-            if($res){
+            if ($res) {
+                $userObj->assignRole($role);
+                DB::commit();
                 return true;
             }
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
-            info($e);
+            Log::error('User creation failed: ' . $e->getMessage());
+            return false;
         }
+
+        return false;
     }
+
 
     public function userUpdate(string $name, $email, $mobile, string $role, $fileNameToStore)
     {
@@ -42,6 +46,10 @@ class StaffService
             DB::beginTransaction();
 
             $user = User::where('email', $email)->first();
+
+            if ($user) {
+                $user->syncRoles([$role]);
+            }
 
             $user->profile_image = $fileNameToStore;
             $user->name          = $name;

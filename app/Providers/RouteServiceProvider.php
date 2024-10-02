@@ -40,6 +40,9 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/custom.php'));
 
             Route::middleware('web')
+                ->group(base_path('routes/withdraw.php'));
+
+            Route::middleware('web')
                 ->group(base_path('routes/user.php'));
         });
     }

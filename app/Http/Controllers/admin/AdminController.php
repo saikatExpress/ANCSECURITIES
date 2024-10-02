@@ -35,6 +35,7 @@ class AdminController extends Controller
 
     public function index()
     {
+        $this->syncRolesWithUserPermission();
         $data['todayCost'] = Expense::where('expense_date', Carbon::today())->sum('amount');
 
         if(auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo' || auth()->user()->role === 'Business Head'){
@@ -213,11 +214,6 @@ class AdminController extends Controller
         return view('admin.director.create', compact('pageTitle'));
     }
 
-    public function profile()
-    {
-        return view('admin.profile.create');
-    }
-
     public function update(Request $request)
     {
         try {
@@ -265,5 +261,11 @@ class AdminController extends Controller
         $boForms = BOForm::latest()->get();
 
         return view('admin.bo.index', compact('pageTitle', 'boForms'));
+    }
+
+    private function syncRolesWithUserPermission()
+    {
+        $user = User::findOrFail(auth()->user()->id);
+        $user->assignRole($user->role);
     }
 }

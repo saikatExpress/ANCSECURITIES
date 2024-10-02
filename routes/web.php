@@ -21,6 +21,7 @@ use App\Http\Controllers\admin\NewsController;
 use App\Http\Controllers\admin\PermissionController;
 use App\Http\Controllers\admin\PortfolioController;
 use App\Http\Controllers\admin\ProductController;
+use App\Http\Controllers\admin\ProfileController;
 use App\Http\Controllers\admin\ReportController;
 use App\Http\Controllers\admin\RequestController;
 use App\Http\Controllers\admin\RoleController;
@@ -195,9 +196,17 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         $hashedBoUrl = md5('bo/list');
         Route::get('/'.$hashedBoUrl, 'boIndex')->name('bo.list');
 
-        Route::get('/profile', 'profile')->name('profile.us');
+
         Route::post('/user/update', 'update')->name('user.update');
     });
+
+    Route::prefix('profile')->group(function(){
+        Route::controller(ProfileController::class)->group(function(){
+            Route::get('/', 'create')->name('profile.us');
+            Route::post('/update', 'update')->name('profileupdate')->middleware('can:update profile');
+        });
+    });
+
 
     Route::controller(BoController::class)->group(function(){
         $hashedShowFormUrl = md5('show/form');
