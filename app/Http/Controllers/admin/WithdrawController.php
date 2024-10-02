@@ -91,10 +91,6 @@ class WithdrawController extends Controller
 
     public function store(Request $request)
     {
-        if (!in_array(auth()->user()->role, ['account', 'admin', 'hr'])) {
-            return redirect()->back()->with('error', 'This action is not permitted for you.');
-        }
-
         $validator = Validator::make($request->all(), [
             'trading_code'  => ['required'],
             'name'          => ['required'],

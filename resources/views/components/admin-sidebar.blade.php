@@ -49,12 +49,6 @@
                             Home
                         </a>
                     </li>
-                    {{-- <li class="active">
-                        <a href="{{ route('admin.dashboard') }}">
-                            <i class="fa fa-circle-o"></i>
-                            Dashboard v2
-                        </a>
-                    </li> --}}
                 </ul>
             </li>
 

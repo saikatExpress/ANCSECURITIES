@@ -11,9 +11,7 @@ Route::controller(WithdrawController::class)->group(function(){
 Route::middleware(['auth'])->group(function(){
     Route::prefix('admin')->group(function(){
         Route::controller(WithdrawController::class)->group(function(){
-            Route::get('/withdraw/list', 'index')->name('admin.withdrawlist');
             Route::post('/withdraw/update', 'update')->name('admin.withdrawupdate');
-            Route::post('/withdraw/request', 'store')->name('admin.withdraw_request');
             Route::get('/view/withdraw/request/{id}', 'show')->name('admin.viewwithdrawrequest');
             Route::get('/fetch/withdraw/info/{id}', 'fetchRequestInfo');
         });

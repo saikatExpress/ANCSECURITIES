@@ -44,7 +44,7 @@
                                 <h4 class="card-title">Withdraw Request</h4>
                             </div>
 
-                            <form action="{{ route('admin.withdraw_request') }}" method="post">
+                            <form action="{{ route('withdrawrequeststore') }}" method="post">
                                 @csrf
                                 <input type="hidden" name="client_id" id="wclient_id">
                                 <div class="form-group" id="form-group-code">
