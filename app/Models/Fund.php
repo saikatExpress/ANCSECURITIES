@@ -58,7 +58,7 @@ class Fund extends Model
 
     public function requestFile()
     {
-        return $this->belongsTo(RequestFile::class, 'request_id', 'id');
+        return $this->hasOne(RequestFile::class, 'request_id', 'id');
     }
 
     public static function createData($requestType, $clientId,$code,$name, $email, $mobile, $amount, $bankAccount, $date, $path)

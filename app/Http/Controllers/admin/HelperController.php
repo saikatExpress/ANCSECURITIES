@@ -213,15 +213,6 @@ class HelperController extends Controller
         return redirect()->back()->with('message', 'File uploaded successfully.');
     }
 
-    public function withdrawStatus($id)
-    {
-        $request = Fund::where('category', 'withdraw')->where('id', $id)->first();
-
-        if($request){
-            return response()->json($request);
-        }
-    }
-
     public function sendRemark(Request $request)
     {
         $id = $request->input('id');
@@ -241,52 +232,6 @@ class HelperController extends Controller
         }
 
         return response()->json(['error' => false, 'message' => 'ID or Remark missing..Try Again...']);
-    }
-
-    public function upgradeWithdrawStatus(Request $request)
-    {
-        $request->validate([
-            'id' => 'required|integer|exists:funds,id',
-            'status' => 'required|in:accept,deny',
-        ]);
-
-        $requestId = $request->input('id');
-        $status    = $request->input('status');
-
-        $withdrawRequest = Fund::where('id', $requestId)->first();
-        $ceo = User::where('role', 'ceo')->where('status', 'active')->first();
-
-        if (!$withdrawRequest) {
-            return response()->json(['message' => 'Withdraw request not found.'], 404);
-        }
-
-        if ($status === 'accept') {
-            $withdrawRequest->approved_by = auth()->user()->id;
-            $withdrawRequest->declined_by = null;
-            $withdrawRequest->ceo = null;
-            $withdrawRequest->ceostatus = null;
-            if(auth()->user()->role === 'audit'){
-                $withdrawRequest->ceo = $ceo->name;
-                $withdrawRequest->ceostatus = 'assign';
-                $withdrawRequest->remark = 'handover to the ceo..thank you.' . ' - ' . auth()->user()->name . ' at ' . formatDateTime(Carbon::now());
-            }
-            $withdrawRequest->flag = 1;
-        } elseif ($status === 'deny') {
-            $withdrawRequest->declined_by = auth()->user()->id;
-            $withdrawRequest->approved_by = null;
-            $withdrawRequest->ceo = null;
-            $withdrawRequest->ceostatus = null;
-            if(auth()->user()->role === 'audit'){
-                $withdrawRequest->ceo = null;
-                $withdrawRequest->ceostatus = null;
-                $withdrawRequest->remark = 'declined this request..thank you.' . ' - ' . auth()->user()->name . ' at ' . formatDateTime(Carbon::now());
-            }
-            $withdrawRequest->flag = 0;
-        }
-
-        $withdrawRequest->save();
-
-        return response()->json(['message' => 'Withdraw request status updated successfully.']);
     }
 
     public function createPdf($id)

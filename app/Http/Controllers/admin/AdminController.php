@@ -103,8 +103,8 @@ class AdminController extends Controller
                       ->where('status', 'approved')
                       ->count();
 
-        $data['wrequests'] = Fund::with('clients:id,name,trading_code')->where('category', 'withdraw')->where('status', 'pending')->get();
-
+        $data['wrequests'] = Fund::with('clients:id,name,trading_code', 'requestFile')->where('category', 'withdraw')->where('status', 'pending')->get();
+        // return $data['wrequests'];
         if(auth()->user()->role === 'account'){
             $data['balance'] = Account::first();
 

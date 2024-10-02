@@ -71,10 +71,8 @@
 
     <script>
         $(document).ready(function() {
-            // Show the alert message
             $('#successAlert').show();
 
-            // Hide the alert message after 3 seconds
             setTimeout(function() {
                 $('#successAlert').fadeOut('slow');
             }, 3000);

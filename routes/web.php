@@ -294,8 +294,6 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::get('/make/request/pdf/{id}', 'createPdf')->name('makerequest.pdf');
 
         Route::post('/upload/portfolio', 'uploadPortfolio')->name('upload.portfolio');
-        Route::post('/upgrade/withdraw/status', 'upgradeWithdrawStatus');
-        Route::get('/get/withdraw/status/{id}', 'withdrawStatus');
         Route::get('/send/remark', 'sendRemark');
     });
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\admin;
 
+use Carbon\Carbon;
 use App\Models\Fund;
 use App\Models\User;
 use App\Models\Staff;
@@ -12,6 +13,7 @@ use App\Services\FundService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class WithdrawController extends Controller
@@ -160,6 +162,76 @@ class WithdrawController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             info($e);
+        }
+    }
+
+    public function withdrawStatus($id)
+    {
+        $request = Fund::where('category', 'withdraw')->where('id', $id)->first();
+
+        if($request){
+            return response()->json($request);
+        }
+    }
+
+    public function upgradeWithdrawStatus(Request $request)
+    {
+        $request->validate([
+            'id'     => 'required|integer|exists:funds,id',
+            'status' => 'required|in:accept,deny',
+        ]);
+
+        $requestId = $request->input('id');
+        $status    = $request->input('status');
+
+        $fundServiceObj = new FundService();
+        $result = $fundServiceObj->updateWithdrawStatus($requestId,$status);
+        if($result === 'approved'){
+            return response()->json(['error' => false, 'message' => 'This request has already approved by CEO or MD.']);
+        }
+
+        if($result === true){
+            return response()->json(['success' => true, 'message' => 'Withdraw request status updated successfully.']);
+        }
+        return response()->json(['error' => false, 'message' => 'Withdraw request not found.']);
+    }
+
+    public function destroy($id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $reqeust = Fund::where('id',$id)->where('category', 'withdraw')->first();
+            if($reqeust->ceostatus === 'approved' && $reqeust->mdstatus === 'approved'){
+                return response()->json(['error' => false,'message' => 'This request has already approved by CEO & MD.'], 404);
+            }
+            if (!$reqeust) {
+                return response()->json(['message' => 'Reqeust not found.'], 404);
+            }
+
+            $portfolioFile = $reqeust->portfolio_file;
+            if ($portfolioFile && Storage::disk('public')->exists($portfolioFile)) {
+                Storage::disk('public')->delete($portfolioFile);
+            }
+
+            $requestFile = RequestFile::where('request_id', $id)->first();
+            if($requestFile){
+                $requestFile->delete();
+            }
+
+            $res = $reqeust->delete();
+
+            if ($res) {
+                DB::commit();
+                return response()->json(['success' => true,'message' => 'Withdraw request deleted successfully.']);
+            } else {
+                DB::rollback();
+                return response()->json(['message' => 'Failed to delete the Withdraw request.'], 500);
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            info($e);
+            return response()->json(['message' => 'An error occurred.'], 500);
         }
     }
 }

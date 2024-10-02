@@ -65,7 +65,7 @@ $(document).ready(function(){
 
         if(reqId != null){
             $.ajax({
-                url: '/get/withdraw/status/' + reqId,
+                url: '/withdraw/get/status/' + reqId,
                 type: 'GET',
                 beforeSend: function(){
 
@@ -120,15 +120,21 @@ $(document).ready(function(){
         });
 
         $.ajax({
-            url: '/upgrade/withdraw/status',
+            url: '/withdraw/upgrade/status',
             type: 'POST',
             data: {
                 id: requestId,
                 status: action
             },
             success: function(response) {
-                toastr.success('Withdraw request status updated successfully!');
-                location.reload();
+                if(response && response.success === true){
+                    toastr.success(response.message);
+                    location.reload();
+                }
+
+                if(response && response.error === false){
+                    toastr.error(response.message);
+                }
             },
             error: function(xhr) {
                 console.log(xhr);
@@ -207,5 +213,44 @@ $(document).ready(function(){
                 }
             });
         }
+    });
+
+    $(document).on('click', '.reqDelBtn', function(){
+        var reqId = $(this).data("id");
+        var listItem = $(this).closest(".list-item");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "GET",
+                    url: "/withdraw/req/delete/" + reqId,
+                    success: function (response) {
+                        if(response && response.success === true){
+                            listItem.remove();
+                            Swal.fire("Deleted!", response.message, "success");
+                        }
+
+                        if(response && response.error === false){
+                            Swal.fire("error!", response.message, "error");
+                        }
+                    },
+                    error: function (error) {
+                        Swal.fire(
+                            "Error!",
+                            error.responseJSON.message,
+                            "error"
+                        );
+                    },
+                });
+            }
+        });
     });
 });
