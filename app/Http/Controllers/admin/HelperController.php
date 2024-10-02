@@ -53,12 +53,14 @@ class HelperController extends Controller
 
         $requestIds = $requestFiles->pluck('request_id');
 
-        $withdraws = Fund::with('clients')->whereIn('id', $requestIds)->get();
-
+        $withdraws = Fund::with('clients')->whereIn('id', $requestIds)->where('ceostatus', 'approved')->where('mdstatus', 'approved')->get();
+        if($withdraws->isEmpty()){
+            return redirect()->back()->with('errorMsg', 'no files found');
+        }
         $data['withdraws'] = $withdraws;
 
-        $data['ceo'] = User::where('role', 'ceo')->first();
-        $data['md'] = User::where('role', 'md')->first();
+        $data['ceo']  = User::where('role', 'ceo')->first();
+        $data['md']   = User::where('role', 'md')->first();
         $data['head'] = User::where('role', 'Business Head')->first();
 
         $pdf = app('dompdf.wrapper');
@@ -68,7 +70,7 @@ class HelperController extends Controller
         $pdf->save($pdfPath);
 
 
-        Fund::whereIn('id', $requestIds)->update(['status' => 'approved']);
+        Fund::whereIn('id', $requestIds)->where('ceostatus', 'approved')->where('mdstatus', 'approved')->update(['status' => 'approved']);
 
         RequestFile::whereIn('request_id', $requestIds)->delete();
 

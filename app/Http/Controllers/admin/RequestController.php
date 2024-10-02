@@ -350,34 +350,6 @@ class RequestController extends Controller
         return response()->json(['message' => 'Status updated successfully.', 'status' => $limitRequest->status]);
     }
 
-    public function requestWithdraw(Request $request, $id)
-    {
-        $request->validate([
-            'status' => 'required|in:approved,canceled',
-        ]);
-
-        $fund = Fund::findOrFail($id);
-
-        $user = auth()->user();
-
-        if ($request->status === 'approved') {
-            // Update 'approved_by' column
-            $fund->update([
-                'status' => 'approved',
-                'approved_by' => $user->id,
-                'declined_by' => NULL,
-            ]);
-        } elseif ($request->status === 'canceled') {
-            $fund->update([
-                'status' => 'canceled',
-                'declined_by' => $user->id,
-                'approved_by' => NULL,
-            ]);
-        }
-
-        return response()->json(['message' => 'Request status updated successfully']);
-    }
-
     public function fetchLimitRequest()
     {
         $requests = LimitRequest::with('clients:id,name,email,trading_code')->where('status', 'pending')->get();
@@ -466,28 +438,5 @@ class RequestController extends Controller
         }
 
         return response()->json($requests);
-    }
-
-    public function limitDestroy($id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $request = LimitRequest::find($id);
-
-            if (!$request) {
-                return response()->json(['message' => 'Limit Request not found.'], 404);
-            }
-
-            $res = $request->delete();
-
-            DB::commit();
-            if($res){
-                return response()->json(['message' => 'Limit Request deleted successfully.']);
-            }
-        } catch (\Exception $e) {
-            DB::rollback();
-            info($e);
-        }
     }
 }

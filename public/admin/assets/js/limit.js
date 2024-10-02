@@ -1,9 +1,8 @@
 $(document).ready(function(){
     $(document).on('click', '.deleteBtn', function(){
         var limitId = $(this).data("id");
-        var listItem = $(this).closest(".list-item"); // Adjust the selector based on your HTML structure
+        var listItem = $(this).closest(".list-item");
 
-        // Use SweetAlert to confirm the deletion
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -14,19 +13,20 @@ $(document).ready(function(){
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
             if (result.isConfirmed) {
-                // If the user confirms, send an AJAX request to delete the pigeon
                 $.ajax({
                     type: "GET",
-                    url: "/limit/delete/" + limitId,
+                    url: "/withdraw/req/delete/" + limitId,
                     success: function (response) {
-                        // Remove the deleted item from the DOM
-                        listItem.remove();
+                        if(response && response.success === true){
+                            listItem.remove();
+                            Swal.fire("Deleted!", response.message, "success");
+                        }
 
-                        // Show a success message
-                        Swal.fire("Deleted!", response.message, "success");
+                        if(response && response.error === false){
+                            Swal.fire("error!", response.message, "error");
+                        }
                     },
                     error: function (error) {
-                        // Show an error message
                         Swal.fire(
                             "Error!",
                             error.responseJSON.message,

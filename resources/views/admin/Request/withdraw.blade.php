@@ -181,10 +181,8 @@
 
         <script>
             $(document).ready(function() {
-                // Show the alert message
                 $('#successAlert').show();
 
-                // Hide the alert message after 3 seconds
                 setTimeout(function() {
                     $('#successAlert').fadeOut('slow');
                 }, 3000);
@@ -196,7 +194,7 @@
                 $('.toggle-status').change(function() {
                     var requestId = $(this).data('id');
                     var actionUrl = $(this).data('action');
-                    var status = $(this).prop('checked') ? 'approved' : 'canceled'; // Determine new status based on checkbox state
+                    var status = $(this).prop('checked') ? 'approved' : 'canceled';
 
                     $.ajax({
                         url: actionUrl,
@@ -206,11 +204,15 @@
                             status: status
                         },
                         success: function(response) {
-                            toastr.success('Status updated successfully.');
+                            if(response && response.success === true){
+                                toastr.success('Status updated successfully.');
+                            }
+                            if(response && response.error === false){
+                                toastr.error(response.message);
+                            }
                         },
                         error: function(xhr) {
                             console.error('Error updating status:', xhr.responseText);
-                            // Handle error, show error message, etc.
                         }
                     });
                 });

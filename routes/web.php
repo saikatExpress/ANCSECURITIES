@@ -238,13 +238,11 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
         Route::post('/manual/request/store', 'manualStore')->name('manual.request_store');
         Route::get('/deposit/request', 'depositIndex')->name('deposit.request');
         Route::post('/request/toggle/{id}', 'toggleStatus')->name('request.toggle');
-        Route::post('/request/withdraw/{id}', 'requestWithdraw')->name('request.withdraw');
         Route::post('/request/deposit/{id}', 'requestDeposit')->name('request.deposit');
         Route::get('/fetch-requests', 'fetchRequests')->name('fetch.requests');
         Route::get('/update/limit/request/{id}', 'updateLimitRequest');
         Route::get('/decline/limit/request/{id}', 'declineLimitRequest');
         Route::get('/fetch-limit-requests', 'fetchLimitRequest')->name('fetch.limit.requests');
-        Route::get('/limit/delete/{id}', 'limitDestroy');
     });
 
     Route::controller(BannerController::class)->group(function(){

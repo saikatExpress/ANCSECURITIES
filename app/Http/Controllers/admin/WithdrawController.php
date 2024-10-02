@@ -39,13 +39,12 @@ class WithdrawController extends Controller
         $data['combinedData'] = $groupedData->map(function ($group) use ($requestFiles) {
             return [
                 'created_by' => $group->created_by,
-                'total' => $group->total,
-                'details' => $requestFiles->filter(function ($requestFile) use ($group) {
+                'total'      => $group->total,
+                'details'    => $requestFiles->filter(function ($requestFile) use ($group) {
                     return $requestFile->created_by == $group->created_by;
                 })
             ];
         });
-
         return view('admin.Request.withdraw.index', compact('groupedData'))->with($data);
     }
 
@@ -81,6 +80,35 @@ class WithdrawController extends Controller
         }
 
         return view('admin.Request.wcreate')->with($data);
+    }
+
+    public function requestWithdraw(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,canceled',
+        ]);
+
+        $fund = Fund::findOrFail($id);
+        if($fund->ceostatus === 'approved' || $fund->mdstatus === 'approved'){
+            return response()->json(['error' => false, 'message' => 'This request already approved.']);
+        }
+        $user = auth()->user();
+
+        if ($request->status === 'approved') {
+            $fund->update([
+                'status' => 'approved',
+                'approved_by' => $user->id,
+                'declined_by' => NULL,
+            ]);
+        } elseif ($request->status === 'canceled') {
+            $fund->update([
+                'status' => 'canceled',
+                'declined_by' => $user->id,
+                'approved_by' => NULL,
+            ]);
+        }
+
+        return response()->json(['success' => true,'message' => 'Request status updated successfully']);
     }
 
     public function fetchRequestInfo($id)

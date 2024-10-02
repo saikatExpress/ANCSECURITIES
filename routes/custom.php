@@ -23,8 +23,4 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/salary/store', 'store')->name('employee.salarystore');
         });
     });
-
-    Route::controller(WithdrawController::class)->group(function(){
-        Route::get('/withdraw/request', 'withdrawIndex')->name('withdraw.request');
-    });
 });
