@@ -30,31 +30,17 @@ class WithdrawController extends Controller
     {
         $data['pageTitle'] = "Withdraw Request Title";
 
-        $groupedData = RequestFile::select('created_by', DB::raw('count(*) as total'))
-            ->groupBy('created_by')
-            ->get();
+        $data['withdrawlist'] = Fund::with('clients:id,name,email,trading_code,mobile,whatsapp')->where('category', 'withdraw')->get();
 
-        $requestFiles = RequestFile::with('funds')->get();
-
-        $data['combinedData'] = $groupedData->map(function ($group) use ($requestFiles) {
-            return [
-                'created_by' => $group->created_by,
-                'total'      => $group->total,
-                'details'    => $requestFiles->filter(function ($requestFile) use ($group) {
-                    return $requestFile->created_by == $group->created_by;
-                })
-            ];
-        });
-        return view('admin.Request.withdraw.index', compact('groupedData'))->with($data);
+        return view('admin.Request.withdraw.index')->with($data);
     }
 
-    public function withdrawIndex()
+    public function deletedRequest()
     {
-        $pageTitle = 'Client Fund withdraw Request';
+        $data['pageTitle'] = "Withdraw Request";
+        $data['deletedRequest'] = Fund::onlyTrashed()->where('category', 'withdraw')->get();
 
-        $limitRequests = Fund::with('clients:id,name,email,trading_code,mobile,whatsapp')->where('category', 'withdraw')->get();
-
-        return view('admin.Request.withdraw', compact('pageTitle','limitRequests'));
+        return view('admin.request.withdraw.delete')->with($data);
     }
 
     public function create()

@@ -209,14 +209,12 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    @can('manual request')
-                        <li>
-                            <a href="{{ route('manual.request') }}">
-                                <i class="fa fa-clock-o"></i>
-                                Manual Request
-                            </a>
-                        </li>
-                    @endcan
+                    <li>
+                        <a href="{{ route('manual.request') }}">
+                            <i class="fa fa-clock-o"></i>
+                            Manual Request
+                        </a>
+                    </li>
 
                     <li>
                         <a href="{{ route('today.limit_request') }}">
@@ -225,19 +223,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('declined.request') }}">
-                            <i class="fa fa-times"></i>
-                            Decline Request
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('all.request') }}">
-                            <i class="fa fa-list"></i>
-                            All Request
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('withdraw.request') }}">
+                        <a href="{{ route('admin.withdrawlist') }}">
                             <i class="fa fa-money"></i>
                             Withdraw Request
                         </a>

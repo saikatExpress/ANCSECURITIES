@@ -230,9 +230,7 @@ Route::middleware(['auth', 'CheckAdmin'])->group(function(){
     });
 
     Route::controller(RequestController::class)->group(function(){
-        Route::get('/all/request', 'index')->name('all.request');
         Route::get('/today/limit/request', 'limitIndex')->name('today.limit_request');
-        Route::get('/declined/request', 'declineIndex')->name('declined.request');
         Route::get('/get/client/code/{code}', 'getClientInfo');
         Route::post('/manual/request/store', 'manualStore')->name('manual.request_store');
         Route::get('/deposit/request', 'depositIndex')->name('deposit.request');

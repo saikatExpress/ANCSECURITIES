@@ -44,6 +44,11 @@
                         Withdraw Request <span class="badge badge-danger" style="background-color: darkred;">{{ ($totalWithdraw) ?? 0 }}</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.withdrawlist') }}">
+                        Withdraw List
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

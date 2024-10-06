@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\RequestFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FundService
 {
@@ -203,12 +204,18 @@ class FundService
     {
         $withdrawRequest = Fund::where('id', $id)->first();
 
-        $withdrawRequest->declined_by = auth()->user()->id;
-        $withdrawRequest->approved_by = null;
-        $withdrawRequest->ceo         = null;
-        $withdrawRequest->ceostatus   = null;
-        $withdrawRequest->remark      = 'declined this request..thank you.' . ' - ' . auth()->user()->name . ' at ' . formatDateTime(Carbon::now());
-        $withdrawRequest->flag        = 0;
+        $portfolioFile = $withdrawRequest->portfolio_file;
+        if ($portfolioFile && Storage::disk('public')->exists($portfolioFile)) {
+            Storage::disk('public')->delete($portfolioFile);
+        }
+
+        $withdrawRequest->declined_by    = auth()->user()->id;
+        $withdrawRequest->approved_by    = null;
+        $withdrawRequest->portfolio_file = null;
+        $withdrawRequest->ceo            = null;
+        $withdrawRequest->ceostatus      = null;
+        $withdrawRequest->remark         = 'declined this request..thank you.' . ' - ' . auth()->user()->name . ' at ' . formatDateTime(Carbon::now());
+        $withdrawRequest->flag           = 0;
 
         $res = $withdrawRequest->save();
         if($res){

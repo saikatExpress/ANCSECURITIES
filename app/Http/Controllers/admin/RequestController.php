@@ -27,12 +27,6 @@ class RequestController extends Controller
         }
     }
 
-    public function index()
-    {
-        $pageTitle = 'All Request';
-        $limitRequests = Fund::where('category', 'withdraw')->where('status', 'approved')->get();
-        return view('admin.Request.index', compact('pageTitle', 'limitRequests'));
-    }
 
     public function getClientInfo($code)
     {
@@ -55,14 +49,6 @@ class RequestController extends Controller
         return view('admin.Request.today', compact('pageTitle','limitRequests'));
     }
 
-    public function declineIndex()
-    {
-        $pageTitle = 'Declined Limit Request';
-
-        $limitRequests = LimitRequest::with('clients:id,name,email,trading_code,mobile,whatsapp')->where('status', 'canceled')->get();
-
-        return view('admin.Request.declined', compact('pageTitle','limitRequests'));
-    }
 
     public function create()
     {

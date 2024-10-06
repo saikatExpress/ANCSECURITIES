@@ -468,6 +468,7 @@
                 </div>
             @endif
 
+            {{-- Withdraw Block --}}
             @if (auth()->user()->role === 'audit')
                 <div class="row">
                     <div class="col-md-12">
@@ -749,6 +750,7 @@
                     </div>
                 </div>
             @endif
+            {{-- Withdraw Block --}}
 
             @if (auth()->user()->role === 'Business Head' || auth()->user()->role === 'hr')
                 <div class="row">

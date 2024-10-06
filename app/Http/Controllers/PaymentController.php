@@ -55,6 +55,7 @@ class PaymentController extends Controller
             'amount'        => $data['amount'],
             'ac_no'         => auth()->user()->bank_account_no,
             'withdraw_date' => $data['withdraw_date'],
+            'created_by'    => Auth::id(),
             'description'   => $data['description'],
             'category'      => 'withdraw',
         ];
