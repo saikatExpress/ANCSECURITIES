@@ -192,7 +192,7 @@
                                         </div>
                                     @elseif($notification['type'] == 'withdraw')
                                         <div class="ticker-item">
-                                            <a style="color: #fff;" href="{{ route('withdraw.request') }}">
+                                            <a style="color: #fff;" href="{{ route('admin.withdrawlist') }}">
                                                 <i class="fa fa-money text-yellow"></i> New Withdraw Request from {{ $notification['data']->clients->name }}<br>
                                                 <i class="fa fa-code text-info"></i> Trading Code: {{ $notification['data']->clients->trading_code }}<br>
                                                 <i class="fa fa-money text-success"></i> Amount: <span style="font-weight:bold;">{{ $notification['data']->amount }}</span>

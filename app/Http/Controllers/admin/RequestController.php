@@ -40,15 +40,6 @@ class RequestController extends Controller
 
     }
 
-    public function limitIndex()
-    {
-        $pageTitle = 'Today Limit Request';
-
-        $limitRequests = LimitRequest::with('clients:id,name,email,trading_code,mobile,whatsapp')->whereDate('created_at', Carbon::now())->get();
-
-        return view('admin.Request.today', compact('pageTitle','limitRequests'));
-    }
-
 
     public function create()
     {

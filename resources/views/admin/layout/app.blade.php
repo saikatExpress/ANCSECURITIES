@@ -6,15 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>ANC Securities Ltd | Dashboard</title>
     <link rel="shortcut icon" href="{{ asset('auth/ANCSECURITIES.png') }}" type="image/x-icon">
-    <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="{{ asset('admin/assets/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('admin/assets/bower_components/font-awesome/css/font-awesome.min.css') }}">
-    <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('admin/assets/bower_components/Ionicons/css/ionicons.min.css') }}">
-    <!-- jvectormap -->
     <link rel="stylesheet" href="{{ asset('admin/assets/bower_components/jvectormap/jquery-jvectormap.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
@@ -23,7 +18,6 @@
 
     <link rel="stylesheet" href="{{ asset('admin/assets/dist/css/skins/_all-skins.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    {{-- Custom CSS --}}
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/ticker.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/admin.css') }}">
@@ -32,23 +26,16 @@
     <body class="hold-transition skin-blue sidebar-mini">
         <div class="wrapper">
 
-            {{-- Top Header Section --}}
             <header class="main-header">
-                <!-- Logo -->
                 <a href="{{ route('admin.dashboard') }}" class="logo">
-                    <!-- mini logo for sidebar mini 50x50 pixels -->
                     <span class="logo-mini"><b>A</b>NC</span>
-                    <!-- logo for regular state and mobile devices -->
                     <span class="logo-lg"><b>ANCSECURITY</b>LTD</span>
                 </a>
 
-                <!-- Header Navbar: style can be found in header.less -->
                 <nav class="navbar navbar-static-top">
-                <!-- Sidebar toggle button-->
                 <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                     <span class="sr-only">Toggle navigation</span>
                 </a>
-                <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
                     <x-message/>
                 </div>
@@ -56,11 +43,9 @@
                 </nav>
             </header>
 
-            <!-- Left side column. contains the logo and sidebar -->
             <x-admin-sidebar/>
 
             <div id="contentArea">
-                <!-- Content will be loaded here -->
             </div>
 
             <div id="clientsArea">

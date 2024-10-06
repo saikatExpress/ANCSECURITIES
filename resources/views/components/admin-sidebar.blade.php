@@ -203,43 +203,6 @@
 
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-file-text"></i> <span>Client Request</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <li>
-                        <a href="{{ route('manual.request') }}">
-                            <i class="fa fa-clock-o"></i>
-                            Manual Request
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ route('today.limit_request') }}">
-                            <i class="fa fa-clock-o"></i>
-                            Todays Limit Request
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.withdrawlist') }}">
-                            <i class="fa fa-money"></i>
-                            Withdraw Request
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('deposit.request') }}">
-                            <i class="fa fa-bank"></i>
-                            Deposit Request
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-
-            <li class="treeview">
-                <a href="#">
                     <i class="fa fa-table"></i> <span>Company</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
@@ -430,26 +393,6 @@
                 </ul>
             </li>
 
-            <li>
-                <a href="pages/calendar.html">
-                    <i class="fa fa-calendar"></i> <span>Calendar</span>
-                    <span class="pull-right-container">
-                    <small class="label pull-right bg-red">3</small>
-                    <small class="label pull-right bg-blue">17</small>
-                    </span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('news.portal') }}">
-                    <i class="fa-solid fa-newspaper"></i> <span>News Portal</span>
-                    <span class="pull-right-container">
-                        <small class="label pull-right bg-yellow">12</small>
-                        <small class="label pull-right bg-green">16</small>
-                        <small class="label pull-right bg-red">5</small>
-                    </span>
-                </a>
-            </li>
-
             <li class="treeview">
                 <a href="#">
                     <i class="fa-solid fa-gear"></i> <span>Settings</span>
@@ -511,5 +454,5 @@
             </li>
         </ul>
     </section>
-    <!-- /.sidebar -->
+
 </aside>
