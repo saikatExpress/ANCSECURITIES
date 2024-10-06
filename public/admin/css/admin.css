@@ -115,9 +115,8 @@
     z-index: 9999;
 }
 
-/* Class to make it slide in */
 .status-panel.active {
-    right: 0; /* Bring the div into view */
+    right: 0;
 }
 
 .status-footer {
@@ -135,7 +134,7 @@
 
 #statusContent {
     overflow-y: auto;
-    height: calc(100vh - 150px); /* Adjust height dynamically */
+    height: calc(100vh - 150px);
     padding: 15px;
     border: 1px solid #ddd;
 }

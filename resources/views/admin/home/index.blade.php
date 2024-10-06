@@ -123,7 +123,7 @@
                                 <i style="margin-top: 20px;" class="fa-solid fa-code-pull-request"></i>
                             </span>
 
-                            <a href="{{ route('today.limit_request') }}">
+                            <a href="">
                                 <div class="info-box-content">
                                     <span class="info-box-text">Todays Limits</span>
                                     <span class="info-box-number">{{ $totalRequests ?? 0 }} / Amount : {{ number_format($totalAmount) }}</span>

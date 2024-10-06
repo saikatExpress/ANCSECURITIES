@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/ticker.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('admin/css/withdraw.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/paginate.css') }}">
 </head>
     <body class="hold-transition skin-blue sidebar-mini">

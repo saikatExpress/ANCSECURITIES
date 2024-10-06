@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Services\FundService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\ActivityService;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -70,6 +71,10 @@ class WithdrawController extends Controller
 
     public function requestWithdraw(Request $request, $id)
     {
+        if(!in_array(auth()->user()->role, ['ceo','admin', 'Business Head', 'md'])){
+            return response()->json(['error' => false, 'message' => 'This action is unathorized.Please contact with admin.']);
+        }
+
         $request->validate([
             'status' => 'required|in:approved,canceled',
         ]);
@@ -132,6 +137,8 @@ class WithdrawController extends Controller
         $res = $fundServiceObj->store($clientId,$name,$amount,$bankAccount,$date,$category);
 
         if($res === true){
+            $activityServiceObj = new ActivityService();
+            $activityServiceObj->withdrawActivityService();
             return redirect()->back()->with('message', 'Withdraw request replacement successfully');
         }
     }

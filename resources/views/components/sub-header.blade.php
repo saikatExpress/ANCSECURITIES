@@ -46,6 +46,11 @@
                         </a>
                     </li>
                     <li>
+                        <a href="{{ route('create.expense') }}">
+                            Expense List
+                        </a>
+                    </li>
+                    <li>
                         <a href="{{ route('admin.withdrawrequest') }}">
                             Withdraw Request <span class="badge badge-danger" style="background-color: darkred;">{{ ($totalWithdraw) ?? 0 }}</span>
                         </a>
