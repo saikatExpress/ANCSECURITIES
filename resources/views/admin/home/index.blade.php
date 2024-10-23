@@ -1,4 +1,8 @@
 
+@php
+    use Carbon\Carbon;
+    use App\Models\User;
+@endphp
 @extends('admin.layout.app')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 @section('content')
@@ -30,91 +34,147 @@
                     <div class="alert alert-danger errorAlert">{{ session('errorMsg') }}</div>
                 @endif
 
-                <div class="col-md-3 col-sm-6 col-xs-12">
+                @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'md')
+                    <div class="col-md-3 col-sm-6 col-xs-12 card-container">
+                        <div class="stat-card">
+                            <div class="stat-item">
+                                <div class="icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>Total Employee</h4>
+                                    <span>
+                                        @php
+                                            $totalEmployee = User::whereNot('role', 'user')->whereNot('role', 'admin')->count();
+                                        @endphp
 
-                    <div class="info-box">
-                        <span class="info-box-icon bg-aqua"><i class="ion ion-ios-time-outline"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text" style="font-weight: 600;color:#28a745;">Daily Attendance</span>
-                            <span style="color: #f39c12; font-weight: bold;" id="punch-in-time"></span>
-                            <span style="color: blue; font-weight: bold;" id="punch-out-time"></span>
-                            @if ($todayAttendance)
-                                <span style="color: #f39c12; font-weight: bold;">Punch in: {{ formatTimeWithAmPm($todayAttendance->in_time) }}</span><br>
-                                @if ($todayAttendance->out_time != null)
-                                    <span style="color: darkred; font-weight: bold;">Punch Out: {{ formatTimeWithAmPm($todayAttendance->in_time) }}</span>
-                                @endif
-                            @endif
-
-                            <div class="attendance-form">
-                                <form id="attendanceForm1" action="{{ route('empattendance.store') }}" method="POST">
-                                    @csrf
-                                    @if ($todayAttendance && $todayAttendance->in_time != null && $todayAttendance->out_time != null)
-                                        <p style="color: #2e0cec;">Congratulations! Your today's attendance has been recorded successfully.</p>
-                                    @else
-                                        <div class="form-group">
-                                            <label for="start-time">Start Time</label>
-                                            <input type="time" id="start-time" name="start_time" class="form-control" @if($todayAttendance) disabled @endif required>
-                                        </div>
-
-                                        @if ($todayAttendance)
-                                            <div class="form-group">
-                                                <label for="end-time">End Time</label>
-                                                <input type="time" id="end-time" name="out_time" class="form-control" @if($todayAttendance->out_time) disabled @endif required>
-                                            </div>
-                                            <button type="submit" class="btn btn-warning">Punch Out</button>
-                                        @else
-                                            <button type="submit" class="btn btn-primary">Punch In</button>
-                                        @endif
-                                    @endif
-                                </form>
+                                        {{ $totalEmployee }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>Today Attendance</h4>
+                                    <span>7</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="icon">
+                                    <i class="fas fa-user-times"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>Today Leave</h4>
+                                    <span>6</span>
+                                </div>
                             </div>
                         </div>
                     </div>
+                @else
+                    @if (!auth()->user()->role === 'audit')
+                        <div class="col-md-3 col-sm-6 col-xs-12">
+                            <div class="info-box">
+                                <span class="info-box-icon bg-aqua"><i class="ion ion-ios-time-outline"></i></span>
+                                <div class="info-box-content">
+                                    <span class="info-box-text" style="font-weight: 600;color:#28a745;">Daily Attendance</span>
+                                    <span style="color: #f39c12; font-weight: bold;" id="punch-in-time"></span>
+                                    <span style="color: blue; font-weight: bold;" id="punch-out-time"></span>
+                                    @if ($todayAttendance)
+                                        <span style="color: #f39c12; font-weight: bold;">Punch in: {{ formatTimeWithAmPm($todayAttendance->in_time) }}</span><br>
+                                        @if ($todayAttendance->out_time != null)
+                                            <span style="color: darkred; font-weight: bold;">Punch Out: {{ formatTimeWithAmPm($todayAttendance->in_time) }}</span>
+                                        @endif
+                                    @endif
 
-                </div>
+                                    <div class="attendance-form">
+                                        <form id="attendanceForm1" action="{{ route('empattendance.store') }}" method="POST">
+                                            @csrf
+                                            @if ($todayAttendance && $todayAttendance->in_time != null && $todayAttendance->out_time != null)
+                                                <p style="color: #2e0cec;">Congratulations! Your today's attendance has been recorded successfully.</p>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="start-time">Start Time</label>
+                                                    <input type="time" id="start-time" name="start_time" class="form-control" @if($todayAttendance) disabled @endif required>
+                                                </div>
 
-                <div class="col-md-3 col-sm-6 col-xs-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-red"><i style="margin-top: 20px;" class="fa fa-clock-o"></i></span>
+                                                @if ($todayAttendance)
+                                                    <div class="form-group">
+                                                        <label for="end-time">End Time</label>
+                                                        <input type="time" id="end-time" name="out_time" class="form-control" @if($todayAttendance->out_time) disabled @endif required>
+                                                    </div>
+                                                    <button type="submit" class="btn btn-warning">Punch Out</button>
+                                                @else
+                                                    <button type="submit" class="btn btn-primary">Punch In</button>
+                                                @endif
+                                            @endif
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
 
-                        <div class="info-box-content">
-                            <span class="info-box-text">Total Working Hours</span>
-                            <span class="info-box-number">
-                                @php
-                                    use Carbon\Carbon;
-
-                                    $currentMonth = now()->month;
-                                    $currentYear = now()->year;
-
-                                    $startDate = Carbon::createFromDate($currentYear, $currentMonth, 1);
-
-                                    $daysInMonth = $startDate->daysInMonth;
-
-                                    $weekdaysCount = 0;
-
-                                    for ($day = 1; $day <= $daysInMonth; $day++) {
-                                        $date = Carbon::createFromDate($currentYear, $currentMonth, $day);
-
-                                        if ($date->dayOfWeek !== Carbon::FRIDAY && $date->dayOfWeek !== Carbon::SATURDAY) {
-                                            $weekdaysCount++;
-                                        }
-                                    }
-
-                                    $totalMonthHours = $weekdaysCount * 9;
-                                @endphp
-                                @if(is_numeric($totalHours))
-                                    {{ number_format($totalHours, 2) .' / ' . $totalMonthHours }} Hours
-                                @else
-                                    {{ $totalHours .'/' . 300 }}
-                                @endif
-                            </span>
-                            <span>This Month</span>
+                @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'md')
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="custom-withdraw-block card">
+                            <div class="header">
+                                <i class="fas fa-money-check-alt"></i>
+                                <p>{{ count($pendingWithdraw) }} new withdraw request(s) created.</p>
+                            </div>
+                            <div class="withdraw-list">
+                                @foreach ($pendingWithdraw as $withdraw)
+                                    <div class="withdraw-item">
+                                        <i class="fas fa-user-circle"></i>
+                                        <p>{{ name($withdraw->created_by) }} created a withdraw request for {{ $withdraw->clients->name }}</p>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
-                </div>
+                @else
+                    <div class="col-md-3 col-sm-6 col-xs-12">
+                        <div class="info-box">
+                            <span class="info-box-icon bg-red"><i style="margin-top: 20px;" class="fa fa-clock-o"></i></span>
+
+                            <div class="info-box-content">
+                                <span class="info-box-text">Total Working Hours</span>
+                                <span class="info-box-number">
+                                    @php
+                                        $currentMonth = now()->month;
+                                        $currentYear = now()->year;
+
+                                        $startDate = Carbon::createFromDate($currentYear, $currentMonth, 1);
+
+                                        $daysInMonth = $startDate->daysInMonth;
+
+                                        $weekdaysCount = 0;
+
+                                        for ($day = 1; $day <= $daysInMonth; $day++) {
+                                            $date = Carbon::createFromDate($currentYear, $currentMonth, $day);
+
+                                            if ($date->dayOfWeek !== Carbon::FRIDAY && $date->dayOfWeek !== Carbon::SATURDAY) {
+                                                $weekdaysCount++;
+                                            }
+                                        }
+
+                                        $totalMonthHours = $weekdaysCount * 9;
+                                    @endphp
+                                    @if(is_numeric($totalHours))
+                                        {{ number_format($totalHours, 2) .' / ' . $totalMonthHours }} Hours
+                                    @else
+                                        {{ $totalHours .'/' . 300 }}
+                                    @endif
+                                </span>
+                                <span>This Month</span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 <div class="clearfix visible-sm-block"></div>
-
 
                 @if (auth()->user()->role === 'it' || auth()->user()->role === 'admin' || auth()->user()->role === 'account')
                     <div class="col-md-3 col-sm-6 col-xs-12">
@@ -176,7 +236,7 @@
                 </div>
             </div>
 
-            @if (auth()->user()->role !== 'md')
+            {{-- @if (auth()->user()->role !== 'md')
                 @if (count($notifications) > 0)
                     <div class="row">
                         <div class="ticker-container">
@@ -212,9 +272,9 @@
                         </div>
                     </div>
                 @endif
-            @endif
+            @endif --}}
 
-            @if (auth()->user()->role === 'hr' || auth()->user()->role === 'admin' || auth()->user()->role === 'ceo' || auth()->user()->role === 'Business Head')
+            @if (auth()->user()->role === 'hr')
                 <div class="row">
                     <div class="col-md-12">
                         <div style="display: flex;align-items: center;justify-content: space-between;">
@@ -401,7 +461,7 @@
                                 </p>
                             </div>
                         </div>
-                        <div style="background-color: #fff;border-radius: 4px;padding: 5px 8px 5px;">
+                        <div style="background-color: #fff;border-radius: 4px;padding: 5px 8px 5px;overflow-y: auto;height: 200px;">
                             @foreach($todayWorks as $work)
                                 <div class="work-item mb-3" style="box-shadow: 0 0 10px rgba(0,0,0,0.1);margin:5px;padding: 5px 8px 5px;border-radius: 4px;background-color: #fff;color: #000;">
                                     <div class="d-flex align-items-center justify-content-between">
@@ -421,54 +481,99 @@
                 </div>
             </div>
 
-            @if (auth()->user()->role === 'md')
+            {{-- Withdraw Block --}}
+            @if (auth()->user()->role === 'ceo' || auth()->user()->role === 'md')
                 <div class="row">
                     <div class="col-md-12">
                         <h4 style="background-color: teal;color: #fff;padding: 5px 8px 5px;border-radius: 4px;width: 20%;text-align: center;">Withdraw Request List</h4>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>AC NO</th>
-                                    <th>Requisition Date</th>
-                                    <th>Amount</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                    @php
-                                        $sl = 1;
-                                    @endphp
-                                @foreach ($withdraws as $withdraw)
+                @if (count($withdraws) > 0)
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-striped table-bordered">
+                                <thead>
                                     <tr>
-                                        <td>{{ $sl }}</td>
-                                        <td>{{ $withdraw->client_name }}</td>
-                                        <td>{{ $withdraw->ac_no }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($withdraw->withdraw_date)->format('Y-m-d') }}</td>
-                                        <td>{{ $withdraw->amount }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.viewwithdrawrequest', ['id' => $withdraw->id]) }}" class="btn btn-sm btn-primary">
-                                                <i class="fa-solid fa-eye"></i>
-                                            </a>
-                                        </td>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Code</th>
+                                        <th>AC NO</th>
+                                        <th>Requisition Date</th>
+                                        <th>Amount</th>
+                                        <th>Portfolio</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
                                     </tr>
-                                    @php
-                                        $sl++;
-                                    @endphp
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                        @php
+                                            $sl = 1;
+                                        @endphp
+                                    @foreach ($withdraws as $withdraw)
+                                        <tr>
+                                            <td>{{ $sl }}</td>
+                                            <td>{{ $withdraw->client_name }}</td>
+                                            <td>{{ $withdraw->clients->trading_code }}</td>
+                                            <td>{{ $withdraw->ac_no }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($withdraw->withdraw_date)->format('Y-m-d') }}</td>
+                                            <td>{{ $withdraw->amount }}</td>
+                                            <td>
+                                                @if ($withdraw->portfolio_file)
+                                                    <a href="{{ asset('storage/' . $withdraw->portfolio_file) }}" class="btn btn-sm btn-primary" target="_blank">
+                                                        <i class="fa-solid fa-eye"></i> View Portfolio
+                                                    </a>
+                                                @else
+                                                    No Portfolio Attached
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if (auth()->user()->role === 'md')
+                                                    @if ($withdraw->mdstatus === 'approved')
+                                                        <label class="btn btn-sm btn-success">
+                                                            Approved
+                                                        </label>
+                                                    @else
+                                                        <label class="btn btn-sm btn-warning">
+                                                            Processing
+                                                        </label>
+                                                    @endif
+                                                @else
+                                                    @if ($withdraw->ceostatus === 'approved')
+                                                        <label class="btn btn-sm btn-success">
+                                                            Approved
+                                                        </label>
+                                                    @else
+                                                        <label class="btn btn-sm btn-warning">
+                                                            Processing
+                                                        </label>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <a href="{{ route('admin.viewwithdrawrequest', ['id' => $withdraw->id]) }}" class="btn btn-sm btn-warning">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-primary statusBtn"
+                                                    data-id="{{ $withdraw->id }}">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        @php
+                                            $sl++;
+                                        @endphp
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                @else
+                    <p style="color: red;">
+                        You have no assigned withdraw requests.
+                    </p>
+                @endif
             @endif
 
-            {{-- Withdraw Block --}}
             @if (auth()->user()->role === 'audit')
                 <div class="row">
                     <div class="col-md-12">
@@ -491,6 +596,7 @@
                                                 <th>Amount</th>
                                                 <th>Code</th>
                                                 <th>AC No</th>
+                                                <th>Audit</th>
                                                 <th>Withdraw Date</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
@@ -504,6 +610,9 @@
                                                     <td>{{ number_format($withdrawal->amount, 2) }} Taka</td>
                                                     <td>{{ $withdrawal->clients->trading_code }}</td>
                                                     <td>{{ $withdrawal->ac_no }}</td>
+                                                    <td>
+                                                        ok
+                                                    </td>
                                                     <td>{{ \Carbon\Carbon::parse($withdrawal->withdraw_date)->format('m/d/y') }}</td>
                                                     <td>
                                                         @if ($withdrawal->ceostatus === 'assign')
@@ -1058,6 +1167,13 @@
         </div>
     </div>
 
+    <div id="statusPanel" class="status-panel">
+        <button type="button" id="closePanelBtn" class="btn btn-sm btn-danger">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="statusContent"></div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -1178,6 +1294,30 @@
             });
         </script>
     @endif --}}
+
+    <script>
+        $(document).ready(function() {
+            $('.statusBtn').on('click', function() {
+                const id = $(this).data('id');
+
+                $('#statusPanel').addClass('active');
+                $.ajax({
+                    url: '/admin/fetch/withdraw/info/' + id,
+                    method: 'GET',
+                    success: function(response){
+                        $('#statusContent').html(response);
+                    },
+                    error: function(xhr){
+
+                    }
+                });
+            });
+
+            $('#closePanelBtn').on('click', function() {
+                $('#statusPanel').removeClass('active');
+            });
+        });
+    </script>
 
     <script>
         $(document).ready(function() {

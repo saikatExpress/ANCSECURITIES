@@ -113,9 +113,6 @@
                                     @endphp
                                     <thead>
                                         <tr>
-                                            <th>
-                                                <input type="checkbox" id="select-all">
-                                            </th>
                                             <th>SL</th>
                                             <th>Name</th>
                                             <th>Code</th>
@@ -128,9 +125,6 @@
                                     <tbody>
                                         @foreach ($withdraws as $limit)
                                             <tr>
-                                                <td>
-                                                    <input type="checkbox" class="select-item">
-                                                </td>
                                                 <td>{{ $sl }}</td>
                                                 <td>{{ $limit->clients->name }}</td>
                                                 <td>{{ $limit->clients->trading_code }}</td>
@@ -242,21 +236,6 @@
                 $('#withdrawname').val(name);
                 $('#wamount').val(amount);
                 $('#clientId').val(clientId);
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('#select-all').on('click', function() {
-                $('.select-item').prop('checked', this.checked);
-            });
-
-            $('.select-item').on('change', function() {
-                if (!$(this).is(':checked')) {
-                    $('#select-all').prop('checked', false);
-                } else if ($('.select-item:checked').length === $('.select-item').length) {
-                    $('#select-all').prop('checked', true);
-                }
             });
         });
     </script>

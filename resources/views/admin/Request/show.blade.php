@@ -263,31 +263,31 @@
 
                                     <div style="display: flex; justify-content:space-between; align-items:center;">
                                         <div class="signature_div">
-                                            @if ($withdraw->mdstatus === 'approved')
+                                            {{-- @if ($withdraw->mdstatus === 'approved')
                                                 <img src="https://www.signwell.com/assets/vip-signatures/muhammad-ali-signature-3f9237f6fc48c3a04ba083117948e16ee7968aae521ae4ccebdfb8f22596ad22.svg" alt="">
-                                            @endif
+                                            @endif --}}
                                             <h4>Md. Mahmud Alam</h4>
                                             <p>Managing Director</p>
                                             <p>Anc Securities Limited</p>
                                         </div>
                                         <div class="signature_div">
-                                            @if ($staff->signature != NULL)
+                                            {{-- @if ($staff->signature != NULL)
                                                 <img src="{{ asset('storage/staffSignature/' . $staff->signature) }}" alt="">
-                                            @endif
-                                            <h4>{{ $staff->name }}</h4>
+                                            @endif --}}
+                                            <h4>Md. Farid Uddin Mahmud</h4>
                                             <p>Head of Business</p>
                                             <p>Anc Securities Limited</p>
                                         </div>
                                         <div class="signature_div">
-                                            <img src="https://www.signwell.com/assets/vip-signatures/muhammad-ali-signature-3f9237f6fc48c3a04ba083117948e16ee7968aae521ae4ccebdfb8f22596ad22.svg" alt="">
+                                            {{-- <img src="https://www.signwell.com/assets/vip-signatures/muhammad-ali-signature-3f9237f6fc48c3a04ba083117948e16ee7968aae521ae4ccebdfb8f22596ad22.svg" alt=""> --}}
                                             <h4>Rana Quraishi</h4>
                                             <p>Audit</p>
                                             <p>Anc Securities Limited</p>
                                         </div>
                                         <div class="signature_div">
-                                            @if ($withdraw->ceostatus === 'approved')
+                                            {{-- @if ($withdraw->ceostatus === 'approved')
                                                 <img src="https://www.signwell.com/assets/vip-signatures/muhammad-ali-signature-3f9237f6fc48c3a04ba083117948e16ee7968aae521ae4ccebdfb8f22596ad22.svg" alt="">
-                                            @endif
+                                            @endif --}}
                                             <h4>Mohammed Monirul Islam</h4>
                                             <p>Chief Executive Officer</p>
                                             <p>Anc Securities Limited</p>

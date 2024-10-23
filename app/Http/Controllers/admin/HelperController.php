@@ -151,14 +151,14 @@ class HelperController extends Controller
 
     public function acceptReqStatus(Request $request, $id)
     {
-        $role = auth()->user()->role;
+        $role   = auth()->user()->role;
         $status = $request->input('status');
 
         $withdraw = Fund::findOrFail($id);
 
         if($withdraw){
             if($role === 'md'){
-                $withdraw->md = auth()->user()->name;
+                $withdraw->md       = auth()->user()->name;
                 $withdraw->mdstatus = $status;
 
                 $withdraw->save();

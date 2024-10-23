@@ -97,6 +97,7 @@ class AdminController extends Controller
         }
 
         $data['todayWorks'] = EmployeeWork::whereDate('assign_work_date', Carbon::today())->where('category', auth()->user()->role)->get();
+
         $data['totalDeposit'] = Fund::where('category', 'deposit')->where('status', 'approved')->sum('amount');
         $data['thisMonthDepositCount'] = $this->getMonthlyDepositCount();
         $data['totalDepositCount'] = Fund::where('category', 'deposit')
@@ -104,7 +105,7 @@ class AdminController extends Controller
                       ->count();
 
         $data['wrequests'] = Fund::with('clients:id,name,trading_code', 'requestFile')->where('category', 'withdraw')->where('status', 'pending')->get();
-        // return $data['wrequests'];
+
         if(auth()->user()->role === 'account'){
             $data['balance'] = Account::first();
 
@@ -123,7 +124,13 @@ class AdminController extends Controller
         if(auth()->user()->role === 'audit'){
             $requestIds = RequestFile::pluck('request_id');
 
-            $data['withdrawForAudit'] = Fund::whereIn('id', $requestIds)->where('category', 'withdraw')->whereNull('ceostatus')->whereNull('mdstatus')->where('flag', 1)->get();
+            $data['withdrawForAudit'] = Fund::whereIn('id', $requestIds)->where('category', 'withdraw')->where('status', 'pending')->where('flag', 1)->get();
+        }
+
+        if(auth()->user()->role === 'ceo' || auth()->user()->role === 'md'){
+            $data['pendingWithdraw'] = Fund::with('clients')->where('category', 'withdraw')
+                                        ->where('status', 'pending')
+                                        ->get();
         }
 
         $data['authUserExpense'] = Expense::with('staff:id,name')->where('staff_id', Auth::id())->get();
@@ -172,8 +179,8 @@ class AdminController extends Controller
 
         $data['browserHistory'] = User::where('role', 'user')->pluck('user_agent');
 
-        if(auth()->user()->role === 'md'){
-            $data['withdraws'] = Fund::with('clients:id,name')->where('category', 'withdraw')->where('status', 'pending')->get();
+        if(auth()->user()->role === 'ceo' || auth()->user()->role === 'md'){
+            $data['withdraws'] = Fund::with('clients:id,name,trading_code')->where('category', 'withdraw')->where('status', 'pending')->whereNotNull(auth()->user()->role)->get();
         }
 
         $res = LimitRequest::selectRaw('COUNT(*) as totalRequests, SUM(limit_amount) as totalAmount')

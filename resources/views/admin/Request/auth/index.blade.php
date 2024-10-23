@@ -13,7 +13,7 @@
                 <li class="active">{{ $pageTitle }}</li>
             </ol>
             <p style="text-align: right;">
-                <a class="btn btn-sm btn-primary" href="{{ route('staff.list') }}">Withdraw Request List</a>
+                <a class="btn btn-sm btn-primary" href="{{ route('admin.withdrawlist') }}">Withdraw Request List</a>
             </p>
         </section>
 
